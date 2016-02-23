@@ -11,9 +11,24 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.2.1.RELEASE</spring.version>
 	</properties>
-	<!-- <repositories> <repository> <id>nexus</id> <name>Team Nexus Repository</name> 
-		<url>http://127.0.0.1:8081/nexus/content/groups/public</url> </repository> 
-		</repositories> -->
+	
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>Team Nexus Repository</name>
+			<url>http://nexus.gi.com/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</repository>
+	</repositories>
 
 	<build>
 		<resources>
@@ -54,7 +69,6 @@
 	</build>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -210,6 +224,83 @@
 			<artifactId>spring-data-commons</artifactId>
 			<version>1.11.2.RELEASE</version>
 		</dependency>
-
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>snapshotsjar</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<!-- 打jar包并发布到私服 -->
+			<distributionManagement>
+				<snapshotRepository>
+					<id>Snapshots</id>
+					<url>http://nexus.gi.com/content/repositories/snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
+			<build>
+				<plugins>
+					<!-- mvn jar:jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.3.2</version>
+					</plugin>
+					<!-- mvn source:jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>releasesjar</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<packtype>jar</packtype>
+			</properties>
+			<!-- 打jar包并发布到私服 -->
+			<distributionManagement>
+				<repository>
+					<id>Releases</id>
+					<url>http://nexus.gi.com/content/repositories/releases/</url>
+				</repository>
+			</distributionManagement>
+			<build>
+				<plugins>
+					<!-- mvn jar:jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.3.2</version>
+					</plugin>
+					<!-- mvn source:jar -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.1.2</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
