@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * 运算辅助类
  */
@@ -363,7 +365,7 @@ public class NumberUtils {
 	 * @return
 	 */
 	public static String plusZero(String value, int integerLen, int decimalsLen) {
-		if (value == null || value == "")
+		if (StringUtils.isBlank(value))
 			return "";
 		String[] amounts = value.split("\\.");
 		String number = "";
