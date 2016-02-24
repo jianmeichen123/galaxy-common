@@ -5,9 +5,6 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +13,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.ControllerPath;
+import com.galaxyinternet.framework.core.model.Page;
+import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
@@ -97,10 +96,10 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@Override
 	@RequestMapping(value = "/queryList", method = RequestMethod.GET)
 	@ResponseBody
-	public ResponseData<T> selectList(Q query, @PageableDefault Pageable pageable) {
-		Page<T> page = getBaseService().queryPageList(query, pageable);
+	public ResponseData<T> selectList(Q query, PageRequest pageable) {
+		Page<T> pageList = getBaseService().queryPageList(query, pageable);
 		ResponseData<T> responseBody = new ResponseData<T>();
-		responseBody.setPage(page);
+		responseBody.setPageList(pageList);
 		return responseBody;
 	}
 

@@ -3,12 +3,12 @@ package com.galaxyinternet.framework.core.service.impl;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.galaxyinternet.framework.core.dao.BaseDao;
 import com.galaxyinternet.framework.core.model.BaseEntity;
+import com.galaxyinternet.framework.core.model.Page;
 import com.galaxyinternet.framework.core.service.BaseService;
 
 /**

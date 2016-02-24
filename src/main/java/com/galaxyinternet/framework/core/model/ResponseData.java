@@ -1,10 +1,5 @@
 package com.galaxyinternet.framework.core.model;
 
-import java.util.ArrayList;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-
 import com.galaxyinternet.framework.core.model.Result.Status;
 
 /**
@@ -18,12 +13,12 @@ public class ResponseData<T extends BaseEntity> {
 
 	private T entity;
 	private Result result;
-	private Page<T> page;
+	private Page<T> pageList;
 	private Long id;// 主键
 
 	public ResponseData() {
 		result = new Result(Status.OK, null);
-		page = new PageImpl<>(new ArrayList<T>(0));
+		pageList = new Page<T>(null, null, null);
 	}
 
 	public Result getResult() {
@@ -34,12 +29,12 @@ public class ResponseData<T extends BaseEntity> {
 		this.result = result;
 	}
 
-	public Page<T> getPage() {
-		return page;
+	public Page<T> getPageList() {
+		return pageList;
 	}
 
-	public void setPage(Page<T> page) {
-		this.page = page;
+	public void setPageList(Page<T> pageList) {
+		this.pageList = pageList;
 	}
 
 	public Long getId() {

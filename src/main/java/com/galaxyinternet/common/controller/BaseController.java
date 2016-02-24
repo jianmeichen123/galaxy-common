@@ -1,6 +1,7 @@
 package com.galaxyinternet.common.controller;
 
 import com.galaxyinternet.framework.core.model.BaseEntity;
+import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 
@@ -34,7 +35,7 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	 * @param pageable
 	 *            分页参数与排序参数
 	 */
-	public ResponseData<T> selectList(Q query, org.springframework.data.domain.Pageable pageable);
+	public ResponseData<T> selectList(Q query, PageRequest pageable);
 
 	/**
 	 * 根据ID查询一个对象，返回页面为viewXXX页面

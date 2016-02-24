@@ -8,8 +8,6 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -19,8 +17,10 @@ import com.galaxyinternet.framework.core.dao.BaseDao;
 import com.galaxyinternet.framework.core.enums.DbExecuteType;
 import com.galaxyinternet.framework.core.exception.DaoException;
 import com.galaxyinternet.framework.core.id.IdGenerator;
+import com.galaxyinternet.framework.core.model.Page;
 import com.galaxyinternet.framework.core.model.PrimaryKeyObject;
 import com.galaxyinternet.framework.core.utils.BeanUtils;
+import com.galaxyinternet.framework.core.utils.GSONUtil;
 
 /**
  * 基础Dao接口实现类，实现改类的子类必须设置泛型类型
@@ -180,7 +180,8 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 		try {
 			List<T> contentList = sqlSessionTemplate.selectList(getSqlName(SqlId.SQL_SELECT),
 					getParams(query, pageable));
-			return new PageImpl<T>(contentList, pageable, this.selectCount(query));
+			System.err.println("contentList==>>"+GSONUtil.toJson(contentList));
+			return new  Page<T>(contentList, pageable, this.selectCount(query));
 		} catch (Exception e) {
 			throw new DaoException(String.format("根据分页对象查询列表出错！语句:%s", getSqlName(SqlId.SQL_SELECT)), e);
 		}
@@ -399,7 +400,7 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 		try {
 			sqlName = query.getClass().getSuperclass().getName() + SQLNAME_SEPARATOR + sqlId;
 			List<V> contentList = sqlSessionTemplate.selectList(sqlName, getParams(query, pageable));
-			return new PageImpl<V>(contentList, pageable, this.selectCount(query));
+			return new Page<V>(contentList, pageable, this.selectCount(query));
 		} catch (Exception e) {
 			throw new DaoException(String.format("根据分页对象查询列表出错！语句:%s", sqlName), e);
 		}
