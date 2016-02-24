@@ -224,6 +224,12 @@
 			<artifactId>spring-data-commons</artifactId>
 			<version>1.11.2.RELEASE</version>
 		</dependency>
+		<!-- java邮件 -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.5.2</version>
+	  	</dependency>
 	</dependencies>
 
 	<profiles>
