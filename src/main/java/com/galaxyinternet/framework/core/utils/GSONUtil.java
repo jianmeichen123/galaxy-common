@@ -21,7 +21,7 @@ import com.google.gson.reflect.TypeToken;
  * </p>
  * 
  * <pre>
- * public class User {
+ * public class BaseUser {
  *     {@literal @SerializedName("pwd")}
  *     private String password;
  *     {@literal @Expose}
@@ -34,8 +34,8 @@ import com.google.gson.reflect.TypeToken;
  *     {@literal @Since(1.0)}
  *     private String sex;
  *     
- *     public User() {}
- *     public User(String username, String password, String gender) {
+ *     public BaseUser() {}
+ *     public BaseUser(String username, String password, String gender) {
  *         // user constructor code... ... ...
  *     }
  *     
@@ -43,13 +43,13 @@ import com.google.gson.reflect.TypeToken;
  *     ... ... ...
  * }
  * 
- * List<User> userList = new LinkedList<User>();
- * User jack = new User("Jack", "123456", "Male");
- * User marry = new User("Marry", "888888", "Female");
+ * List<BaseUser> userList = new LinkedList<BaseUser>();
+ * BaseUser jack = new BaseUser("Jack", "123456", "Male");
+ * BaseUser marry = new BaseUser("Marry", "888888", "Female");
  * userList.add(jack);
  * userList.add(marry);
  * 
- * Type targetType = new TypeToken<List<User>>(){}.getType();
+ * Type targetType = new TypeToken<List<BaseUser>>(){}.getType();
  * 
  * String sUserList1 = JSONUtils.toJson(userList, targetType);
  * sUserList1 ----> [{"uname":"jack","gender":"Male","sex":"Male"},{"uname":"marry","gender":"Female","sex":"Female"}]

@@ -20,7 +20,7 @@ import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
-import com.galaxyinternet.framework.core.model.User;
+import com.galaxyinternet.framework.core.model.BaseUser;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.StringEx;
 
@@ -42,7 +42,7 @@ public class LoginFilter implements Filter {
 		webExcludedUrl = null;
 	}
 
-	private User getUser(HttpServletRequest request) {
+	private BaseUser getUser(HttpServletRequest request) {
 		String sessionId = request.getHeader("sessionID");
 		if (StringUtils.isNotBlank(sessionId)) {
 			return getUser(request, sessionId);
@@ -59,11 +59,11 @@ public class LoginFilter implements Filter {
 	 *            sessionId key
 	 * @return user
 	 */
-	private User getUser(HttpServletRequest request, String key) {
+	private BaseUser getUser(HttpServletRequest request, String key) {
 		WebApplicationContext wac = WebApplicationContextUtils
 				.getWebApplicationContext(request.getSession().getServletContext());
 		Cache cache = (Cache) wac.getBean("cache");
-		User user = (User) cache.getByRedis(key);
+		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
 			cache.setByRedis(key, user, 60 * 60 * 24 * 7);
 		}
@@ -75,7 +75,7 @@ public class LoginFilter implements Filter {
 			throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
-		User user = getUser(req);
+		BaseUser user = getUser(req);
 		if (null != user && user.getId() > 0) {
 			req.getSession().setAttribute("sessionUser", user);
 		}
