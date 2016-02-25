@@ -1,21 +1,31 @@
 package com.galaxyinternet.framework.core.utils.mail;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 
 /**
  * 发送邮件需要使用的基本信息 此处需要修改
  */
 public class MailSenderInfo {
 	// 发送邮件的服务器的IP和端口
-	private String mailServerHost = "smtp.126.com"; // 默认服务器
+	private String mailServerHost = "smtp.55tuan.com"; // 默认服务器
 	private String mailServerPort = "25";
 	// 邮件发送者的地址
-	private String fromAddress = "test@126.com";
+	private String fromAddress = "yingzhao@galaxyinternet.com";
 	// 邮件接收者的地址
 	private String toAddress;
 	// 登陆邮件发送服务器的用户名和密码
-	private String userName = "test@126.com";
-	private String password = "123456";
+	private String userName = "yingzhao";
+	private String password = "12345678";
 	// 是否需要身份验证
 	private boolean validate = true;
 	// 邮件主题
@@ -24,12 +34,17 @@ public class MailSenderInfo {
 	private String content;
 	// 邮件附件的文件名
 	private String[] attachFileNames;
+	
+	/**附件添加的组件**/
+	private Multipart mp ;
+	/**存放附件文件**/
+	private List<FileDataSource> files = new LinkedList<FileDataSource>();
 
 	/**
 	 * 获得邮件会话属性
 	 */
 	public MailSenderInfo() {
-
+		mp = new MimeMultipart();
 	}
 
 	public Properties getProperties() {
@@ -40,6 +55,29 @@ public class MailSenderInfo {
 		return p;
 	}
 
+	
+	/**
+	 * 增加发送附件
+	 * @param filename 邮件附件的地址，只能是本机地址而不能是网络地址，否则抛出异常
+	 * @return
+	 */
+	public boolean addFileAffix(String filename) {
+		try {
+			BodyPart bp = new MimeBodyPart();
+			FileDataSource fileds = new FileDataSource(filename);
+			bp.setDataHandler(new DataHandler(fileds));
+			/**解决附件名称乱码**/
+			bp.setFileName(MimeUtility.encodeText(fileds.getName(), "UTF-8",null)); 
+			/**添加附件**/
+			mp.addBodyPart(bp);
+			files.add(fileds);
+			return true;
+		} catch (Exception e) {
+			System.err.println("增加邮件附件<" + filename + ">时发生错误：" + e);
+			return false;
+		}
+		
+	}
 	public String getMailServerHost() {
 		return mailServerHost;
 	}

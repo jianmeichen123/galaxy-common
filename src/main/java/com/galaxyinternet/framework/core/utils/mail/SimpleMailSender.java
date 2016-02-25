@@ -5,11 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
@@ -165,7 +167,7 @@ public class SimpleMailSender {
 		mailInfo.setToAddress(toAddress);// 收件人地址
 		mailInfo.setSubject(subject);// 邮件主题
 		mailInfo.setContent(content);// 邮件内容
-
+		
 		// 判断是否需要身份认证
 		MyAuthenticator authenticator = null;
 		Properties pro = mailInfo.getProperties();
@@ -196,7 +198,7 @@ public class SimpleMailSender {
 			// 新建一个存放信件内容的BodyPart对象
 			BodyPart mdp = new MimeBodyPart();
 			// 给BodyPart对象设置内容和格式/编码方式
-			mdp.setContent(content.toString(), "text/html;charset=GBK");
+			mdp.setContent(content.toString(), "text/html;charset=UTF-8");
 			// 这句很重要，千万不要忘了
 			mm.setSubType("related");
 
@@ -213,8 +215,8 @@ public class SimpleMailSender {
 				DataHandler dh = new DataHandler(new ByteArrayDataSource(in, "application/octet-stream"));
 				mdp.setDataHandler(dh);
 				// 加上这句将作为附件发送,否则将作为信件的文本内容
-				mdp.setFileName(i + ".jpg");
-				mdp.setHeader("Content-ID", "IMG" + i);
+				mdp.setFileName(file.getName());
+				mdp.setHeader("Content-ID", "TXT" + i);
 				// 将含有附件的BodyPart加入到MimeMultipart对象中
 				mm.addBodyPart(mdp);
 			}
@@ -239,28 +241,110 @@ public class SimpleMailSender {
 		}
 		return false;
 	}
+	
+	/**
+	 * 发送附件
+	 * @param toAddress
+	 * @param subject
+	 * @param content
+	 * @param fileList
+	 * @return
+	 */
+	public static boolean sendMailWithAttachfile(String toAddress, String subject, String content, List<String> fileList) {
 
+		// 发送信息
+		MailSenderInfo mailInfo = new MailSenderInfo();
+		mailInfo.setToAddress(toAddress);// 收件人地址
+		mailInfo.setSubject(subject);// 邮件主题
+		mailInfo.setContent(content);// 邮件内容
+		
+		// 判断是否需要身份认证
+		MyAuthenticator authenticator = null;
+		Properties pro = mailInfo.getProperties();
+		// 如果需要身份认证，则创建一个密码验证器
+		if (mailInfo.isValidate()) {
+			authenticator = new MyAuthenticator(mailInfo.getUserName(), mailInfo.getPassword());
+		}
+		// 根据邮件会话属性和密码验证器构造一个发送邮件的session
+		Session sendMailSession = Session.getDefaultInstance(pro, authenticator);
+		try {
+			// 根据session创建一个邮件消息
+			MimeMessage message = new MimeMessage(sendMailSession);
+			// 创建邮件发送者地址
+			Address from = new InternetAddress(mailInfo.getFromAddress());
+			// 设置邮件消息的发送者
+			message.setFrom(from);
+			// 创建邮件的接收者地址，并设置到邮件消息中
+			Address to = new InternetAddress(mailInfo.getToAddress());
+			// Message.RecipientType.TO属性表示接收者的类型为TO
+			message.setRecipient(Message.RecipientType.TO, to);
+			// 设置邮件消息的主题
+			message.setSubject(mailInfo.getSubject());
+			// 设置邮件消息发送的时间
+			message.setSentDate(new Date());
+
+			// 新建一个MimeMultipart对象用来存放BodyPart对象(事实上可以存放多个)
+			MimeMultipart mm = new MimeMultipart();
+			// 新建一个存放信件内容的BodyPart对象
+			BodyPart mdp = new MimeBodyPart();
+			// 给BodyPart对象设置内容和格式/编码方式
+			mdp.setContent(content.toString(), "text/html;charset=UTF-8");
+			// 这句很重要，千万不要忘了
+			mm.setSubType("mixed");
+
+			mm.addBodyPart(mdp);
+			/** 附件文件路径 **/
+			for(String file : fileList){
+//				mailInfo.addFileAffix(file);
+				
+				  MimeBodyPart mbpFile = new MimeBodyPart();
+	                //以文件名创建FileDataSource对象
+	                FileDataSource fds = new FileDataSource(file);
+	                //处理附件
+	                mbpFile.setDataHandler(new DataHandler(fds));
+	                mbpFile.setFileName(fds.getName());
+	                //将BodyPart添加到MultiPart中
+	                mm.addBodyPart(mbpFile);
+
+			}
+			
+			// 把mm作为消息对象的内容
+
+			message.setContent(mm);
+
+			message.saveChanges();
+			javax.mail.Transport transport = sendMailSession.getTransport("smtp");
+			transport.connect(mailInfo.getMailServerHost(), mailInfo.getUserName(), mailInfo.getPassword());
+			transport.sendMessage(message, message.getAllRecipients());
+			// Transport.send(message);
+			return true;
+		} catch (MessagingException ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
 	public static void main(String[] args) {
 
-		String toMail = "381447823@qq.com";// 收件人邮件地址
+		String toMail = "sue_vip@126.com";// 收件人邮件地址
 		String content = "<html>" + "<head></head>" + "<body>" + "<div align=center>"
 				+ "	<a href=http://localhost:8000/controller/vcs/login/toLogin target=_blank>" +
 				// " <img src=cid:IMG0 width=500 height=400 border=0>" +
 				"您好，您申请的商户已经开通，请点击地址：http://localhost:8000/controller/vcs/login/toLogin  登陆 " + "	</a>" + "</div>"
 				+ "</body>" + "</html>";// 邮件内容
 		String subject = "商户开通通知";// 邮件主题
-		/*
-		 * List<File> attachList = new ArrayList<File>();
-		 * 
-		 * 
-		 * File file = new File(
-		 * "E:/work/futureRestaurant/workSpace/wlct_web/WebRoot/template/wlct/门票印刷文件-电子券.jpg"
-		 * ); attachList.add(file);
-		 * 
-		 * 
-		 * sendHtmlMailWithImg(toMail,subject,content,attachList);
-		 */
-		sendHtmlMail(toMail, subject, content);
-
+		
+		 List<File> attachList = new ArrayList<File>();
+		 List<String> fileList =  new ArrayList<String>();
+		 
+		 File file = new File(
+		 "F:/本群文件百度云盘备份.txt"
+		 ); attachList.add(file);
+		 String filePath = "F:/20160223.sql";
+		 fileList.add(filePath);
+		 sendMailWithAttachfile(toMail,subject,content,fileList);
+//		 sendHtmlMailWithImg(toMail,subject,content,attachList);
+		 
+	//  sendHtmlMail(toMail, subject, content);
+		System.out.println("send");
 	}
 }
