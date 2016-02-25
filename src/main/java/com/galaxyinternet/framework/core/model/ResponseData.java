@@ -11,10 +11,27 @@ import com.galaxyinternet.framework.core.model.Result.Status;
  */
 public class ResponseData<T extends BaseEntity> {
 
+	/**
+	 * 单记录操作存储对象
+	 */
 	private T entity;
+	/**
+	 * 处理后的结果，成功还是失败
+	 */
 	private Result result;
+	/**
+	 * 查询的列表数据
+	 */
 	private Page<T> pageList;
-	private Long id;// 主键
+	/**
+	 * 如果单记录操作时为记录的主键
+	 */
+	private Long id;
+
+	/**
+	 * 这里存储请求相关的关键数据
+	 */
+	private Header header;
 
 	public ResponseData() {
 		result = new Result(Status.OK, null);
@@ -55,4 +72,13 @@ public class ResponseData<T extends BaseEntity> {
 			this.id = entity.getId();
 		}
 	}
+
+	public Header getHeader() {
+		return header;
+	}
+
+	public void setHeader(Header header) {
+		this.header = header;
+	}
+
 }

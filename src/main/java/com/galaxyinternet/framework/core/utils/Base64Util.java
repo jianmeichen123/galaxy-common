@@ -6,8 +6,6 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * 对密码进行加密 解密传输
- * @author yangming
- *
  */
 public class Base64Util {
 	
