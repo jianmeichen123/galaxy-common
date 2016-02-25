@@ -2,11 +2,9 @@ package com.galaxyinternet.framework.core.utils;
 
 import java.util.Random;
 
-public class PWDUtils {
+import org.apache.shiro.crypto.hash.Sha256Hash;
 
-	public static void main(String[] args) {
-		System.out.println(genRandomNum(6));
-	}
+public class PWDUtils {
 
 	/**
 	 * 生成随即密码
@@ -37,5 +35,22 @@ public class PWDUtils {
 		}
 
 		return pwd.toString();
+	}
+
+	public static String genernateNewPasswordByBase64(String password) {
+		return EncodeUtils.encodeBase64(password.getBytes());
+	}
+
+	public static String decodePasswordByBase64(String password) {
+		return new String(EncodeUtils.decodeBase64(password));
+	}
+
+	public static String genernateNewPassword(String password) {
+		// 加密密码
+		return new Sha256Hash(password).toHex();
+	}
+
+	public static String genernateNewPasswordBySalt(String password, String salt) {
+		return new Sha256Hash(password, salt, 5000).toHex();
 	}
 }

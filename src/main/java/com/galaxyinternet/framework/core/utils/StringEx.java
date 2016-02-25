@@ -1,7 +1,12 @@
 package com.galaxyinternet.framework.core.utils;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
- * @Description: 字符串处理工具类
+ * 字符串处理工具类
  */
 public class StringEx {
 	/**
@@ -34,5 +39,49 @@ public class StringEx {
 		else
 			return (new StringBuilder()).append(Character.toUpperCase(str.charAt(0))).append(str.substring(1))
 					.toString();
+	}
+
+	/**
+	 * 功能描述：去掉特殊字符
+	 */
+	public static String replaceSpecial(String source) {
+		String dest = "";
+		if (source != null) {
+			Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+			Matcher m = p.matcher(source);
+			dest = m.replaceAll("");
+		}
+		return dest;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public static boolean isNullOrEmpty(Object obj) {
+		if (obj == null)
+			return true;
+
+		if (obj instanceof CharSequence)
+			return ((CharSequence) obj).length() == 0;
+
+		if (obj instanceof Collection)
+			return ((Collection) obj).isEmpty();
+
+		if (obj instanceof Map)
+			return ((Map) obj).isEmpty();
+
+		if (obj instanceof Object[]) {
+			Object[] object = (Object[]) obj;
+			if (object.length == 0) {
+				return true;
+			}
+			boolean empty = true;
+			for (int i = 0; i < object.length; i++) {
+				if (!isNullOrEmpty(object[i])) {
+					empty = false;
+					break;
+				}
+			}
+			return empty;
+		}
+		return false;
 	}
 }
