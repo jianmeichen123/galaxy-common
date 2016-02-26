@@ -23,6 +23,12 @@ public class ResponseData<T extends BaseEntity> {
 	 * 查询的列表数据
 	 */
 	private Page<T> pageList;
+	
+	/**
+	 * page list of extending fields 
+	 */
+	private Page<?> pageVoList;
+	
 	/**
 	 * 如果单记录操作时为记录的主键
 	 */
@@ -79,6 +85,14 @@ public class ResponseData<T extends BaseEntity> {
 
 	public void setHeader(Header header) {
 		this.header = header;
+	}
+
+	public Page<?> getPageVoList() {
+		return pageVoList;
+	}
+
+	public void setPageVoList(Page<?> pageVoList) {
+		this.pageVoList = pageVoList;
 	}
 
 }
