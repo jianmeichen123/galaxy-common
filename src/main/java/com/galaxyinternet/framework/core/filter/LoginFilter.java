@@ -97,9 +97,9 @@ public class LoginFilter implements Filter {
 		}
 
 		if (loginFlag && null == user) {
-			logger.warn("用户长时间未操作或已过期");
+			String errorMessage = "用户未登录或会话已过期,请重新登录";
+			logger.warn(errorMessage);
 			response.setCharacterEncoding("utf-8");
-			String errorMessage = "用户长时间未操作或已过期,请重新登录";
 			ResponseData resposeData = new ResponseData();
 			Result result = new Result();
 			result.setStatus(Status.ERROR);
@@ -107,7 +107,10 @@ public class LoginFilter implements Filter {
 			resposeData.setResult(result);
 			response.getWriter().write(GSONUtil.toJson(resposeData));
 			return;
+		}else{
+			chain.doFilter(req, response);
 		}
+		
 	}
 
 	@Override
