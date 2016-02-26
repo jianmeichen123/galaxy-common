@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -86,7 +87,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@Override
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseData<T> addOne(Q entity) {
+	public ResponseData<T> addOne(@RequestBody Q entity) {
 		Long id = getBaseService().insert(entity);
 		ResponseData<T> responseBody = new ResponseData<T>();
 		responseBody.setId(id);
@@ -116,7 +117,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@Override
 	@ResponseBody
 	@RequestMapping(value = "/edit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseData<T> editOne(Q entity) {
+	public ResponseData<T> editOne(@RequestBody Q entity) {
 		getBaseService().updateById(entity);
 		ResponseData<T> responseBody = new ResponseData<T>();
 		responseBody.setResult(new Result(Status.OK, entity));
