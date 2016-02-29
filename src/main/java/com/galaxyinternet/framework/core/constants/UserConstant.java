@@ -21,7 +21,8 @@ public interface UserConstant {
 	public long CWZJ = 11L;
 	//财务经理
 	public long CWJL = 12L;
-	
-	
+	//用户状态
+	String NORMAL = "0";
+	String DISABLE = "1";
 
 }
