@@ -17,6 +17,8 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.Validate;
 
+import com.galaxyinternet.framework.core.constants.Constants;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
