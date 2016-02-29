@@ -43,11 +43,17 @@ public class LoginFilter implements Filter {
 	}
 
 	private BaseUser getUser(HttpServletRequest request) {
-		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isNotBlank(sessionId)) {
-			return getUser(request, sessionId);
+		
+		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		if(userObj==null){
+			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+			if (StringUtils.isNotBlank(sessionId)) {
+				return getUser(request, sessionId);
+			}else{
+				return null;
+			}
 		}
-		return null;
+		return (BaseUser)userObj;
 	}
 
 	/**

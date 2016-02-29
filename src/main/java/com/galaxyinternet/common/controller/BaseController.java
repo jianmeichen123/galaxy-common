@@ -1,7 +1,5 @@
 package com.galaxyinternet.common.controller;
 
-import org.springframework.web.servlet.ModelAndView;
-
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
@@ -61,6 +59,5 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	 * 
 	 * @return
 	 */
-	public ModelAndView forwardPage();
-
+	public String forwardPage(String path, String page);
 }
