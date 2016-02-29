@@ -1,5 +1,7 @@
 package com.galaxyinternet.framework.core.model;
 
+import java.util.List;
+
 import com.galaxyinternet.framework.core.model.Result.Status;
 
 /**
@@ -28,6 +30,8 @@ public class ResponseData<T extends BaseEntity> {
 	 * page list of extending fields 
 	 */
 	private Page<?> pageVoList;
+	
+	private List<T> entityList;
 	
 	/**
 	 * 如果单记录操作时为记录的主键
@@ -93,6 +97,14 @@ public class ResponseData<T extends BaseEntity> {
 
 	public void setPageVoList(Page<?> pageVoList) {
 		this.pageVoList = pageVoList;
+	}
+
+	public List<T> getEntityList() {
+		return entityList;
+	}
+
+	public void setEntityList(List<T> entityList) {
+		this.entityList = entityList;
 	}
 
 }
