@@ -62,11 +62,11 @@ public abstract class UUIDUtils {
 			/**
 			 * JDK1.7+使用
 			 */
-			// java.util.concurrent.ThreadLocalRandom.current().nextBytes(randomBytes);
+			java.util.concurrent.ThreadLocalRandom.current().nextBytes(randomBytes);
 			/**
 			 * JDK1.6版本及其以下使用
 			 */
-			random.nextBytes(randomBytes);
+			//random.nextBytes(randomBytes);
 		} else {
 			random.nextBytes(randomBytes);
 		}
