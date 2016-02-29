@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.galaxyinternet.framework.cache.Cache;
+import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.BaseUser;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
@@ -42,7 +43,7 @@ public class LoginFilter implements Filter {
 	}
 
 	private BaseUser getUser(HttpServletRequest request) {
-		String sessionId = request.getHeader("sessionID");
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 		if (StringUtils.isNotBlank(sessionId)) {
 			return getUser(request, sessionId);
 		}
@@ -87,7 +88,7 @@ public class LoginFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		BaseUser user = getUser(req);
 		if (null != user && user.getId() > 0) {
-			req.getSession().setAttribute("sessionUser", user);
+			req.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 		}
 
 		String url = req.getRequestURI();
