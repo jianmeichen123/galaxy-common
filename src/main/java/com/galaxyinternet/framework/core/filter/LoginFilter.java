@@ -107,10 +107,10 @@ public class LoginFilter implements Filter {
 			resposeData.setResult(result);
 			response.getWriter().write(GSONUtil.toJson(resposeData));
 			return;
-		}else{
+		} else {
 			chain.doFilter(req, response);
 		}
-		
+
 	}
 
 	@Override
