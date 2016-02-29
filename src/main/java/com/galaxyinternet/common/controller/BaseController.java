@@ -1,5 +1,7 @@
 package com.galaxyinternet.common.controller;
 
+import org.springframework.web.servlet.ModelAndView;
+
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
@@ -52,5 +54,13 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	 *            要更新的实体
 	 */
 	public ResponseData<T> editOne(Q entity);
+
+	/**
+	 * 跳转页面方法<br/>
+	 * 如果有需要跳转页面的需求，应该覆盖此方法。
+	 * 
+	 * @return
+	 */
+	public ModelAndView forwardPage();
 
 }

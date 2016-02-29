@@ -22,17 +22,20 @@ public class ResponseData<T extends BaseEntity> {
 	 */
 	private Result result;
 	/**
-	 * 查询的列表数据
+	 * 分页的列表数据(T类型的集合)
 	 */
 	private Page<T> pageList;
-	
+
 	/**
-	 * page list of extending fields 
+	 * 分页的列表数据(不分类型)
 	 */
 	private Page<?> pageVoList;
-	
+
+	/**
+	 * 非分页的对象集合
+	 */
 	private List<T> entityList;
-	
+
 	/**
 	 * 如果单记录操作时为记录的主键
 	 */

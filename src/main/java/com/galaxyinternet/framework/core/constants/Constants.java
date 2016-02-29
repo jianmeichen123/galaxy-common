@@ -8,4 +8,6 @@ public class Constants {
     
     public final static String SESSION_ID_KEY="sessionId";
     
+    public final static String FORWARD_EXCLUDED_BASE_URL="/galaxyInternet/openurl";
+    
 }

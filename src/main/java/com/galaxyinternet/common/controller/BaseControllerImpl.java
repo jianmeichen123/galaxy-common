@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.ControllerPath;
 import com.galaxyinternet.framework.core.model.Page;
@@ -124,4 +126,9 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 		return responseBody;
 	}
 
+	@Override
+	@RequestMapping(value = Constants.FORWARD_EXCLUDED_BASE_URL + "/forwardPage")
+	public ModelAndView forwardPage() {
+		return new ModelAndView();
+	}
 }
