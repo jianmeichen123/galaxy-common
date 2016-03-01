@@ -38,6 +38,7 @@ import com.aliyun.oss.model.PartSummary;
 import com.aliyun.oss.model.PutObjectResult;
 import com.aliyun.oss.model.UploadPartRequest;
 import com.aliyun.oss.model.UploadPartResult;
+import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.id.IdGenerator;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
@@ -58,10 +59,10 @@ public class OSSHelper {
 	private static OSSClient client;
 
 	static {
-		Properties property = PropertiesUtils.getProperties("oss-config.properties");
-		endpoint = property.getProperty("oss.service.endpoint");
-		accessKeyId = property.getProperty("oss.access.key.id");
-		accessKeySecret = property.getProperty("oss.access.key.secret");
+		Properties property = PropertiesUtils.getProperties(Constants.OSS_CONFIG_FILE);
+		endpoint = property.getProperty(Constants.OSS_ENDPOINT_KEY);
+		accessKeyId = property.getProperty(Constants.OSS_ACCESS_KEY);
+		accessKeySecret = property.getProperty(Constants.OSS_ACCESS_KEY_SECRET);
 		client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
 	}
 
