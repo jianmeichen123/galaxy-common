@@ -47,6 +47,9 @@ public class LoginFilter implements Filter {
 		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		if(userObj==null){
 			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+			if(StringUtils.isBlank(sessionId)){
+				sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
+			}
 			if (StringUtils.isNotBlank(sessionId)) {
 				return getUser(request, sessionId);
 			}else{
