@@ -38,8 +38,6 @@ public class LoginFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		excludedUrlArray = null;
-		webExcludedUrl = null;
 	}
 
 	private BaseUser getUser(HttpServletRequest request) {
