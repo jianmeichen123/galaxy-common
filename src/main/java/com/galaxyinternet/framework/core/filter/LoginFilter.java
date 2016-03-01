@@ -34,7 +34,7 @@ public class LoginFilter implements Filter {
 	/**
 	 * 允许游客状态的接口
 	 */
-	static String[] webExcludedUrl = { "/galaxy/userlogin/login",Constants.FORWARD_EXCLUDED_BASE_URL };
+	static String[] webExcludedUrl = { "/galaxy/userlogin",Constants.FORWARD_EXCLUDED_BASE_URL };
 
 	@Override
 	public void destroy() {
