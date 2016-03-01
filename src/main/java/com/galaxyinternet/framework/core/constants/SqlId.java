@@ -13,5 +13,4 @@ public interface SqlId {
 	public String SQL_DELETE_BY_ID = "deleteById";
 	public String SQL_INSERT = "insert";
 	
-	public String SQL_SELECT_ID_BY_USERID = "selectIdByUserId";
 }
