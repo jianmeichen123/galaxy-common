@@ -126,7 +126,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	}
 
 	@Override
-	@RequestMapping(value = Constants.FORWARD_EXCLUDED_BASE_URL + "/{path}/{page}")
+	@RequestMapping(value ="/{path}/{page}")
 	public String forwardPage(@PathVariable("path") String path,@PathVariable("page") String page) {
 		return path+"/"+page;
 	}

@@ -10,6 +10,8 @@ public class Constants {
     
     public final static String SESSOPM_SID_KEY="sid";
     
-    public final static String FORWARD_EXCLUDED_BASE_URL="/galaxyInternet/openurl";
+    public final static String LOGIN_TOLOGIN ="/galaxy/userlogin/toLogin";
+    
+    public final static String LOGIN_CHECKLOGIN ="/galaxy/userlogin/login";
     
 }
