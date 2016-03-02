@@ -23,5 +23,14 @@ public class Constants {
 	public final static String OSS_BUCKET_NAME_KEY = "oss.bucket.name";
 
 	public final static String OSS_CONFIG_FILE = "oss-config.properties";
-
+	
+	//mail相关
+	public final static String MAIL_CONFIG_FILE = "mail.properties";
+	public final static String MAIL_HOST_KEY = "mail.host";
+	public final static String MAIL_ADDRESS_KEY = "mail.address";
+	public final static String MAIL_USERNAME_KEY = "mail.username";
+	public final static String MAIL_PASSWORD_KEY = "mail.password";
+	public final static String MAIL_SMTP_AUTH_KEY = "mail.smtp.auth";
+	public final static String MAIL_SMTP_TIMEOUT_KEY = "mail.smtp.timeout";
+	public final static String MAIL_SMTP_PORT_KEY= "mail.smtp.port";
 }

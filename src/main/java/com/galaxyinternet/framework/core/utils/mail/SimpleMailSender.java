@@ -25,11 +25,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 简单邮件（不带附件的邮件）发送器
  */
 public class SimpleMailSender {
 
+	static final Logger logger = LoggerFactory.getLogger(SimpleMailSender.class);
 	/**
 	 * 
 	 * 方法描述:以文本格式发送邮件,待发送的邮件的信息
@@ -78,7 +82,7 @@ public class SimpleMailSender {
 			Transport.send(mailMessage);
 			return true;
 		} catch (MessagingException ex) {
-			ex.printStackTrace();
+			logger.error("邮件发送失败",ex);
 		}
 		return false;
 	}
@@ -341,10 +345,11 @@ public class SimpleMailSender {
 		 ); attachList.add(file);
 		 String filePath = "F:/20160223.sql";
 		 fileList.add(filePath);
+		 fileList.add(filePath);
 		 sendMailWithAttachfile(toMail,subject,content,fileList);
 //		 sendHtmlMailWithImg(toMail,subject,content,attachList);
 		 
-	//  sendHtmlMail(toMail, subject, content);
+	    sendHtmlMail(toMail, subject, content);
 		System.out.println("send");
 	}
 }

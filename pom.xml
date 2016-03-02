@@ -290,6 +290,14 @@
 				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
 				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
 				<oss.bucket.name>galaxydev-xhhl-fx</oss.bucket.name>
+				<mail.host>smtp.55tuan.com</mail.host>
+				<mail.address>yingzhao@galaxyinternet.com</mail.address>
+				<mail.username>yingzhao</mail.username>
+				<mail.password>qqqqqqqqqqq</mail.password>
+				<mail.smtp.auth>true</mail.smtp.auth>
+				<mail.smtp.timeout>25000</mail.smtp.timeout>
+				<mail.smtp.port>25</mail.smtp.port>
+				
 			</properties>
 		</profile>
 		<profile>
@@ -299,6 +307,8 @@
 				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
 				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
 				<oss.bucket.name>galaxytest-xhhl-fx</oss.bucket.name>
+				
+				
 			</properties>
 		</profile>
 		<profile>
