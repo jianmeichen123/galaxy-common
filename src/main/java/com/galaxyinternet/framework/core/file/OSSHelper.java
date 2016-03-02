@@ -53,6 +53,7 @@ public class OSSHelper {
 	private static String endpoint;
 	private static String accessKeyId;
 	private static String accessKeySecret;
+	private static String bucketName;
 	private static ExecutorService executorService = Executors.newFixedThreadPool(5);
 	private static AtomicInteger completedBlocks = new AtomicInteger(0);
 	private static List<PartETag> partETags = Collections.synchronizedList(new ArrayList<PartETag>());
@@ -60,6 +61,7 @@ public class OSSHelper {
 
 	static {
 		Properties property = PropertiesUtils.getProperties(Constants.OSS_CONFIG_FILE);
+		bucketName = property.getProperty(Constants.OSS_BUCKET_NAME_KEY);
 		endpoint = property.getProperty(Constants.OSS_ENDPOINT_KEY);
 		accessKeyId = property.getProperty(Constants.OSS_ACCESS_KEY);
 		accessKeySecret = property.getProperty(Constants.OSS_ACCESS_KEY_SECRET);
@@ -156,6 +158,17 @@ public class OSSHelper {
 	/**
 	 * 删除单个文件
 	 * 
+	 * @param key
+	 *            文件的唯一标示
+	 * @return 删除单个文件的结果
+	 */
+	public static FileResult deleteFile(String key) {
+		return deleteFile(bucketName, key);
+	}
+
+	/**
+	 * 删除单个文件
+	 * 
 	 * @param bucketName
 	 *            oss中存储文件的队列
 	 * @param key
@@ -183,6 +196,17 @@ public class OSSHelper {
 		}
 		fileResult.setResult(result);
 		return fileResult;
+	}
+
+	/**
+	 * 批量删除文件
+	 * 
+	 * @param keys
+	 *            文件的唯一标示
+	 * @return 批量删除文件的结果
+	 */
+	public static DeleteFileResult deleteMultipleFiles(List<String> keys) {
+		return deleteMultipleFiles(bucketName, keys);
 	}
 
 	/**
@@ -218,6 +242,18 @@ public class OSSHelper {
 		}
 		fileResult.setResult(result);
 		return fileResult;
+	}
+
+	/**
+	 * 简单的文件上传
+	 * 
+	 * @param file
+	 *            上传的文件
+	 * @param key
+	 *            文件的唯一标示
+	 */
+	public static UploadFileResult simpleUploadByOSS(File file, String key) {
+		return simpleUploadByOSS(file, bucketName, key);
 	}
 
 	/**
@@ -272,6 +308,16 @@ public class OSSHelper {
 	/**
 	 * 简单的文件下传
 	 * 
+	 * @param key
+	 *            文件的唯一标示
+	 */
+	public static DownloadFileResult simpleDownloadByOSS(String key) {
+		return simpleDownloadByOSS(bucketName, key);
+	}
+
+	/**
+	 * 简单的文件下传
+	 * 
 	 * @param bucketName
 	 *            oss中存储文件的队列
 	 * @param key
@@ -307,6 +353,18 @@ public class OSSHelper {
 		}
 		responseFile.setResult(result);
 		return responseFile;
+	}
+
+	/**
+	 * 简单的文件下载
+	 * 
+	 * @param tmpFile
+	 *            下载文件的载体(需要先创建该空文件，下载成功后会覆盖此空文件)
+	 * @param key
+	 *            文件的唯一标示
+	 */
+	public static DownloadFileResult simpleDownloadByOSS(File tmpFile, String key) {
+		return simpleDownloadByOSS(tmpFile, bucketName, key);
 	}
 
 	/**
