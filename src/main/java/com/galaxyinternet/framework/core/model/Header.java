@@ -10,6 +10,7 @@ public class Header implements Serializable {
 	private String sessionId;
 	private Long userId;
 	private String loginName;
+	private Object attachment;
 
 	public String getSessionId() {
 		return sessionId;
@@ -35,4 +36,12 @@ public class Header implements Serializable {
 		this.loginName = loginName;
 	}
 
+	public Object getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(Object attachment) {
+		this.attachment = attachment;
+	}
+	
 }
