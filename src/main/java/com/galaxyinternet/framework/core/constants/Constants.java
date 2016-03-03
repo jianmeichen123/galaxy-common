@@ -7,6 +7,8 @@ public class Constants {
 	public final static String SESSION_USER_KEY = "galax_session_user";
 
 	public final static String SESSION_ID_KEY = "sessionId";
+	
+	public final static String SESSION_PROJECT_CODE = "project_code";
 
 	public final static String SESSOPM_SID_KEY = "sid";
 
