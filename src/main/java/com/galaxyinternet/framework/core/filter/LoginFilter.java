@@ -128,6 +128,7 @@ public class LoginFilter implements Filter {
 			Result result = new Result();
 			result.setStatus(Status.ERROR);
 			result.setMessage(errorMessage);
+			result.setErrorCode(Constants.IS_SESSIONID_EXPIRED);
 			resposeData.setResult(result);
 			response.getWriter().write(GSONUtil.toJson(resposeData));
 			return;

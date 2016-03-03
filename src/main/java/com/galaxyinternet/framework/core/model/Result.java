@@ -19,6 +19,11 @@ public class Result implements Serializable {
 	 */
 	private Object message;
 
+	/**
+	 * 错误码
+	 */
+	private String errorCode;
+
 	public Result() {
 		super();
 	}
@@ -33,6 +38,33 @@ public class Result implements Serializable {
 	public Result(Status status, Object message) {
 		this.status = status;
 		this.message = message;
+	}
+
+	/**
+	 * @description
+	 * @param status
+	 *            状态
+	 * @param errorCode
+	 *            错误码
+	 * @param message
+	 *            消息
+	 */
+	public Result(Status status, String errorCode, Object message) {
+		this.status = status;
+		this.errorCode = errorCode;
+		this.message = message;
+	}
+
+	/**
+	 * @description
+	 * @param status
+	 *            状态
+	 * @param errorCode
+	 *            错误码
+	 */
+	public Result(Status status, String errorCode) {
+		this.status = status;
+		this.errorCode = errorCode;
 	}
 
 	/**
@@ -62,6 +94,16 @@ public class Result implements Serializable {
 		this.status = Status.ERROR;
 	}
 
+	/**
+	 * 添加错误消息
+	 * 
+	 * @param message
+	 */
+	public void addError(String errorCode) {
+		this.errorCode = errorCode;
+		this.status = Status.ERROR;
+	}
+
 	public Status getStatus() {
 		return status;
 	}
@@ -76,6 +118,14 @@ public class Result implements Serializable {
 
 	public void setMessage(Object message) {
 		this.message = message;
+	}
+
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
 	}
 
 }
