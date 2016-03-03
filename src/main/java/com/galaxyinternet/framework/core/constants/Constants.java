@@ -24,6 +24,16 @@ public class Constants {
 
 	public final static String OSS_CONFIG_FILE = "oss-config.properties";
 	
+	public final static String  IS_UP_EMPTY= "0";
+	
+	public final static String  IS_UP_WRONG= "1";
+	
+	public final static String  IS_SESSIONID_EMPTY= "2";
+	
+	public final static String  IS_SESSIONID_EXPIRED= "3";
+	
+	public final static String  LOGIN_SUCCESS= "4";
+	
 	//mail相关
 	public final static String MAIL_CONFIG_FILE = "mail.properties";
 	public final static String MAIL_HOST_KEY = "mail.host";
