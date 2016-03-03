@@ -1,4 +1,4 @@
-package com.galaxyinternet.framework.core;
+package com.galaxyinternet.framework.core.config;
 
 import java.util.List;
 import java.util.Properties;
