@@ -24,6 +24,8 @@ public class Constants {
 
 	public final static String OSS_CONFIG_FILE = "oss-config.properties";
 	
+	public final static String GALAXYINTERNET_FX_ENDPOINT = "galaxyinternet_fx_endpoint";
+	
 	public final static String  IS_UP_EMPTY= "0";
 	
 	public final static String  IS_UP_WRONG= "1";

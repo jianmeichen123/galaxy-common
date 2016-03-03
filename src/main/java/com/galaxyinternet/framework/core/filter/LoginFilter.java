@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.BaseUser;
@@ -31,30 +33,33 @@ public class LoginFilter implements Filter {
 	 * 任何情况都不需要登录，在web.xml里面配置
 	 */
 	static String[] excludedUrlArray = {};
+
+	static Cache cache;
+
 	/**
 	 * 允许游客状态的接口
 	 */
-	static String[] webExcludedUrl = { Constants.LOGIN_TOLOGIN,Constants.LOGIN_CHECKLOGIN};
+	static String[] webExcludedUrl = { Constants.LOGIN_TOLOGIN, Constants.LOGIN_CHECKLOGIN };
 
 	@Override
 	public void destroy() {
 	}
 
 	private BaseUser getUser(HttpServletRequest request) {
-		
+
 		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		if(userObj==null){
+		if (userObj == null) {
 			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-			if(StringUtils.isBlank(sessionId)){
+			if (StringUtils.isBlank(sessionId)) {
 				sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
 			}
 			if (StringUtils.isNotBlank(sessionId)) {
 				return getUser(request, sessionId);
-			}else{
+			} else {
 				return null;
 			}
 		}
-		return (BaseUser)userObj;
+		return (BaseUser) userObj;
 	}
 
 	/**
@@ -67,9 +72,11 @@ public class LoginFilter implements Filter {
 	 * @return user
 	 */
 	private BaseUser getUser(HttpServletRequest request, String key) {
-		WebApplicationContext wac = WebApplicationContextUtils
-				.getWebApplicationContext(request.getSession().getServletContext());
-		Cache cache = (Cache) wac.getBean("cache");
+		if (null == cache) {
+			WebApplicationContext wac = WebApplicationContextUtils
+					.getWebApplicationContext(request.getSession().getServletContext());
+			cache = (Cache) wac.getBean("cache");
+		}
 		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
 			cache.setByRedis(key, user, 60 * 60 * 24 * 7);
@@ -142,5 +149,10 @@ public class LoginFilter implements Filter {
 		if (!StringEx.isNullOrEmpty(excludedUrl)) {
 			excludedUrlArray = excludedUrl.split(",");
 		}
+		ServletContext servletContext = config.getServletContext();
+		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+		cache = (Cache) wac.getBean("cache");
+		String configs = (String) cache.get(Constants.GALAXYINTERNET_FX_ENDPOINT);
+		servletContext.setAttribute(Constants.GALAXYINTERNET_FX_ENDPOINT, configs);
 	}
 }

@@ -1,6 +1,8 @@
 package com.galaxyinternet.framework.core.config;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.galaxyinternet.framework.cache.Cache;
+import com.galaxyinternet.framework.core.constants.Constants;
+import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
 /**
@@ -21,17 +25,17 @@ public class ConfigBean implements BeanFactoryAware {
 
 	private String file;
 
-	private String hashtable;
+	private String redisKey;
 
 	private Cache cache;
 
 	private List<String> keys;
 
-	public ConfigBean(String file, List<String> keys, String hashtable, Cache cache) {
+	public ConfigBean(String file, List<String> keys, Cache cache) {
 		super();
 		this.file = file;
 		this.keys = keys;
-		this.hashtable = hashtable;
+		this.redisKey = Constants.GALAXYINTERNET_FX_ENDPOINT;
 		this.cache = cache;
 		init();
 	}
@@ -41,12 +45,14 @@ public class ConfigBean implements BeanFactoryAware {
 	 */
 	private void init() {
 		if (StringUtils.isNotBlank(this.file) && CollectionUtils.isNotEmpty(keys)
-				&& StringUtils.isNotBlank(this.hashtable) && null != cache) {
+				&& StringUtils.isNotBlank(this.redisKey) && null != cache) {
 			Properties properties = PropertiesUtils.getProperties(this.file);
+			Map<String,Object> configs = new HashMap<String,Object>();
 			for (String key : keys) {
 				String value = properties.getProperty(key);
-				this.cache.hset(hashtable, key, value);
+				configs.put(key, value);
 			}
+			this.cache.set(this.redisKey, GSONUtil.toJson(configs));
 		} else {
 			this.destory();
 		}
@@ -55,7 +61,7 @@ public class ConfigBean implements BeanFactoryAware {
 	@SuppressWarnings("unused")
 	private void show() {
 		for (String key : keys) {
-			System.out.println("cache value=" + this.cache.hget(hashtable, key));
+			System.out.println("cache value=" + this.cache.get(this.redisKey));
 		}
 	}
 
@@ -65,7 +71,7 @@ public class ConfigBean implements BeanFactoryAware {
 	private void destory() {
 		this.file = null;
 		this.keys = null;
-		this.hashtable = null;
+		this.redisKey = null;
 		/*String[] names = beanFactory.getBeanDefinitionNames();
 		List<String> nameList = Arrays.asList(names);
 		for (String name : names) {
