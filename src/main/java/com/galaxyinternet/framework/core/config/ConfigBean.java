@@ -44,6 +44,7 @@ public class ConfigBean implements BeanFactoryAware {
 	 */
 	@SuppressWarnings("unchecked")
 	private void init() {
+		this.cache.set(this.redisKey, new HashMap<String, Object>());
 		if (StringUtils.isNotBlank(this.file) && CollectionUtils.isNotEmpty(keys)
 				&& StringUtils.isNotBlank(this.redisKey) && null != cache) {
 			Properties properties = PropertiesUtils.getProperties(this.file);
