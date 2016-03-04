@@ -1,6 +1,7 @@
 package com.galaxyinternet.framework.core.filter;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -152,7 +153,8 @@ public class LoginFilter implements Filter {
 		ServletContext servletContext = config.getServletContext();
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 		cache = (Cache) wac.getBean("cache");
-		String configs = (String) cache.get(Constants.GALAXYINTERNET_FX_ENDPOINT);
-		servletContext.setAttribute(Constants.GALAXYINTERNET_FX_ENDPOINT, configs);
+		@SuppressWarnings("unchecked")
+		Map<String, Object> configs = (Map<String, Object>) cache.get(Constants.GALAXYINTERNET_FX_ENDPOINT);
+		servletContext.setAttribute(Constants.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
 	}
 }
