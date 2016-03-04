@@ -36,7 +36,7 @@ public class Constants {
 	
 	public final static String  IS_SESSIONID_EXPIRED= "3";
 	
-	public final static String  LOGIN_SUCCESS= "4";
+	public final static String  OPTION_SUCCESS= "4";
 	
 	//mail相关
 	public final static String MAIL_CONFIG_FILE = "mail.properties";
