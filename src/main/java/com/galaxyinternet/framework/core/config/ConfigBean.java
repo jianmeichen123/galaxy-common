@@ -14,7 +14,6 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
-import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
 /**
@@ -43,16 +42,23 @@ public class ConfigBean implements BeanFactoryAware {
 	/**
 	 * 初始化数据到redis
 	 */
+	@SuppressWarnings("unchecked")
 	private void init() {
 		if (StringUtils.isNotBlank(this.file) && CollectionUtils.isNotEmpty(keys)
 				&& StringUtils.isNotBlank(this.redisKey) && null != cache) {
 			Properties properties = PropertiesUtils.getProperties(this.file);
-			Map<String,Object> configs = new HashMap<String,Object>();
+			Map<String, Object> configs = null;
+			Object object = this.cache.get(this.redisKey);
+			if (null != object) {
+				configs = (Map<String, Object>) object;
+			} else {
+				configs = new HashMap<String, Object>();
+			}
 			for (String key : keys) {
 				String value = properties.getProperty(key);
 				configs.put(key, value);
 			}
-			this.cache.set(this.redisKey, GSONUtil.toJson(configs));
+			this.cache.set(this.redisKey, configs);
 		} else {
 			this.destory();
 		}
