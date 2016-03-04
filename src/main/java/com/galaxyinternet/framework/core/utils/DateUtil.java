@@ -28,6 +28,14 @@ public class DateUtil {
 		String retStrFormatNowDate = sdFormatter.format(nowTime);
 		return retStrFormatNowDate;
 	}
+	
+	public static String longToString(long time){
+		Date nowTime = new Date(time);
+		SimpleDateFormat sdFormatter = new SimpleDateFormat(dateFormat);
+		String retStrFormatNowDate = sdFormatter.format(nowTime);
+		return retStrFormatNowDate;
+	}
+	
 
 	public static Date convertStringToDate(String time, String format) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
