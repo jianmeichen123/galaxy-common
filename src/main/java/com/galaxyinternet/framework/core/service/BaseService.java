@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.Page;
+import com.galaxyinternet.framework.core.query.Query;
 
 /**
  * 基础的Service接口
@@ -198,4 +199,6 @@ public interface BaseService<T extends BaseEntity> {
 	 * @return Map containing key pair data.
 	 */
 	public <K, V extends T> Map<K, V> queryMap(T query, String mapKey, Pageable pageable);
+	
+	public Page<T> queryPageList(Query query);
 }

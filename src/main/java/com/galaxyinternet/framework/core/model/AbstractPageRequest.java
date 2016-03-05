@@ -15,8 +15,8 @@ public abstract class AbstractPageRequest implements Pageable, Serializable {
 
 	private static final long serialVersionUID = 1232825578694716871L;
 
-	private final int page;
-	private final int size;
+	private int page;
+	private int size;
 
 	public AbstractPageRequest() {
 		this.page = 0;
@@ -55,6 +55,8 @@ public abstract class AbstractPageRequest implements Pageable, Serializable {
 		return size;
 	}
 
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -148,4 +150,13 @@ public abstract class AbstractPageRequest implements Pageable, Serializable {
 		AbstractPageRequest other = (AbstractPageRequest) obj;
 		return this.page == other.page && this.size == other.size;
 	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
 }

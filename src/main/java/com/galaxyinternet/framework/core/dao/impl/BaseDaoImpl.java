@@ -19,6 +19,7 @@ import com.galaxyinternet.framework.core.exception.DaoException;
 import com.galaxyinternet.framework.core.id.IdGenerator;
 import com.galaxyinternet.framework.core.model.Page;
 import com.galaxyinternet.framework.core.model.PrimaryKeyObject;
+import com.galaxyinternet.framework.core.query.Query;
 import com.galaxyinternet.framework.core.utils.BeanUtils;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 
@@ -176,6 +177,21 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 	}
 
 	@Override
+	public Page<T> selectPageList(Query query) {
+		try {
+			Map<String, Object> params = BeanUtils.toMap(query);
+			params.put("offset", query.getOffset());
+			params.put("limit", query.getPageSize());
+			List<T> contentList = sqlSessionTemplate.selectList(getSqlName(SqlId.SQL_SELECT),params);
+			System.err.println("contentList==>>"+GSONUtil.toJson(contentList));
+			return new  Page<T>(contentList, null, this.selectQueryCount(query));
+		} catch (Exception e) {
+			throw new DaoException(String.format("根据分页对象查询列表出错！语句:%s", getSqlName(SqlId.SQL_SELECT)), e);
+		}
+	}
+
+	
+	@Override
 	public Page<T> selectPageList(T query, Pageable pageable) {
 		try {
 			List<T> contentList = sqlSessionTemplate.selectList(getSqlName(SqlId.SQL_SELECT),
@@ -186,7 +202,7 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 			throw new DaoException(String.format("根据分页对象查询列表出错！语句:%s", getSqlName(SqlId.SQL_SELECT)), e);
 		}
 	}
-
+	
 	@Override
 	public <K, V extends T> Map<K, V> selectMap(T query, String mapKey, Pageable pageable) {
 		try {
@@ -215,6 +231,15 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 		}
 	}
 
+	public Long selectQueryCount(Query query) {
+		try {
+			Map<String, Object> params = BeanUtils.toMap(query);
+			return sqlSessionTemplate.selectOne(getSqlName(SqlId.SQL_SELECT_COUNT), params);
+		} catch (Exception e) {
+			throw new DaoException(String.format("查询对象总数出错！语句：%s", getSqlName(SqlId.SQL_SELECT_COUNT)), e);
+		}
+	}
+	
 	@Override
 	@Transactional
 	public ID insert(T entity) {
@@ -413,4 +438,6 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 	private final void appendUpdatedTime(T entity) {
 		entity.setUpdatedTime(new Date().getTime());
 	}
+	
+	
 }
