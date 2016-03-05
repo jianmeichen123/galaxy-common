@@ -208,5 +208,97 @@ public class DateUtil {
 		}
 		return msgID;
 	}
+	/**获取指定时间多少天以后的日期
+	 * @param date
+	 * @param day
+	 * @return
+	 */
+	public static Date addDate(Date date, int day) {
+		Calendar calendar = null;
+		calendar = Calendar.getInstance();
+		long millis = getMillis(date) + ((long) day) * 24 * 3600 * 1000;
+		calendar.setTimeInMillis(millis);
+		return calendar.getTime();
+	}
+	/**获取指定时间的毫秒值
+	 * @param date
+	 * @return
+	 */
+	public static long getMillis(Date date) {
+		Calendar calendar = null;
+		calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar.getTimeInMillis();
+	}
+	/**
+	 * 获取两个时间串时间的差值，单位为小时
+	 * 
+	 * @param startTime
+	 *            开始时间 yyyy-MM-dd HH:mm:ss
+	 * @param endTime
+	 *            结束时间 yyyy-MM-dd HH:mm:ss
+	 * @return 两个时间的差值(秒)
+	 */
+	public static int getDiffHour(String startTime, String endTime) {
+		long diff = 0;
+		SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date startDate = ft.parse(startTime);
+			Date endDate = ft.parse(endTime);
+			diff = startDate.getTime() - endDate.getTime();
+			diff = diff / (1000 * 60 * 60);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return new Long(diff).intValue();
+	}
+	/**
+	 * 返回当前指定的时间戳。格式为yyyy-MM-dd HH:mm:ss
+	 * 
+	 * @return 格式为yyyy-MM-dd HH:mm:ss，总共19位。
+	 */
+	public static String getCurrentDateTime() {
+		return getFormatDateTime(new Date(), "yyyy-MM-dd HH:mm:ss");
+	}
 
+	/**
+	 * 根据给定的格式与时间(Date类型的)，返回时间字符串。最为通用。<br>
+	 * 
+	 * @param date
+	 *            指定的日期
+	 * @param format
+	 *            日期格式字符串
+	 * @return String 指定格式的日期字符串.
+	 */
+	public static String getFormatDateTime(Date date, String format) {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		return sdf.format(date);
+	}
+	/**
+	 * 格式化日期显示格式
+	 * 
+	 * @param sdate
+	 *            原始日期格式 s - 表示 "yyyy-mm-dd" 形式的日期的 String 对象
+	 * @param format
+	 *            格式化后日期格式
+	 * @return 格式化后的日期显示
+	 */
+	public static String dateFormat(String sdate, String format) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		java.sql.Date date = java.sql.Date.valueOf(sdate);
+		String dateString = formatter.format(date);
+		return dateString;
+	}
+	/**
+	 * 返回给定时间字符串。
+	 * <p>
+	 * 格式：yyyy-MM-dd
+	 * 
+	 * @param date
+	 *            日期
+	 * @return String 指定格式的日期字符串.
+	 */
+	public static String getFormatDate(Date date) {
+		return getFormatDateTime(date, dateTimeFormatForChina);
+	}
 }
