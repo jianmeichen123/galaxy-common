@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.ControllerPath;
+import com.galaxyinternet.framework.core.model.PagableEntity;
 import com.galaxyinternet.framework.core.model.Page;
 import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
@@ -97,7 +100,25 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@Override
 	@RequestMapping(value = "/queryList", method = RequestMethod.GET)
 	@ResponseBody
+	@Deprecated
 	public ResponseData<T> selectList(Q query, PageRequest pageable) {
+		Page<T> pageList = getBaseService().queryPageList(query, pageable);
+		ResponseData<T> responseBody = new ResponseData<T>();
+		responseBody.setPageList(pageList);
+		return responseBody;
+	}
+	
+	@Override
+	@RequestMapping(value = "/selectList", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public ResponseData<T> selectList(Q query) {
+		Pageable pageable = null;
+		if (query instanceof PagableEntity) {
+			PagableEntity entity = ((PagableEntity) query);
+			pageable = new PageRequest(entity.getPageNum(), entity.getPageSize());
+		} else {
+			pageable = new PageRequest(0, Constants.DEFAULT_PAGE_SIZE);
+		}
 		Page<T> pageList = getBaseService().queryPageList(query, pageable);
 		ResponseData<T> responseBody = new ResponseData<T>();
 		responseBody.setPageList(pageList);

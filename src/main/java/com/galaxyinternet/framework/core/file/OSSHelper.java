@@ -38,10 +38,12 @@ import com.aliyun.oss.model.PartSummary;
 import com.aliyun.oss.model.PutObjectResult;
 import com.aliyun.oss.model.UploadPartRequest;
 import com.aliyun.oss.model.UploadPartResult;
-import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.id.IdGenerator;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
+import com.galaxyinternet.framework.core.oss.GlobalCode;
+import com.galaxyinternet.framework.core.oss.OSSConstant;
+import com.galaxyinternet.framework.core.oss.OSSUploadFile;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
@@ -60,25 +62,30 @@ public class OSSHelper {
 	private static OSSClient client;
 
 	static {
-		Properties property = PropertiesUtils.getProperties(Constants.OSS_CONFIG_FILE);
-		bucketName = property.getProperty(Constants.OSS_BUCKET_NAME_KEY);
-		endpoint = property.getProperty(Constants.OSS_ENDPOINT_KEY);
-		accessKeyId = property.getProperty(Constants.OSS_ACCESS_KEY);
-		accessKeySecret = property.getProperty(Constants.OSS_ACCESS_KEY_SECRET);
+		Properties property = PropertiesUtils.getProperties(OSSConstant.OSS_CONFIG_FILE);
+		bucketName = property.getProperty(OSSConstant.OSS_BUCKET_NAME_KEY);
+		endpoint = property.getProperty(OSSConstant.OSS_ENDPOINT_KEY);
+		accessKeyId = property.getProperty(OSSConstant.OSS_ACCESS_KEY);
+		accessKeySecret = property.getProperty(OSSConstant.OSS_ACCESS_KEY_SECRET);
 		client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
 	}
 
 	public static void main(String[] args) throws IOException {
 		try {
-			String key = "3948241456726026";
-			key = String.valueOf(IdGenerator.generateId(OSSHelper.class));
+			String key = String.valueOf(IdGenerator.generateId(OSSHelper.class));
 			System.out.println("key=" + key);
 			// createBucketName();
 			// testUpload();
 			// testDelete();
-			testDownload1();
+			// testDownload1();
 			// testDeleteMultiple();
-			System.out.println(endpoint);
+			//System.out.println(endpoint);
+			
+			//multipartUploadByOSS(new File("D:\\AdbeRdr1010_zh_CN.rar"),"3949336065212424","D:\\temp\\");
+			
+			//uploadSupportBreakpoint("D:\\AdbeRdr1010_zh_CN.rar",BucketName.DEV.getName(),"3949336065212425");
+			
+			testDeleteMultiple();
 		} catch (Exception oe) {
 			oe.printStackTrace();
 		}
@@ -113,18 +120,20 @@ public class OSSHelper {
 		simpleUploadByOSS(new File("C:\\Users\\Administrator\\Desktop\\test.png"), BucketName.DEV.getName(), key);
 	}
 
+	@SuppressWarnings("unused")
 	private static void testDelete() {
 		String key = "3948241456726026";
 		FileResult result = deleteFile(BucketName.DEV.getName(), key);
 		System.err.println(GSONUtil.toJson(result));
 	}
 
+	@SuppressWarnings("unused")
 	private static void testDeleteMultiple() {
 		String key = "3948241456726026";
 		List<String> keys = new ArrayList<String>();
-		keys.add("3947903009947652");
-		keys.add("3947951227666434");
-		FileResult result = deleteMultipleFiles("b90e0d40-dede-11e5-8413-1be541b8872b", keys);
+		keys.add("3949336065212425");
+		keys.add("3949336065212424");
+		FileResult result = deleteMultipleFiles(BucketName.DEV.getName(), keys);
 		// System.err.println(GSONUtil.toJson(result));
 	}
 
@@ -497,14 +506,6 @@ public class OSSHelper {
 					+ "a serious internal problem while trying to communicate with OSS, "
 					+ "such as not being able to access the network.");
 			System.out.println("Error Message: " + ce.getMessage());
-		} finally {
-			/*
-			 * Do not forget to shut down the client finally to release all
-			 * allocated resources.
-			 */
-			if (client != null) {
-				// client.shutdown();
-			}
 		}
 	}
 
@@ -567,6 +568,28 @@ public class OSSHelper {
 		}
 	}
 
+	
+	/**
+	 * 分片上传文件，应用场景： <br/>
+	 * 1.需要支持断点上传。<br/>
+	 * 2.上传超过100MB大小的文件。 <br/>
+	 * 3.网络条件较差，和OSS的服务器之间的链接经常断开。<br/>
+	 * 4.上传文件之前，无法确定上传文件的大小。
+	 * 
+	 */
+	public static void uploadSupportBreakpoint(String sourceFilePath, String bucketName, String key) {
+		int result = new OSSUploadFile(sourceFilePath, bucketName, key).uploadFile();
+		if (result == GlobalCode.ERROR) {
+			logger.error("大文件上传失败");
+		} else {
+			logger.info("文件上传成功");
+		}
+	}
+	
+	public static void multipartUploadByOSS(File file, String key, String localFilePath) {
+		multipartUploadByOSS(file, bucketName, key, localFilePath);
+	}
+
 	/**
 	 * 分片上传文件，应用场景： <br/>
 	 * 1.需要支持断点上传。<br/>
@@ -586,7 +609,7 @@ public class OSSHelper {
 			 * Claim a upload id firstly
 			 */
 			String uploadId = claimUploadId(bucketName, key, client);
-			System.out.println("Claiming a new upload id " + uploadId + "\n");
+			logger.info("Claiming a new upload id " + uploadId + "\n");
 
 			/*
 			 * Calculate how many parts to be divided
@@ -600,7 +623,7 @@ public class OSSHelper {
 			if (partCount > 10000) {
 				throw new RuntimeException("Total parts count should not exceed 10000");
 			} else {
-				System.out.println("Total parts count " + partCount + "\n");
+				logger.info("Total parts count " + partCount + "\n");
 			}
 
 			/*
@@ -632,7 +655,7 @@ public class OSSHelper {
 			if (partETags.size() != partCount) {
 				throw new IllegalStateException("Upload multiparts fail due to some parts are not finished yet");
 			} else {
-				System.out.println("Succeed to complete multiparts into an object named " + key + "\n");
+				logger.info("Succeed to complete multiparts into an object named " + key + "\n");
 			}
 
 			/*
@@ -648,30 +671,20 @@ public class OSSHelper {
 			/*
 			 * Fetch the object that newly created at the step below.
 			 */
-			System.out.println("Fetching an object");
+			logger.info("Fetching an object");
 			client.getObject(new GetObjectRequest(bucketName, key), new File(localFilePath));
 
 		} catch (OSSException oe) {
-			System.out.println("Caught an OSSException, which means your request made it to OSS, "
-					+ "but was rejected with an error response for some reason.");
-			System.out.println("Error Message: " + oe.getErrorCode());
-			System.out.println("Error Code:       " + oe.getErrorCode());
-			System.out.println("Request ID:      " + oe.getRequestId());
-			System.out.println("Host ID:           " + oe.getHostId());
+			logger.error(
+					"Caught an OSSException, which means your request made it to OSS, "
+							+ "but was rejected with an error response for some reason.",
+					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
+					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
 		} catch (ClientException ce) {
-			System.out.println("Caught an ClientException, which means the client encountered "
+			logger.error("Caught an ClientException, which means the client encountered "
 					+ "a serious internal problem while trying to communicate with OSS, "
-					+ "such as not being able to access the network.");
-			System.out.println("Error Message: " + ce.getMessage());
-		} finally {
-			/*
-			 * Do not forget to shut down the client finally to release all
-			 * allocated resources.
-			 */
-			if (client != null) {
-				client.shutdown();
+					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
 			}
-		}
 	}
 
 	private static class PartUploader implements Runnable {
@@ -713,7 +726,7 @@ public class OSSHelper {
 				uploadPartRequest.setPartNumber(this.partNumber);
 
 				UploadPartResult uploadPartResult = client.uploadPart(uploadPartRequest);
-				System.out.println("Part#" + this.partNumber + " done\n");
+				logger.info("Part#" + this.partNumber + " done\n");
 				synchronized (partETags) {
 					partETags.add(uploadPartResult.getPartETag());
 				}
@@ -745,22 +758,22 @@ public class OSSHelper {
 			}
 		});
 
-		System.out.println("Completing to upload multiparts\n");
+		logger.info("Completing to upload multiparts\n");
 		CompleteMultipartUploadRequest completeMultipartUploadRequest = new CompleteMultipartUploadRequest(bucketName,
 				key, uploadId, partETags);
 		client.completeMultipartUpload(completeMultipartUploadRequest);
 	}
 
 	private static void listAllParts(String uploadId, String bucketName, String key, OSSClient client) {
-		System.out.println("Listing all parts......");
+		logger.info("Listing all parts......");
 		ListPartsRequest listPartsRequest = new ListPartsRequest(bucketName, key, uploadId);
 		PartListing partListing = client.listParts(listPartsRequest);
 
 		int partCount = partListing.getParts().size();
 		for (int i = 0; i < partCount; i++) {
 			PartSummary partSummary = partListing.getParts().get(i);
-			System.out.println("\tPart#" + partSummary.getPartNumber() + ", ETag=" + partSummary.getETag());
+			logger.info("\tPart#" + partSummary.getPartNumber() + ", ETag=" + partSummary.getETag());
 		}
-		System.out.println();
+		System.err.println();
 	}
 }

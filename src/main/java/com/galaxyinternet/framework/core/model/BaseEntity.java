@@ -3,7 +3,7 @@ package com.galaxyinternet.framework.core.model;
 /**
  * @author kerfer
  */
-public class BaseEntity extends PrimaryKeyObject<Long> {
+public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 
 	private static final long serialVersionUID = 1L;
 

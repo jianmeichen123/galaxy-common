@@ -16,18 +16,6 @@ public class Constants {
 
 	public final static String LOGIN_CHECKLOGIN = "/galaxy/userlogin/login";
 
-	public final static String OSS_ENDPOINT_KEY = "oss.service.endpoint";
-
-	public final static String OSS_ACCESS_KEY = "oss.access.key.id";
-
-	public final static String OSS_ACCESS_KEY_SECRET = "oss.access.key.secret";
-	
-	public final static String OSS_BUCKET_NAME_KEY = "oss.bucket.name";
-
-	public final static String OSS_CONFIG_FILE = "oss-config.properties";
-	
-	public final static String GALAXYINTERNET_FX_ENDPOINT = "galaxyinternet_fx_endpoint";
-	
 	public final static String  IS_UP_EMPTY= "0";
 	
 	public final static String  IS_UP_WRONG= "1";
@@ -37,6 +25,8 @@ public class Constants {
 	public final static String  IS_SESSIONID_EXPIRED= "3";
 	
 	public final static String  OPTION_SUCCESS= "4";
+	
+	public final static int  DEFAULT_PAGE_SIZE= 15;
 	
 	//mail相关
 	public final static String MAIL_CONFIG_FILE = "mail.properties";

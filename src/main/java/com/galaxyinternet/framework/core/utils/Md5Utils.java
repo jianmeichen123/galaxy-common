@@ -1,6 +1,11 @@
 package com.galaxyinternet.framework.core.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -9,28 +14,32 @@ import org.slf4j.LoggerFactory;
 
 public class Md5Utils {
 	static final Logger LOGGER = LoggerFactory.getLogger(Md5Utils.class);
+	protected static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
+			'f' };
+	private static MessageDigest digest = null;
+
+	static {
+		try {
+			digest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			LOGGER.error("Md5Utils messagedigest初始化失败", e);
+		}
+	}
 
 	private Md5Utils() {
 	}
 
 	public static String md5(final String in) {
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance("MD5");
-			digest.reset();
-			digest.update(in.getBytes());
-			final byte[] a = digest.digest();
-			final int len = a.length;
-			final StringBuilder sb = new StringBuilder(len << 1);
-			for (int i = 0; i < len; i++) {
-				sb.append(Character.forDigit((a[i] & 0xf0) >> 4, 16));
-				sb.append(Character.forDigit(a[i] & 0x0f, 16));
-			}
-			return sb.toString();
-		} catch (final NoSuchAlgorithmException e) {
-			LOGGER.error("NoSuchAlgorithmException", e);
+		digest.reset();
+		digest.update(in.getBytes());
+		final byte[] a = digest.digest();
+		final int len = a.length;
+		final StringBuilder sb = new StringBuilder(len << 1);
+		for (int i = 0; i < len; i++) {
+			sb.append(Character.forDigit((a[i] & 0xf0) >> 4, 16));
+			sb.append(Character.forDigit(a[i] & 0x0f, 16));
 		}
-		return null;
+		return sb.toString();
 	}
 
 	/**
@@ -71,4 +80,55 @@ public class Md5Utils {
 		return "";
 	}
 
+	public static String getFileMD5String(File file) {
+		FileInputStream in = null;
+		MappedByteBuffer byteBuffer = null;
+		try {
+			in = new FileInputStream(file);
+			FileChannel ch = in.getChannel();
+			byteBuffer = ch.map(FileChannel.MapMode.READ_ONLY, 0, file.length());
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (null != in) {
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		digest.update(byteBuffer);
+		return bufferToHex(digest.digest());
+	}
+
+	public static String getMD5String(byte[] bytes) {
+		digest.update(bytes);
+		return bufferToHex(digest.digest());
+	}
+
+	private static String bufferToHex(byte bytes[]) {
+		return bufferToHex(bytes, 0, bytes.length);
+	}
+
+	private static String bufferToHex(byte bytes[], int m, int n) {
+		StringBuffer stringbuffer = new StringBuffer(2 * n);
+		int k = m + n;
+		for (int l = m; l < k; l++) {
+			appendHexPair(bytes[l], stringbuffer);
+		}
+		return stringbuffer.toString();
+	}
+
+	private static void appendHexPair(byte bt, StringBuffer stringbuffer) {
+		char c0 = hexDigits[(bt & 0xf0) >> 4];
+		char c1 = hexDigits[bt & 0xf];
+		stringbuffer.append(c0);
+		stringbuffer.append(c1);
+	}
+
+	public static boolean checkPassword(String password, String md5PwdStr) {
+		String s = getMD5Str(password);
+		return s.equals(md5PwdStr);
+	}
 }

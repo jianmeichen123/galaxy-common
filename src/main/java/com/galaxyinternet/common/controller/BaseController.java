@@ -35,7 +35,16 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	 * @param pageable
 	 *            分页参数与排序参数
 	 */
+	@Deprecated
 	public ResponseData<T> selectList(Q query, PageRequest pageable);
+	
+	/**
+	 * 查询对象列表，返回页面 listXXX页面
+	 * 
+	 * @param query
+	 *            查询对象 该查询对象必须实现Pagable接口，本系统中统一继承PagableEntity即可支持分页
+	 */
+	public ResponseData<T> selectList(Q query);
 
 	/**
 	 * 根据ID查询一个对象，返回页面为viewXXX页面

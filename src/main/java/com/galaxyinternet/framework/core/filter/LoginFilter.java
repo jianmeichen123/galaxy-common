@@ -24,6 +24,7 @@ import com.galaxyinternet.framework.core.model.BaseUser;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
+import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.StringEx;
 
@@ -154,7 +155,7 @@ public class LoginFilter implements Filter {
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
 		cache = (Cache) wac.getBean("cache");
 		@SuppressWarnings("unchecked")
-		Map<String, Object> configs = (Map<String, Object>) cache.get(Constants.GALAXYINTERNET_FX_ENDPOINT);
-		servletContext.setAttribute(Constants.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
+		Map<String, Object> configs = (Map<String, Object>) cache.get(OSSConstant.GALAXYINTERNET_FX_ENDPOINT);
+		servletContext.setAttribute(OSSConstant.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
 	}
 }

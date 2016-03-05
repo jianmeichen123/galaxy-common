@@ -13,7 +13,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.galaxyinternet.framework.cache.Cache;
-import com.galaxyinternet.framework.core.constants.Constants;
+import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
 /**
@@ -34,7 +34,7 @@ public class ConfigBean implements BeanFactoryAware {
 		super();
 		this.file = file;
 		this.keys = keys;
-		this.redisKey = Constants.GALAXYINTERNET_FX_ENDPOINT;
+		this.redisKey = OSSConstant.GALAXYINTERNET_FX_ENDPOINT;
 		this.cache = cache;
 		init();
 	}
