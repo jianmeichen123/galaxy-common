@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.galaxyinternet.framework.core.dao.BaseDao;
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.Page;
+import com.galaxyinternet.framework.core.query.Query;
 import com.galaxyinternet.framework.core.service.BaseService;
 
 /**
@@ -120,4 +121,8 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
 		return getBaseDao().selectMap(query, mapKey, pageable);
 	}
 
+	@Override
+	public Page<T> queryPageList(Query query) {
+		return getBaseDao().selectPageList(query);
+	}
 }

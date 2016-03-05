@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import com.galaxyinternet.framework.core.enums.DbExecuteType;
 import com.galaxyinternet.framework.core.model.Page;
 import com.galaxyinternet.framework.core.model.PrimaryKeyObject;
+import com.galaxyinternet.framework.core.query.Query;
 
 /**
  * 通用基础DAO
@@ -252,4 +253,7 @@ public interface BaseDao<T extends PrimaryKeyObject<ID>, ID extends Serializable
 	 * @return Page 信息方便前台显示
 	 */
 	public <V extends T> Page<V> selectPageList(String sqlId, T query, Pageable pageable);
+	
+	public <V extends T> Page<V> selectPageList(Query query);
+	
 }
