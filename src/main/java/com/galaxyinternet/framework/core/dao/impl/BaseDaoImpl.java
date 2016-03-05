@@ -196,7 +196,6 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 		try {
 			List<T> contentList = sqlSessionTemplate.selectList(getSqlName(SqlId.SQL_SELECT),
 					getParams(query, pageable));
-			System.err.println("contentList==>>"+GSONUtil.toJson(contentList));
 			return new  Page<T>(contentList, pageable, this.selectCount(query));
 		} catch (Exception e) {
 			throw new DaoException(String.format("根据分页对象查询列表出错！语句:%s", getSqlName(SqlId.SQL_SELECT)), e);
