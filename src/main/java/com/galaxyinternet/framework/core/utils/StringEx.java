@@ -21,8 +21,9 @@ public class StringEx {
 		if (Character.isLowerCase(str.charAt(0)))
 			return str;
 		else
-			return (new StringBuilder()).append(Character.toLowerCase(str.charAt(0))).append(str.substring(1))
-					.toString();
+			return (new StringBuilder())
+					.append(Character.toLowerCase(str.charAt(0)))
+					.append(str.substring(1)).toString();
 	}
 
 	/**
@@ -37,8 +38,9 @@ public class StringEx {
 		if (Character.isUpperCase(str.charAt(0)))
 			return str;
 		else
-			return (new StringBuilder()).append(Character.toUpperCase(str.charAt(0))).append(str.substring(1))
-					.toString();
+			return (new StringBuilder())
+					.append(Character.toUpperCase(str.charAt(0)))
+					.append(str.substring(1)).toString();
 	}
 
 	/**
@@ -83,5 +85,19 @@ public class StringEx {
 			return empty;
 		}
 		return false;
+	}
+	/**
+	 * 判断字符串是否整数
+	 * @author zhaoying
+	 * @param value
+	 * @return
+	 */
+	public static boolean isInteger(String value) {
+		try {
+			Integer.parseInt(value);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }
