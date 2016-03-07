@@ -27,7 +27,7 @@ public class OSSTest {
 	}
 
 	@Test
-	private static void testDownload2() throws Exception {
+	public  void testDownload2() throws Exception {
 		String key = "3948241456726026";
 		DownloadFileResult result = OSSHelper.simpleDownloadByOSS(BucketName.DEV.getName(), key);
 		System.out.println(GSONUtil.toJson(result));
@@ -43,7 +43,7 @@ public class OSSTest {
 	}
 
 	@Test
-	private static void testDownload1() throws Exception {
+	public  void testDownload1() throws Exception {
 		String key = "3948241456726026";
 		DownloadFileResult result = OSSHelper.simpleDownloadByOSS(new File("D:\\temp\\aaa.png"),
 				BucketName.DEV.getName(), key);
@@ -51,31 +51,30 @@ public class OSSTest {
 	}
 
 	@Test
-	private static void testUpload() throws Exception {
+	public  void testUpload() throws Exception {
 		String key = "3948241456726026";
 		OSSHelper.simpleUploadByOSS(new File("C:\\Users\\Administrator\\Desktop\\test.png"), BucketName.DEV.getName(),
 				key);
 	}
 
 	@Test
-	private static void testDelete() {
+	public  void testDelete() {
 		String key = "3948241456726026";
 		FileResult result = OSSHelper.deleteFile(BucketName.DEV.getName(), key);
 		System.err.println(GSONUtil.toJson(result));
 	}
 
 	@Test
-	private static void testDeleteMultiple() {
-		String key = "3948241456726026";
+	public  void testDeleteMultiple() {
 		List<String> keys = new ArrayList<String>();
 		keys.add("3949336065212425");
 		keys.add("3949336065212424");
 		FileResult result = OSSHelper.deleteMultipleFiles(BucketName.DEV.getName(), keys);
-		// System.err.println(GSONUtil.toJson(result));
+		System.err.println(GSONUtil.toJson(result));
 	}
 
 	@Test
-	private static void createBucketName() {
+	public  void createBucketName() {
 		String devBucketName = BucketName.DEV.getName();
 		String testBucketName = BucketName.TEST.getName();
 		String proBucketName = BucketName.PRODUCT.getName();
