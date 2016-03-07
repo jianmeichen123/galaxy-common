@@ -2,7 +2,6 @@ package com.galaxyinternet.framework.core.oss;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ public class OSSTest {
 	@Before
 	public void setup() {
 		key = String.valueOf(IdGenerator.generateId(OSSTest.class));
+		System.out.println("key="+key);
 	}
 
 	@Test

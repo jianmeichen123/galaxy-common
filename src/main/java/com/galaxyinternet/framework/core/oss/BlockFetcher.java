@@ -80,7 +80,7 @@ public class BlockFetcher implements Callable<Integer> {
 	@Override
 	public Integer call() {
 		// OSSClient 使用单例
-		OSSClient client = OSSFactory.getInstance();
+		OSSClient client = OSSFactory.getClientInstance();
 		ObjectMetadata objectMetadata = null;
 		// 判断文件在云端是否存在
 		try {

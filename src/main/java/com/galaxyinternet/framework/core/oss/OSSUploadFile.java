@@ -102,7 +102,7 @@ public class OSSUploadFile implements Callable<Integer> {
 	 */
 	@Override
 	public Integer call() {
-		OSSClient client = OSSFactory.getInstance();
+		OSSClient client = OSSFactory.getClientInstance();
 		File uploadFile = new File(sourceFilePath);
 		if (!uploadFile.exists()) {
 			LOGGER.info("无法找到文件：" + sourceFilePath);

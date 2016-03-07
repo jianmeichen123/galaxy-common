@@ -52,7 +52,7 @@ public class DownloadPartThread implements Callable<DownloadPartThread>, Seriali
 			// 调用ossapi
 			GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, fileKey);
 			getObjectRequest.setRange(startPos, endPos);
-			ossObject = OSSFactory.getInstance().getObject(getObjectRequest);
+			ossObject = OSSFactory.getClientInstance().getObject(getObjectRequest);
 			file.seek(startPos);
 			int bufSize = 1024;
 			byte[] buffer = new byte[bufSize];

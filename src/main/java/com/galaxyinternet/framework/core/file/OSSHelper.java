@@ -27,7 +27,7 @@ import com.galaxyinternet.framework.core.oss.OSSUploadFile;
  */
 public class OSSHelper {
 	private static Logger logger = LoggerFactory.getLogger(OSSHelper.class);
-	private static OSSClient client = OSSFactory.getInstance();
+	private static OSSClient client = OSSFactory.getClientInstance();
 	private static String defaultBucketName = OSSFactory.getDefaultBucketName();
 
 	/**

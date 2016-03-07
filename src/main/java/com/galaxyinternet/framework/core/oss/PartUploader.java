@@ -56,7 +56,7 @@ public class PartUploader implements Callable<PartUploader>, Serializable {
 			uploadPartRequest.setPartSize(size);
 			uploadPartRequest.setPartNumber(partId);
 
-			UploadPartResult uploadPartResult = OSSFactory.getInstance().uploadPart(uploadPartRequest);
+			UploadPartResult uploadPartResult = OSSFactory.getClientInstance().uploadPart(uploadPartRequest);
 			// MyPartETag是对uploadPartResult.getPartETag()的返回值PartETag的封装，主要是为了能序列化PartETag，MyPartETag仅比PartETag多实现了Serializable接口
 			fxPartETag = new FxPartETag(uploadPartResult.getPartETag());
 		} catch (Exception e) {

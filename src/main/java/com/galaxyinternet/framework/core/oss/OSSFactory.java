@@ -48,7 +48,7 @@ public class OSSFactory {
 		return ossClient;
 	}*/
 	
-	public static OSSClient getInstance() {
+	public static OSSClient getClientInstance() {
 		return ossClient;
 	}
 
