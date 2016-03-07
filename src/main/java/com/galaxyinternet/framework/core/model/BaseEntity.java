@@ -6,7 +6,11 @@ package com.galaxyinternet.framework.core.model;
 public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 
 	private static final long serialVersionUID = 1L;
-
+	/**
+	 * 是否包含转义字符
+	 */
+	protected boolean escapeChar;
+	
 	@Override
 	public Long getCreatedTime() {
 		return createdTime;
@@ -35,5 +39,13 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	@Override
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public boolean isEscapeChar() {
+		return escapeChar;
+	}
+
+	public void setEscapeChar(boolean escapeChar) {
+		this.escapeChar = escapeChar;
 	}
 }

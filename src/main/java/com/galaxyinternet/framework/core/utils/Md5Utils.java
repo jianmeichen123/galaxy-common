@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 public class Md5Utils {
 	static final Logger LOGGER = LoggerFactory.getLogger(Md5Utils.class);
 	protected static char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
-			'f' };
+			'f', 'g', 'a', 'l', 'a', 'x', 'y' };
 	private static MessageDigest digest = null;
 
 	static {
@@ -29,24 +29,32 @@ public class Md5Utils {
 	private Md5Utils() {
 	}
 
-	public static String md5(final String in) {
-		digest.reset();
-		digest.update(in.getBytes());
-		final byte[] a = digest.digest();
-		final int len = a.length;
-		final StringBuilder sb = new StringBuilder(len << 1);
-		for (int i = 0; i < len; i++) {
-			sb.append(Character.forDigit((a[i] & 0xf0) >> 4, 16));
-			sb.append(Character.forDigit(a[i] & 0x0f, 16));
+	/**
+	 * md5加密为32位字符串
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static String md5Crypt(String input) {
+		try {
+			digest.update(input.getBytes());
+			byte[] bytes = digest.digest();
+			int j = bytes.length;
+			char[] chars = new char[j * 2];
+			int k = 0;
+			for (int i = 0; i < j; i++) {
+				byte b = bytes[i];
+				chars[k++] = hexDigits[b >>> 4 & 0xf];
+				chars[k++] = hexDigits[b & 0xf];
+			}
+			return new String(chars);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-		return sb.toString();
 	}
 
 	/**
-	 * MD5 加密
-	 * 
-	 * @param str
-	 * @return
+	 * MD5 加密为16为字符串
 	 */
 	public static String getMD5Str(String str) {
 		if (str != null && str.length() > 0) {
@@ -64,9 +72,7 @@ public class Md5Utils {
 			}
 
 			final byte[] byteArray = messageDigest.digest();
-
 			final StringBuffer md5StrBuff = new StringBuffer();
-
 			for (int i = 0; i < byteArray.length; i++) {
 				if (Integer.toHexString(0xFF & byteArray[i]).length() == 1) {
 					md5StrBuff.append("0").append(Integer.toHexString(0xFF & byteArray[i]));
@@ -131,4 +137,32 @@ public class Md5Utils {
 		String s = getMD5Str(password);
 		return s.equals(md5PwdStr);
 	}
+
+	/**
+	 * 加密解密算法 执行一次加密，两次解密
+	 */
+	public static String convertMD5(String inStr) {
+		char[] a = inStr.toCharArray();
+		for (int i = 0; i < a.length; i++) {
+			a[i] = (char) (a[i] ^ 't');
+		}
+		String s = new String(a);
+		return s;
+
+	}
+
+	/**
+	 * MD5解密
+	 */
+	public static String getStrByMd5(String md5Input) {
+		return convertMD5(convertMD5(md5Input));
+	}
+
+	public static void main(String args[]) {
+		String s = new String("李斯");
+		System.out.println("原始：" + s);
+		System.out.println("MD5后：" + md5Crypt(s));
+		System.out.println("解密的：" + getStrByMd5(s));
+	}
+
 }

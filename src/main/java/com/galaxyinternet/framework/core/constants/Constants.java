@@ -26,6 +26,8 @@ public class Constants {
 	
 	public final static String  OPTION_SUCCESS= "4";
 	
+	public final static String  ACCESS_REJECTED= "5";
+	
 	public final static int  DEFAULT_PAGE_SIZE= 15;
 	
 	//mail相关
@@ -37,4 +39,7 @@ public class Constants {
 	public final static String MAIL_SMTP_AUTH_KEY = "mail.smtp.auth";
 	public final static String MAIL_SMTP_TIMEOUT_KEY = "mail.smtp.timeout";
 	public final static String MAIL_SMTP_PORT_KEY= "mail.smtp.port";
+	
+	public final static String HEADER_REFERER_KEY= "galaxy.header.referer";
+	public final static String SAFE_CONFIG_FILE = "safe-config.properties";
 }
