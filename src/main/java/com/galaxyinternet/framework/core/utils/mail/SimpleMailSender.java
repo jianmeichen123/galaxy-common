@@ -99,13 +99,14 @@ public class SimpleMailSender {
 	 *            邮件内容
 	 * @return
 	 */
+	
 	public static boolean sendHtmlMail(String toAddress, String subject, String content) {
 		// 发送信息
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setToAddress(toAddress);// 收件人地址
 		mailInfo.setSubject(subject);// 邮件主题
 		mailInfo.setContent(content);// 邮件内容
-
+		boolean flag = true;
 		// 判断是否需要身份认证
 		MyAuthenticator authenticator = null;
 		Properties pro = mailInfo.getProperties();
@@ -145,11 +146,16 @@ public class SimpleMailSender {
 
 			// 发送邮件
 			Transport.send(mailMessage);
-			return true;
+			return flag;
 		} catch (MessagingException ex) {
+			flag = false;
 			ex.printStackTrace();
-		}
-		return false;
+			return flag;
+		} catch (NullPointerException ex) {
+			flag = false;
+			ex.printStackTrace();
+			return flag;
+		} 
 	}
 
 	/**
