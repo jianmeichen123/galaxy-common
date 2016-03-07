@@ -8,19 +8,19 @@ import java.util.List;
 /**
  * 单个文件的上传线程集合
  */
-public class UploadPartObj implements Serializable {
+public class PartUploadObj implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	List<PartUploader> uploadPartThreads = Collections.synchronizedList(new ArrayList<PartUploader>());
+	List<PartUploadCallable> uploadPartThreads = Collections.synchronizedList(new ArrayList<PartUploadCallable>());
 
 	boolean result = true;
 
-	public List<PartUploader> getUploadPartThreads() {
+	public List<PartUploadCallable> getUploadPartThreads() {
 		return uploadPartThreads;
 	}
 
-	public void setUploadPartThreads(List<PartUploader> uploadPartThreads) {
+	public void setUploadPartThreads(List<PartUploadCallable> uploadPartThreads) {
 		this.uploadPartThreads = uploadPartThreads;
 	}
 

@@ -17,10 +17,10 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
-import com.galaxyinternet.framework.core.oss.BlockFetcher;
+import com.galaxyinternet.framework.core.oss.OSSDownloader;
 import com.galaxyinternet.framework.core.oss.GlobalCode;
 import com.galaxyinternet.framework.core.oss.OSSFactory;
-import com.galaxyinternet.framework.core.oss.OSSUploadFile;
+import com.galaxyinternet.framework.core.oss.OSSUploader;
 
 /**
  * 基于oss的文件上传及下载
@@ -291,7 +291,7 @@ public class OSSHelper {
 	 * 
 	 */
 	public static void uploadSupportBreakpoint(String sourceFilePath, String bucketName, String key) {
-		int result = new OSSUploadFile(sourceFilePath, bucketName, key).uploadFile();
+		int result = new OSSUploader(sourceFilePath, bucketName, key).uploadFile();
 		if (result == GlobalCode.ERROR) {
 			logger.error("大文件上传失败");
 		} else {
@@ -307,7 +307,7 @@ public class OSSHelper {
 	 * @param key
 	 */
 	public static void downloadSupportBreakpoint(String localFilePath, String bucketName, String key) {
-		int result = new BlockFetcher(localFilePath, bucketName, key).downloadFile();
+		int result = new OSSDownloader(localFilePath, bucketName, key).downloadFile();
 		;
 		if (result == GlobalCode.ERROR) {
 			logger.error("大文件下载失败");

@@ -29,9 +29,9 @@ import com.galaxyinternet.framework.core.utils.Md5Utils;
 /**
  * 使用普通方式上传小文件，使用Multipart上传方式进行多线程分段上传较大文件
  */
-public class OSSUploadFile implements Callable<Integer> {
+public class OSSUploader implements Callable<Integer> {
 
-	public static final Logger LOGGER = Logger.getLogger(OSSUploadFile.class);
+	public static final Logger LOGGER = Logger.getLogger(OSSUploader.class);
 
 	// 外层线程池
 	public static ExecutorService uploadMainPool = null;
@@ -62,7 +62,7 @@ public class OSSUploadFile implements Callable<Integer> {
 	 * @param key
 	 *            存储key -在oss的存储路径
 	 */
-	public OSSUploadFile(String sourceFilePath, String bucketName, String key) {
+	public OSSUploader(String sourceFilePath, String bucketName, String key) {
 		// 实例化单文件上次线程池
 		pool = Executors.newFixedThreadPool(OSSConstant.SINGLE_FILE_CONCURRENT_THREADS);
 		this.sourceFilePath = sourceFilePath;
@@ -140,19 +140,19 @@ public class OSSUploadFile implements Callable<Integer> {
 		boolean isSerializationFile = false;
 
 		// 子线程池的线程对象封装类（用于序列化的）
-		UploadPartObj uploadPartObj = null;
+		PartUploadObj uploadPartObj = null;
 		// 获取文件MD5值
 		fileDM5Str = Md5Utils.getFileMD5String(uploadFile);
 
 		// 若存在上传失败留下的序列化文件则反序列化对象
 		if (new File(serializationFilePath).exists()) {
-			uploadPartObj = (UploadPartObj) FileSerializableUtil.deserialize(serializationFilePath);
+			uploadPartObj = (PartUploadObj) FileSerializableUtil.deserialize(serializationFilePath);
 			isSerializationFile = true;
 		}
 
 		// 序列化文件不存在，分配分块给子线程池线程对象
 		if (uploadPartObj == null || !isSerializationFile) {
-			uploadPartObj = new UploadPartObj();
+			uploadPartObj = new PartUploadObj();
 			try {
 				// 初始化MultipartUpload 返回uploadId
 				uploadId = initMultipartUpload(client, bucketName, key, fileDM5Str);
@@ -164,7 +164,7 @@ public class OSSUploadFile implements Callable<Integer> {
 				long start = partSize * i;
 				long curPartSize = partSize < uploadFile.length() - start ? partSize : uploadFile.length() - start;
 				// 构造上传线程，UploadPartThread是执行每个分块上传任务的线程
-				uploadPartObj.getUploadPartThreads().add(new PartUploader(client, bucketName, key, uploadFile,
+				uploadPartObj.getUploadPartThreads().add(new PartUploadCallable(client, bucketName, key, uploadFile,
 						uploadId, i + 1, partSize * i, curPartSize));
 			}
 		}
@@ -203,7 +203,7 @@ public class OSSUploadFile implements Callable<Integer> {
 	 * @param serializationFilePath
 	 * @return
 	 */
-	private UploadPartObj upload(UploadPartObj uploadPartObj, String serializationFilePath) {
+	private PartUploadObj upload(PartUploadObj uploadPartObj, String serializationFilePath) {
 		try {
 
 			uploadPartObj.setResult(true);
@@ -223,7 +223,7 @@ public class OSSUploadFile implements Callable<Integer> {
 			}
 
 			// 判断上传结果
-			for (PartUploader uploadPartThread : uploadPartObj.getUploadPartThreads()) {
+			for (PartUploadCallable uploadPartThread : uploadPartObj.getUploadPartThreads()) {
 				if (uploadPartThread.getFxPartETag() == null)
 					uploadPartObj.setResult(false);
 			}
@@ -260,9 +260,9 @@ public class OSSUploadFile implements Callable<Integer> {
 
 	// 完成一个multi-part请求。
 	private static void completeMultipartUpload(OSSClient client, String bucketName, String key,
-			UploadPartObj uploadPartObj) {
+			PartUploadObj uploadPartObj) {
 		List<PartETag> eTags = new ArrayList<PartETag>();
-		for (PartUploader uploadPartThread : uploadPartObj.getUploadPartThreads()) {
+		for (PartUploadCallable uploadPartThread : uploadPartObj.getUploadPartThreads()) {
 			eTags.add(new PartETag(uploadPartThread.getFxPartETag().getPartNumber(),
 					uploadPartThread.getFxPartETag().geteTag()));
 		}

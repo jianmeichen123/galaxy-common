@@ -13,12 +13,12 @@ import com.aliyun.oss.model.GetObjectRequest;
 import com.aliyun.oss.model.OSSObject;
 
 /**
- * 用于上传每个part的线程类 可序列化 用于上传的断点续传
+ * 用于下载每个part的线程类 可序列化 用于断点下载的类
  */
-public class DownloadPartThread implements Callable<DownloadPartThread>, Serializable {
+public class PartDownloadCallable implements Callable<PartDownloadCallable>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final Logger LOGGER = Logger.getLogger(DownloadPartThread.class);
+	public static final Logger LOGGER = Logger.getLogger(PartDownloadCallable.class);
 	// 当前线程的下载开始位置
 	private long startPos;
 
@@ -32,7 +32,7 @@ public class DownloadPartThread implements Callable<DownloadPartThread>, Seriali
 	private String fileKey;
 	private String etag;
 
-	public DownloadPartThread(long startPos, long endPos, String localFilePath, String bucketName, String fileKey) {
+	public PartDownloadCallable(long startPos, long endPos, String localFilePath, String bucketName, String fileKey) {
 		this.startPos = startPos;
 		this.endPos = endPos;
 		this.localFilePath = localFilePath;
@@ -41,7 +41,7 @@ public class DownloadPartThread implements Callable<DownloadPartThread>, Seriali
 	}
 
 	@Override
-	public DownloadPartThread call() {
+	public PartDownloadCallable call() {
 		RandomAccessFile file = null;
 		OSSObject ossObject = null;
 		try {

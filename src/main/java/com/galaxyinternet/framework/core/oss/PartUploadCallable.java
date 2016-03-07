@@ -15,10 +15,10 @@ import com.aliyun.oss.model.UploadPartResult;
 /**
  * 上传每个part的线程类 可序列化 用于上传的断点续传
  */
-public class PartUploader implements Callable<PartUploader>, Serializable {
+public class PartUploadCallable implements Callable<PartUploadCallable>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final Logger LOGGER = Logger.getLogger(PartUploader.class);
+	public static final Logger LOGGER = Logger.getLogger(PartUploadCallable.class);
 
 	private File uploadFile;
 	private String bucket;
@@ -29,7 +29,7 @@ public class PartUploader implements Callable<PartUploader>, Serializable {
 	private String uploadId;
 	private FxPartETag fxPartETag;
 
-	public PartUploader(OSSClient client, String bucket, String object, File uploadFile, String uploadId, int partId,
+	public PartUploadCallable(OSSClient client, String bucket, String object, File uploadFile, String uploadId, int partId,
 			long start, long partSize) {
 		this.uploadFile = uploadFile;
 		this.bucket = bucket;
@@ -41,7 +41,7 @@ public class PartUploader implements Callable<PartUploader>, Serializable {
 	}
 
 	@Override
-	public PartUploader call() {
+	public PartUploadCallable call() {
 
 		InputStream in = null;
 		try {

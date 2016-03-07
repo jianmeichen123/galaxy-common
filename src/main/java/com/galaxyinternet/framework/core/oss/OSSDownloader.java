@@ -19,8 +19,8 @@ import com.galaxyinternet.framework.core.utils.FileSerializableUtil;
 /**
  * oss多线程分段下载文件
  */
-public class BlockFetcher implements Callable<Integer> {
-	public static final Logger LOGGER = Logger.getLogger(BlockFetcher.class);
+public class OSSDownloader implements Callable<Integer> {
+	public static final Logger LOGGER = Logger.getLogger(OSSDownloader.class);
 	// 外层线程池
 	public static ExecutorService downloadMainPool = null;
 	// 内层线程池
@@ -40,11 +40,11 @@ public class BlockFetcher implements Callable<Integer> {
 	private String bucketName; // bucketName
 	private String key;// 云端存储路径
 
-	public BlockFetcher() {
+	public OSSDownloader() {
 		super();
 	}
 
-	public BlockFetcher(String localFilePath, String bucketName, String key) {
+	public OSSDownloader(String localFilePath, String bucketName, String key) {
 		// 初始化子线程池
 		pool = Executors.newFixedThreadPool(OSSConstant.SINGLE_FILE_CONCURRENT_THREADS);
 		this.localFilePath = localFilePath;
@@ -98,25 +98,25 @@ public class BlockFetcher implements Callable<Integer> {
 		int partCount = calPartCount(fileLength, partSize);
 
 		// 子线程池的线程对象封装类（用于序列化的）
-		DownloadPartObj downloadPartObj = null;
+		PartDownloadObj downloadPartObj = null;
 		boolean isSerializationFile = false;
 		// 序列化的文件路径（与下载文件同路径使用.dw.temp后缀）
 		String serializationFilePath = localFilePath + ".dw.temp";
 		// 若存在反序列化对象
 		if (new File(serializationFilePath).exists()) {
-			downloadPartObj = (DownloadPartObj) FileSerializableUtil.deserialize(serializationFilePath);
+			downloadPartObj = (PartDownloadObj) FileSerializableUtil.deserialize(serializationFilePath);
 			isSerializationFile = true;
 		}
 		// 序列化文件不存在，分配分块给子线程池线程对象
 		if (downloadPartObj == null || !isSerializationFile) {
-			downloadPartObj = new DownloadPartObj();
+			downloadPartObj = new PartDownloadObj();
 			for (int i = 0; i < partCount; i++) {
 				final long startPos = partSize * i;
 				final long endPos = partSize * i
 						+ (partSize < (fileLength - startPos) ? partSize : (fileLength - startPos)) - 1;
 				// DownloadPartThread是执行每个分块下载任务的线程
 				downloadPartObj.getDownloadPartThreads()
-						.add(new DownloadPartThread(startPos, endPos, localFilePath, bucketName, key));
+						.add(new PartDownloadCallable(startPos, endPos, localFilePath, bucketName, key));
 			}
 		}
 
@@ -145,7 +145,7 @@ public class BlockFetcher implements Callable<Integer> {
 	 * @param serializationFilePath
 	 * @return
 	 */
-	private DownloadPartObj download(DownloadPartObj partThreadObj, String serializationFilePath) {
+	private PartDownloadObj download(PartDownloadObj partThreadObj, String serializationFilePath) {
 
 		try {
 			partThreadObj.setResult(true);
@@ -162,7 +162,7 @@ public class BlockFetcher implements Callable<Integer> {
 				pool.awaitTermination(OSSConstant.SERIALIZATION_TIME, TimeUnit.SECONDS);
 			}
 			// 判断下载结果
-			for (DownloadPartThread downloadPartThread : partThreadObj.getDownloadPartThreads()) {
+			for (PartDownloadCallable downloadPartThread : partThreadObj.getDownloadPartThreads()) {
 				if (downloadPartThread.getEtag() == null) {
 					partThreadObj.setResult(false);
 				}
