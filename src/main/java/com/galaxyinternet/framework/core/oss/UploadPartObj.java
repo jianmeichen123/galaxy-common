@@ -12,15 +12,15 @@ public class UploadPartObj implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	List<UploadPartThread> uploadPartThreads = Collections.synchronizedList(new ArrayList<UploadPartThread>());
+	List<PartUploader> uploadPartThreads = Collections.synchronizedList(new ArrayList<PartUploader>());
 
 	boolean result = true;
 
-	public List<UploadPartThread> getUploadPartThreads() {
+	public List<PartUploader> getUploadPartThreads() {
 		return uploadPartThreads;
 	}
 
-	public void setUploadPartThreads(List<UploadPartThread> uploadPartThreads) {
+	public void setUploadPartThreads(List<PartUploader> uploadPartThreads) {
 		this.uploadPartThreads = uploadPartThreads;
 	}
 

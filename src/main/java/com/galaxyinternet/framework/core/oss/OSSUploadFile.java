@@ -164,7 +164,7 @@ public class OSSUploadFile implements Callable<Integer> {
 				long start = partSize * i;
 				long curPartSize = partSize < uploadFile.length() - start ? partSize : uploadFile.length() - start;
 				// 构造上传线程，UploadPartThread是执行每个分块上传任务的线程
-				uploadPartObj.getUploadPartThreads().add(new UploadPartThread(client, bucketName, key, uploadFile,
+				uploadPartObj.getUploadPartThreads().add(new PartUploader(client, bucketName, key, uploadFile,
 						uploadId, i + 1, partSize * i, curPartSize));
 			}
 		}
@@ -223,7 +223,7 @@ public class OSSUploadFile implements Callable<Integer> {
 			}
 
 			// 判断上传结果
-			for (UploadPartThread uploadPartThread : uploadPartObj.getUploadPartThreads()) {
+			for (PartUploader uploadPartThread : uploadPartObj.getUploadPartThreads()) {
 				if (uploadPartThread.getFxPartETag() == null)
 					uploadPartObj.setResult(false);
 			}
@@ -262,7 +262,7 @@ public class OSSUploadFile implements Callable<Integer> {
 	private static void completeMultipartUpload(OSSClient client, String bucketName, String key,
 			UploadPartObj uploadPartObj) {
 		List<PartETag> eTags = new ArrayList<PartETag>();
-		for (UploadPartThread uploadPartThread : uploadPartObj.getUploadPartThreads()) {
+		for (PartUploader uploadPartThread : uploadPartObj.getUploadPartThreads()) {
 			eTags.add(new PartETag(uploadPartThread.getFxPartETag().getPartNumber(),
 					uploadPartThread.getFxPartETag().geteTag()));
 		}
