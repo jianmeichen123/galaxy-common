@@ -1,22 +1,32 @@
 package com.galaxyinternet.framework.core.utils;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * AES 加密解密工具
+ * AES 加密解密工具<br/>
+ * 数据传输使用AES对称加密
  */
 public class AESUtil {
+
+	/**
+	 * 加密密钥
+	 */
+	static String defaultPrivatePassword = "01239&87645galaxyABCdef";
+
+	/**
+	 * 加密
+	 * 
+	 * @param content
+	 *            需要加密的内容
+	 */
+	public static byte[] encrypt(String content) {
+		return encrypt(content, defaultPrivatePassword);
+	}
 
 	/**
 	 * 加密
@@ -39,20 +49,22 @@ public class AESUtil {
 			cipher.init(Cipher.ENCRYPT_MODE, key);// 初始化
 			byte[] result = cipher.doFinal(byteContent);
 			return result; // 加密
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (NoSuchPaddingException e) {
-			e.printStackTrace();
-		} catch (InvalidKeyException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * 解密
+	 * 
+	 * @param content
+	 *            待解密内容
+	 * @return
+	 */
+
+	public static byte[] decrypt(byte[] content) {
+		return decrypt(content, defaultPrivatePassword);
 	}
 
 	/**
@@ -82,15 +94,16 @@ public class AESUtil {
 		return null;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		String content = "test";
-		String password = "www.galaxyinternet.com";
 		// 加密
 		System.out.println("加密前：" + content);
-		byte[] encryptResult = encrypt(content, password);
+		byte[] encryptResult = encrypt(content);
+
+		System.out.println(new String(encryptResult, "utf-8"));
 		// 解密
-		byte[] decryptResult = decrypt(encryptResult, password);
+		byte[] decryptResult = decrypt(encryptResult);
 		System.out.println("解密后：" + new String(decryptResult));
 	}
 
