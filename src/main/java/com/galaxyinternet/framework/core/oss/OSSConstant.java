@@ -1,9 +1,9 @@
 package com.galaxyinternet.framework.core.oss;
 
 public class OSSConstant {
-	public final static long DOWNLOAD_PART_SIZE = 8 * 1024 * 1024L; // 每个下载Part的大小设置为5MB
+	public final static long DOWNLOAD_PART_SIZE = 6 * 1024 * 1024L; // 每个下载Part的大小设置为6MB
 
-	public final static long UPLOAD_PART_SIZE = 8 * 1024 * 1024L; // 每个上传Part的大小设置为5MB
+	public final static long UPLOAD_PART_SIZE = 6 * 1024 * 1024L; // 每个上传Part的大小设置为6MB
 
 	public final static int CONCURRENT_FILE_NUMBER = 10; // 并发文件数。
 
