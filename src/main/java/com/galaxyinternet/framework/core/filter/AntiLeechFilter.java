@@ -23,15 +23,10 @@ import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
 /**
- * 安全防卫过滤器 <br/>
- * 1.防盗链<br/>
- * 2.
- * 
- * @author keifer
- *
+ * 防盗链过滤器
  */
-public class GuardFilter implements Filter {
-	private Logger logger = LoggerFactory.getLogger(GuardFilter.class);
+public class AntiLeechFilter implements Filter {
+	private Logger logger = LoggerFactory.getLogger(AntiLeechFilter.class);
 
 	private static String headerReferer;
 
@@ -47,7 +42,6 @@ public class GuardFilter implements Filter {
 		String referer = request.getHeader("referer");
 		if (referer == null || !referer.startsWith(headerReferer)) {
 			logger.error("Access rejected. Request url:", request.getRequestURL().toString());
-			response.sendRedirect(request.getContextPath() + Constants.LOGIN_TOLOGIN);
 			ResponseData resposeData = new ResponseData();
 			Result result = new Result();
 			result.setStatus(Status.ERROR);
