@@ -15,6 +15,7 @@ public class StringEx {
 	 * @param str
 	 * @return
 	 */
+	
 	public static String toLowerCaseFirstOne(String str) {
 		if (str == null || "".equals(str))
 			return str;
@@ -99,5 +100,19 @@ public class StringEx {
 		} catch (NumberFormatException e) {
 			return false;
 		}
+	}
+	
+	/**
+	 * 处理sql特殊字符
+	 */
+	public static String checkSql(String keyword){
+		String [] specialWords= {"*","%","_"};
+		for(int i = 0; i<specialWords.length; i++){
+			if(keyword.indexOf(specialWords[i])>=0){
+				keyword = keyword.replace(specialWords[i], "/"+specialWords[i]);
+				return keyword;
+			}
+		}
+		return keyword;
 	}
 }
