@@ -36,7 +36,6 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 				keyword = newkeyword;
 			}
 			this.setEscapeChar(escapeChar);
-			System.out.println("-------escapeChar:"+escapeChar);
 		}
 		return keyword;
 	}
@@ -79,6 +78,7 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	}
 
 	public Boolean getEscapeChar() {
+		this.getKeyword();
 		return escapeChar;
 	}
 
