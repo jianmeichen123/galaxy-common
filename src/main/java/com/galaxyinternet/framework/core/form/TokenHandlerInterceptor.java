@@ -6,21 +6,23 @@ import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
 
 /**
  * 令牌处理拦截器<br/>
  * 
+ * @description 每个子项目如果需要支持表单防重提交，都需要配置该拦截器
  * @author keifer
  */
 public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
-	HttpServletRequest request;
-	HttpSession session;
+	Cache cache;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -29,12 +31,11 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 			Method method = handlerMethod.getMethod();
 			Token token = method.getAnnotation(Token.class);
 			if (token != null) {
-				this.request = request;
-				session = request.getSession(true);
-				if (this.isRepeatSubmitted()) {
+				if (this.isRepeatSubmitted(request)) {
 					return false;
 				}
-				session.removeAttribute(TOKEN);
+				String tokenKey = (String) request.getAttribute(Constants.REQUEST_SCOPE_TOKEN_KEY);
+				removeSessionToken(request, tokenKey);
 			}
 		}
 		return true;
@@ -50,18 +51,19 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 			Object removeReq = request.getAttribute(Constants.TOKEN_REMOVE_KEY);
 			if (token != null) {
 				boolean remove = token.remove();
+				String tokenKey = (String) request.getAttribute(Constants.REQUEST_SCOPE_TOKEN_KEY);
 				if (null == removeReq && remove) {
-					session.removeAttribute(TOKEN);
+					removeSessionToken(request, tokenKey);
 				} else {
-					session.setAttribute(TOKEN, request.getAttribute(TOKEN));
+					setSessionToken(request, tokenKey);
 				}
 			}
 		}
 		super.afterCompletion(request, response, handler, ex);
 	}
 
-	private boolean isRepeatSubmitted() {
-		String sessionToken = (String) session.getAttribute(TOKEN);
+	private boolean isRepeatSubmitted(HttpServletRequest request) {
+		String sessionToken = getSessionToken(request);
 		if (sessionToken == null) {
 			return true;
 		}
@@ -73,5 +75,34 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 			return true;
 		}
 		return false;
+	}
+
+	private String getSessionToken(HttpServletRequest request) {
+		String tokenKey = (String) request.getAttribute(Constants.REQUEST_SCOPE_TOKEN_KEY);
+		Object sessionToken = request.getSession().getAttribute(tokenKey);
+		if (null == sessionToken) {
+			WebApplicationContext wac = WebApplicationContextUtils
+					.getWebApplicationContext(request.getSession().getServletContext());
+			cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
+			Object token = cache.get(tokenKey);
+			if (null == token) {
+				return null;
+			} else {
+				return String.valueOf(token);
+			}
+		} else {
+			return String.valueOf(sessionToken);
+		}
+	}
+
+	private void setSessionToken(HttpServletRequest request, String tokenKey) {
+		String tokenValue = request.getParameter(TOKEN);
+		request.getSession().setAttribute(tokenKey, tokenValue);
+		cache.set(tokenKey, Constants.REDIS_TIMEOUT_SECONDS, tokenValue);
+	}
+
+	private void removeSessionToken(HttpServletRequest request, String tokenKey) {
+		request.getSession().removeAttribute(tokenKey);
+		cache.remove(tokenKey);
 	}
 }

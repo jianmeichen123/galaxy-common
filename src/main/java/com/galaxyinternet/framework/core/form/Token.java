@@ -8,8 +8,8 @@ import java.lang.annotation.Target;
 import javax.servlet.http.HttpSession;
 
 /**
- * 用于重复提交表单时，预先生成令牌并保存在{@link HttpSession}作用域中， <br>
- * 在表单处理结束后，移除{@link HttpSession}作用域中的令牌。
+ * @description 用于重复提交表单时，预先生成令牌并保存在{@link HttpSession}作用域中， <br>
+ *              在表单处理结束后，移除{@link HttpSession}作用域中的令牌。 处理表单请求的业务方向，需要添加该注解
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

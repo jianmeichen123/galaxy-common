@@ -7,7 +7,7 @@ public class Constants {
 	public final static String SESSION_USER_KEY = "galax_session_user";
 
 	public final static String SESSION_ID_KEY = "sessionId";
-	
+
 	public final static String SESSION_PROJECT_CODE = "project_code";
 
 	public final static String SESSOPM_SID_KEY = "sid";
@@ -16,21 +16,21 @@ public class Constants {
 
 	public final static String LOGIN_CHECKLOGIN = "/galaxy/userlogin/login";
 
-	public final static String  IS_UP_EMPTY= "0";
-	
-	public final static String  IS_UP_WRONG= "1";
-	
-	public final static String  IS_SESSIONID_EMPTY= "2";
-	
-	public final static String  IS_SESSIONID_EXPIRED= "3";
-	
-	public final static String  OPTION_SUCCESS= "4";
-	
-	public final static String  ACCESS_REJECTED= "5";
-	
-	public final static int  DEFAULT_PAGE_SIZE= 15;
-	
-	//mail相关
+	public final static String IS_UP_EMPTY = "0";
+
+	public final static String IS_UP_WRONG = "1";
+
+	public final static String IS_SESSIONID_EMPTY = "2";
+
+	public final static String IS_SESSIONID_EXPIRED = "3";
+
+	public final static String OPTION_SUCCESS = "4";
+
+	public final static String ACCESS_REJECTED = "5";
+
+	public final static int DEFAULT_PAGE_SIZE = 15;
+
+	// mail相关
 	public final static String MAIL_CONFIG_FILE = "mail.properties";
 	public final static String MAIL_HOST_KEY = "mail.host";
 	public final static String MAIL_ADDRESS_KEY = "mail.address";
@@ -38,13 +38,14 @@ public class Constants {
 	public final static String MAIL_PASSWORD_KEY = "mail.password";
 	public final static String MAIL_SMTP_AUTH_KEY = "mail.smtp.auth";
 	public final static String MAIL_SMTP_TIMEOUT_KEY = "mail.smtp.timeout";
-	public final static String MAIL_SMTP_PORT_KEY= "mail.smtp.port";
-	
-	public final static String HEADER_REFERER_KEY= "galaxy.header.referer";
+	public final static String MAIL_SMTP_PORT_KEY = "mail.smtp.port";
+
+	public final static String HEADER_REFERER_KEY = "galaxy.header.referer";
 	public final static String SAFE_CONFIG_FILE = "safe-config.properties";
-	
+
 	public final static String TOKEN_REMOVE_KEY = "token_remove";
-	
-	
-	
+	public final static String REDIS_CACHE_BEAN_NAME = "cache";
+	public final static String REQUEST_SCOPE_TOKEN_KEY = "galax_requestscope_token_id";
+	public final static int REDIS_TIMEOUT_SECONDS = 60 * 60 * 24;// 24小时
+
 }

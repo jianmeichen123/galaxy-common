@@ -30,6 +30,7 @@ import sun.misc.BASE64Encoder;
  * 3.Commons-Lang的xml/html escape
  * 4.JDK提供的URLEncoder
  */
+@SuppressWarnings("restriction")
 public class EncodeUtils {
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -129,7 +130,8 @@ public class EncodeUtils {
     /**
      * Xml 转码.
      */
-    public static String escapeXml(String xml) {
+    @SuppressWarnings("deprecation")
+	public static String escapeXml(String xml) {
         return StringEscapeUtils.escapeXml(xml);
     }
 
@@ -178,7 +180,7 @@ public class EncodeUtils {
     }
 
     // 使用AES 128位加密生成串
-    public static String aesEncrypt(String src) throws Exception {
+	public static String aesEncrypt(String src) throws Exception {
         byte[] key = toByte(Constants.SECRET_KEY);
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
         SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");//linux系统需要指定
@@ -194,7 +196,7 @@ public class EncodeUtils {
     }
 
     // 使用AES 128位解密
-    public static String aesDecrypt(String src) throws Exception {
+	public static String aesDecrypt(String src) throws Exception {
         byte[] key = toByte(Constants.SECRET_KEY);
         byte[] content = new BASE64Decoder().decodeBuffer(src);// 先用base64解密
         KeyGenerator kgen = KeyGenerator.getInstance("AES");
