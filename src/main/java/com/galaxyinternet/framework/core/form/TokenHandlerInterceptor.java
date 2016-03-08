@@ -34,6 +34,7 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 				if (this.isRepeatSubmitted()) {
 					return false;
 				}
+				session.removeAttribute(TOKEN);
 			}
 		}
 		return true;
@@ -51,6 +52,8 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 				boolean remove = token.remove();
 				if (null == removeReq && remove) {
 					session.removeAttribute(TOKEN);
+				} else {
+					session.setAttribute(TOKEN, request.getAttribute(TOKEN));
 				}
 			}
 		}
