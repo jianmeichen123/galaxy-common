@@ -42,4 +42,9 @@ public class Constants {
 	
 	public final static String HEADER_REFERER_KEY= "galaxy.header.referer";
 	public final static String SAFE_CONFIG_FILE = "safe-config.properties";
+	
+	public final static String TOKEN_REMOVE_KEY = "token_remove";
+	
+	
+	
 }

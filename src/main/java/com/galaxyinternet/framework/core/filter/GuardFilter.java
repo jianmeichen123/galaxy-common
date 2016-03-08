@@ -23,7 +23,9 @@ import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
 /**
- * 安全防卫过滤器
+ * 安全防卫过滤器 <br/>
+ * 1.防盗链<br/>
+ * 2.
  * 
  * @author keifer
  *
