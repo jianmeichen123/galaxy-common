@@ -26,18 +26,20 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	 * @return the keyword
 	 */
 	public String getKeyword() {
+		return keyword;
+	}
+	
+	private void getNewKeyword(){
 		if(escapeChar == null){
 			escapeChar = false;
 		}
-		if(StringUtils.isNotEmpty(keyword)&&escapeChar==false){
+		if(StringUtils.isNotEmpty(keyword)&&!escapeChar){
 			String newkeyword = StringEx.checkSql(keyword);
 			if(!keyword.equals(newkeyword)){
-				escapeChar = true;
-				keyword = newkeyword;
+				this.setEscapeChar(true);
+				this.setKeyword(newkeyword);
 			}
-			this.setEscapeChar(escapeChar);
 		}
-		return keyword;
 	}
 
 	/**
@@ -78,7 +80,7 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	}
 
 	public Boolean getEscapeChar() {
-		this.getKeyword();
+		this.getNewKeyword();
 		return escapeChar;
 	}
 
