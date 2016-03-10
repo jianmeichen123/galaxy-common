@@ -99,9 +99,20 @@ public class Result implements Serializable {
 	 * 
 	 * @param message
 	 */
-	public void addError(String errorCode) {
+	public void addErrorCode(String errorCode) {
 		this.errorCode = errorCode;
 		this.status = Status.ERROR;
+	}
+
+	/**
+	 * 添加错误消息和错误code
+	 * 
+	 * @param message
+	 */
+	public void addError(String message, String errorCode) {
+		this.message = message;
+		addErrorCode(message);
+
 	}
 
 	public Status getStatus() {
