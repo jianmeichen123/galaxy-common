@@ -109,9 +109,9 @@ public class Result implements Serializable {
 	 * 
 	 * @param message
 	 */
-	public void addError(String message, String errorCode) {
-		this.message = message;
-		addErrorCode(message);
+	public void addError(Object message, String errorCode) {
+		this.errorCode = errorCode;
+		addError(message);
 
 	}
 
