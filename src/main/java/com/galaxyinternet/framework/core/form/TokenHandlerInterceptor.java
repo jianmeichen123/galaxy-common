@@ -18,9 +18,8 @@ import com.galaxyinternet.framework.core.constants.Constants;
 /**
  * 令牌处理拦截器<br/>
  * 
- * @Description 每个子项目如果需要支持表单防重提交，都需要配置该拦截器
+ * @description 每个子项目如果需要支持表单防重提交，都需要配置该拦截器
  * @author keifer
- * @date 2016年3月8日
  */
 public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	Cache cache;
@@ -35,8 +34,14 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 				if (this.isRepeatSubmitted(request)) {
 					return false;
 				}
-				String tokenKey = (String) request.getAttribute(Constants.REQUEST_SCOPE_TOKEN_KEY);
-				removeSessionToken(request, tokenKey);
+				
+				WebApplicationContext wac = WebApplicationContextUtils
+						.getWebApplicationContext(request.getSession().getServletContext());
+				cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
+				
+				String tokenvalue = (String) request.getHeader(TOKEN);
+				String tokenKey = (String) request.getSession().getAttribute(tokenvalue);
+				removeSessionToken(request, tokenKey, tokenvalue);
 			}
 		}
 		return true;
@@ -52,9 +57,10 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 			Object removeReq = request.getAttribute(Constants.TOKEN_REMOVE_KEY);
 			if (token != null) {
 				boolean remove = token.remove();
-				String tokenKey = (String) request.getAttribute(Constants.REQUEST_SCOPE_TOKEN_KEY);
+				String tokenvalue = (String) request.getHeader(TOKEN);
+				String tokenKey = (String) request.getSession().getAttribute(tokenvalue);
 				if (null == removeReq && remove) {
-					removeSessionToken(request, tokenKey);
+					removeSessionToken(request, tokenKey, tokenvalue);
 				} else {
 					setSessionToken(request, tokenKey);
 				}
@@ -64,22 +70,25 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	private boolean isRepeatSubmitted(HttpServletRequest request) {
-		String sessionToken = getSessionToken(request);
-		if (sessionToken == null) {
-			return true;
-		}
-		String requestToken = request.getParameter(TOKEN);
+		String requestToken = request.getHeader(TOKEN);
 		if (requestToken == null) {
 			return true;
 		}
+		String sessionToken = getSessionToken(request, requestToken);
+		if (sessionToken == null) {
+			return true;
+		}
+
 		if (!sessionToken.equals(requestToken)) {
 			return true;
 		}
 		return false;
 	}
 
-	private String getSessionToken(HttpServletRequest request) {
-		String tokenKey = (String) request.getAttribute(Constants.REQUEST_SCOPE_TOKEN_KEY);
+	private String getSessionToken(HttpServletRequest request, String tokenValue) {
+		String tokenKey = (String) request.getSession().getAttribute(tokenValue);
+		if (null == tokenKey)
+			return null;
 		Object sessionToken = request.getSession().getAttribute(tokenKey);
 		if (null == sessionToken) {
 			WebApplicationContext wac = WebApplicationContextUtils
@@ -102,8 +111,9 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 		cache.set(tokenKey, Constants.TOKEN_IN_REDIS_TIMEOUT_SECONDS, tokenValue);
 	}
 
-	private void removeSessionToken(HttpServletRequest request, String tokenKey) {
+	private void removeSessionToken(HttpServletRequest request, String tokenKey, String tokenValue) {
 		request.getSession().removeAttribute(tokenKey);
+		request.getSession().removeAttribute(tokenValue);
 		cache.remove(tokenKey);
 	}
 }
