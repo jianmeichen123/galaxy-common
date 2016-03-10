@@ -59,31 +59,37 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
 	}
 
 	@Override
+	@Transactional
 	public Long insert(T entity) {
 		return getBaseDao().insert(entity);
 	}
 
 	@Override
+	@Transactional
 	public int delete(T query) {
 		return getBaseDao().delete(query);
 	}
 
 	@Override
+	@Transactional
 	public int deleteById(Long id) {
 		return getBaseDao().deleteById(id);
 	}
 
 	@Override
+	@Transactional
 	public int deleteAll() {
 		return getBaseDao().deleteAll();
 	}
 
 	@Override
+	@Transactional
 	public int updateById(T entity) {
 		return getBaseDao().updateById(entity);
 	}
 
 	@Override
+	@Transactional
 	public int updateByIdSelective(T entity) {
 		return getBaseDao().updateByIdSelective(entity);
 	}

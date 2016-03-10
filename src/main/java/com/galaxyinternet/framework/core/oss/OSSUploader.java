@@ -110,7 +110,7 @@ public class OSSUploader implements Callable<Integer> {
 		}
 		int result = GlobalCode.ERROR;
 
-		key = key.contains("\\\\") ? key.replaceAll("\\\\", "/") : key.contains("\\") ? key.replaceAll("\\", "/") : key;
+		key = key.contains("\\\\") ? key.replaceAll("\\\\", "/") : (key.contains("\\") ? key.replaceAll("\\", "/") : key);
 		// 准备Bucket
 		result = OSSFactory.getBucketName(bucketName);
 		if (result == GlobalCode.ERROR)
