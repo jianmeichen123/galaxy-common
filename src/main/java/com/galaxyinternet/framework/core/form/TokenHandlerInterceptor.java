@@ -25,17 +25,12 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	Cache cache;
 
 	@Override
-	public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler)
-			throws Exception {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		if (cache == null) {
 			WebApplicationContext wac = WebApplicationContextUtils
 					.getWebApplicationContext(request.getSession().getServletContext());
 			cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
 		}
-	}
-
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		if (handler instanceof HandlerMethod) {
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
 			Method method = handlerMethod.getMethod();
@@ -50,7 +45,7 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 该方法处理业务系统异常时的情况
 	 */
