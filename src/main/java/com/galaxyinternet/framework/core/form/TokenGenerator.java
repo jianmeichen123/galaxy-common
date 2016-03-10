@@ -7,7 +7,9 @@ import com.galaxyinternet.framework.core.id.IdGenerator;
 import com.galaxyinternet.framework.core.utils.EncodeUtils;
 
 /**
- * Token的生成器
+ * @Description: Token的生成器
+ * @author keifer
+ * @date 2016年3月8日
  */
 public class TokenGenerator {
 

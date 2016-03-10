@@ -18,8 +18,9 @@ import com.galaxyinternet.framework.core.constants.Constants;
 /**
  * 令牌处理拦截器<br/>
  * 
- * @description 每个子项目如果需要支持表单防重提交，都需要配置该拦截器
+ * @Description 每个子项目如果需要支持表单防重提交，都需要配置该拦截器
  * @author keifer
+ * @date 2016年3月8日
  */
 public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	Cache cache;
