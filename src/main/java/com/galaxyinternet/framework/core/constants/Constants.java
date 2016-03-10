@@ -46,6 +46,6 @@ public class Constants {
 	public final static String TOKEN_REMOVE_KEY = "token_remove";
 	public final static String REDIS_CACHE_BEAN_NAME = "cache";
 	public final static String REQUEST_SCOPE_TOKEN_KEY = "galax_requestscope_token_id";
-	public final static int REDIS_TIMEOUT_SECONDS = 60 * 60 * 24;// 24小时
+	public final static int TOKEN_IN_REDIS_TIMEOUT_SECONDS = 60 * 60;// 1小时
 
 }

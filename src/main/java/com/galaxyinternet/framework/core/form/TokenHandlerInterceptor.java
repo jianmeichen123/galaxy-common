@@ -98,7 +98,7 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	private void setSessionToken(HttpServletRequest request, String tokenKey) {
 		String tokenValue = request.getParameter(TOKEN);
 		request.getSession().setAttribute(tokenKey, tokenValue);
-		cache.set(tokenKey, Constants.REDIS_TIMEOUT_SECONDS, tokenValue);
+		cache.set(tokenKey, Constants.TOKEN_IN_REDIS_TIMEOUT_SECONDS, tokenValue);
 	}
 
 	private void removeSessionToken(HttpServletRequest request, String tokenKey) {
