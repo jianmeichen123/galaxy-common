@@ -241,6 +241,12 @@
 			<artifactId>httpcore</artifactId>
 			<version>4.4.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.2.4.Final</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -299,7 +305,6 @@
 				<mail.smtp.port>25</mail.smtp.port>
 				<!-- 上线应该配置成公司的域名 -->
 				<galaxy.header.referer>http</galaxy.header.referer>
-				
 			</properties>
 		</profile>
 		<profile>
@@ -309,8 +314,8 @@
 				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
 				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
 				<oss.bucket.name>galaxytest-xhhl-fx</oss.bucket.name>
-				
-				
+
+
 			</properties>
 		</profile>
 		<profile>

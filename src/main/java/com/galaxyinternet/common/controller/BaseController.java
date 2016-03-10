@@ -1,5 +1,7 @@
 package com.galaxyinternet.common.controller;
 
+import org.springframework.validation.BindingResult;
+
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
@@ -28,6 +30,14 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	public ResponseData<T> addOne(Q entity);
 
 	/**
+	 * 添加一条实体，实体不能为null,此方法支持表单字段校验
+	 * 
+	 * @param result
+	 *            验证结果绑定对象
+	 */
+	public ResponseData<T> addOne(Q entity, BindingResult result);
+
+	/**
 	 * 查询对象列表，返回页面 listXXX页面
 	 * 
 	 * @param query
@@ -37,7 +47,7 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	 */
 	@Deprecated
 	public ResponseData<T> selectList(Q query, PageRequest pageable);
-	
+
 	/**
 	 * 查询对象列表，返回页面 listXXX页面
 	 * 
@@ -61,6 +71,16 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	 *            要更新的实体
 	 */
 	public ResponseData<T> editOne(Q entity);
+
+	/**
+	 * 更新一个实体，实体不能为null,此方法支持表单字段校验
+	 * 
+	 * @param entity
+	 *            要更新的实体
+	 * @param result
+	 *            验证结果绑定对象
+	 */
+	public ResponseData<T> editOne(Q entity, BindingResult result);
 
 	/**
 	 * 跳转页面方法<br/>

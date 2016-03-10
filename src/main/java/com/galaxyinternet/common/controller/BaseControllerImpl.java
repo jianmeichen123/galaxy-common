@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.service.BaseService;
+import com.galaxyinternet.framework.core.validator.ValidatorResultHandler;
 
 /**
  * 基础控制器接口实现类
@@ -107,7 +109,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 		responseBody.setPageList(pageList);
 		return responseBody;
 	}
-	
+
 	@Override
 	@RequestMapping(value = "/selectList", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -146,8 +148,34 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	}
 
 	@Override
-	@RequestMapping(value ="/{path}/{page}")
-	public String forwardPage(@PathVariable("path") String path,@PathVariable("page") String page) {
-		return path+"/"+page;
+	@RequestMapping(value = "/{path}/{page}")
+	public String forwardPage(@PathVariable("path") String path, @PathVariable("page") String page) {
+		return path + "/" + page;
+	}
+
+	@Override
+	@RequestMapping(value = "/addValid", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseData<T> addOne(Q entity, BindingResult result) {
+		ResponseData<T> responseBody = new ResponseData<T>();
+		Result validationResult = ValidatorResultHandler.handle(result);
+		if (validationResult.getStatus() == Status.ERROR) {
+			responseBody.setResult(validationResult);
+			return responseBody;
+		}
+		return this.addOne(entity);
+	}
+
+	@Override
+	@ResponseBody
+	@RequestMapping(value = "/editValid", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseData<T> editOne(Q entity, BindingResult result) {
+		ResponseData<T> responseBody = new ResponseData<T>();
+		Result validationResult = ValidatorResultHandler.handle(result);
+		if (validationResult.getStatus() == Status.ERROR) {
+			responseBody.setResult(validationResult);
+			return responseBody;
+		}
+		return this.editOne(entity);
 	}
 }
