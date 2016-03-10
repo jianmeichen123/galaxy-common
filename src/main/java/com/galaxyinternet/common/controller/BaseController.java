@@ -30,10 +30,13 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	public ResponseData<T> addOne(Q entity);
 
 	/**
-	 * 添加一条实体，实体不能为null,此方法支持表单字段校验
+	 * 添加一条实体，实体不能为null,此方法支持表单字段校验<br/>
+	 * 验证是使用的是hibernate-validator框架,参考文档
+	 * {@link http://docs.jboss.org/hibernate/validator/5.2/reference/en-US/html_single/}
 	 * 
 	 * @param result
 	 *            验证结果绑定对象
+	 * 
 	 */
 	public ResponseData<T> addOne(Q entity, BindingResult result);
 
@@ -73,7 +76,9 @@ public interface BaseController<T extends BaseEntity, Q extends T> {
 	public ResponseData<T> editOne(Q entity);
 
 	/**
-	 * 更新一个实体，实体不能为null,此方法支持表单字段校验
+	 * 更新一个实体，实体不能为null,此方法支持表单字段校验<br/>
+	 * 验证是使用的是hibernate-validator框架,参考文档
+	 * {@link http://docs.jboss.org/hibernate/validator/5.2/reference/en-US/html_single/}
 	 * 
 	 * @param entity
 	 *            要更新的实体

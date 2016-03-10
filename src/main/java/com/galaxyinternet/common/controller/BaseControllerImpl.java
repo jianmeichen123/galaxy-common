@@ -2,6 +2,8 @@ package com.galaxyinternet.common.controller;
 
 import java.util.Arrays;
 
+import javax.validation.Valid;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -156,7 +158,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@Override
 	@RequestMapping(value = "/addValid", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseData<T> addOne(Q entity, BindingResult result) {
+	public ResponseData<T> addOne(@RequestBody @Valid Q entity, BindingResult result) {
 		ResponseData<T> responseBody = new ResponseData<T>();
 		Result validationResult = ValidatorResultHandler.handle(result);
 		if (validationResult.getStatus() == Status.ERROR) {
@@ -169,7 +171,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@Override
 	@ResponseBody
 	@RequestMapping(value = "/editValid", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseData<T> editOne(Q entity, BindingResult result) {
+	public ResponseData<T> editOne(@RequestBody @Valid Q entity, BindingResult result) {
 		ResponseData<T> responseBody = new ResponseData<T>();
 		Result validationResult = ValidatorResultHandler.handle(result);
 		if (validationResult.getStatus() == Status.ERROR) {
