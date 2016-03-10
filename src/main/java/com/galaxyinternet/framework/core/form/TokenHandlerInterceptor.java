@@ -25,28 +25,35 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	Cache cache;
 
 	@Override
+	public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		if (cache == null) {
+			WebApplicationContext wac = WebApplicationContextUtils
+					.getWebApplicationContext(request.getSession().getServletContext());
+			cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
+		}
+	}
+
+	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		if (handler instanceof HandlerMethod) {
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
 			Method method = handlerMethod.getMethod();
 			Token token = method.getAnnotation(Token.class);
 			if (token != null) {
-				if (this.isRepeatSubmitted(request)) {
+				String requestTokenvalue = (String) request.getHeader(TOKEN);
+				if (this.isRepeatSubmitted(request, requestTokenvalue)) {
 					return false;
 				}
-				
-				WebApplicationContext wac = WebApplicationContextUtils
-						.getWebApplicationContext(request.getSession().getServletContext());
-				cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
-				
-				String tokenvalue = (String) request.getHeader(TOKEN);
-				String tokenKey = (String) request.getSession().getAttribute(tokenvalue);
-				removeSessionToken(request, tokenKey, tokenvalue);
+				removeSessionToken(request, requestTokenvalue);
 			}
 		}
 		return true;
 	}
-
+	
+	/**
+	 * 该方法处理业务系统异常时的情况
+	 */
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
@@ -57,20 +64,18 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 			Object removeReq = request.getAttribute(Constants.TOKEN_REMOVE_KEY);
 			if (token != null) {
 				boolean remove = token.remove();
-				String tokenvalue = (String) request.getHeader(TOKEN);
-				String tokenKey = (String) request.getSession().getAttribute(tokenvalue);
+				String tokenValue = (String) request.getHeader(TOKEN);
 				if (null == removeReq && remove) {
-					removeSessionToken(request, tokenKey, tokenvalue);
+					removeSessionToken(request, tokenValue);
 				} else {
-					setSessionToken(request, tokenKey);
+					setSessionToken(request, tokenValue);
 				}
 			}
 		}
 		super.afterCompletion(request, response, handler, ex);
 	}
 
-	private boolean isRepeatSubmitted(HttpServletRequest request) {
-		String requestToken = request.getHeader(TOKEN);
+	private boolean isRepeatSubmitted(HttpServletRequest request, String requestToken) {
 		if (requestToken == null) {
 			return true;
 		}
@@ -86,15 +91,9 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	private String getSessionToken(HttpServletRequest request, String tokenValue) {
-		String tokenKey = (String) request.getSession().getAttribute(tokenValue);
-		if (null == tokenKey)
-			return null;
-		Object sessionToken = request.getSession().getAttribute(tokenKey);
+		String sessionToken = (String) request.getSession().getAttribute(tokenValue);
 		if (null == sessionToken) {
-			WebApplicationContext wac = WebApplicationContextUtils
-					.getWebApplicationContext(request.getSession().getServletContext());
-			cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
-			Object token = cache.get(tokenKey);
+			Object token = cache.get(sessionToken);
 			if (null == token) {
 				return null;
 			} else {
@@ -105,15 +104,14 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 		}
 	}
 
-	private void setSessionToken(HttpServletRequest request, String tokenKey) {
-		String tokenValue = request.getParameter(TOKEN);
-		request.getSession().setAttribute(tokenKey, tokenValue);
-		cache.set(tokenKey, Constants.TOKEN_IN_REDIS_TIMEOUT_SECONDS, tokenValue);
+	private void setSessionToken(HttpServletRequest request, String tokenValue) {
+		request.getSession().setAttribute(tokenValue, tokenValue);
+		cache.set(tokenValue, Constants.TOKEN_IN_REDIS_TIMEOUT_SECONDS, tokenValue);
 	}
 
-	private void removeSessionToken(HttpServletRequest request, String tokenKey, String tokenValue) {
-		request.getSession().removeAttribute(tokenKey);
+	private void removeSessionToken(HttpServletRequest request, String tokenValue) {
 		request.getSession().removeAttribute(tokenValue);
-		cache.remove(tokenKey);
+		cache.remove(tokenValue);
 	}
+
 }
