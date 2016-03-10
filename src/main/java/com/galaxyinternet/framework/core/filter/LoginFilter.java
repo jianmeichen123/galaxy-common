@@ -48,20 +48,19 @@ public class LoginFilter implements Filter {
 	}
 
 	private BaseUser getUser(HttpServletRequest request) {
-
-		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		if (userObj == null) {
-			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-			if (StringUtils.isBlank(sessionId)) {
-				sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-			}
-			if (StringUtils.isNotBlank(sessionId)) {
-				return getUser(request, sessionId);
-			} else {
-				return null;
-			}
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		if (StringUtils.isBlank(sessionId)) {
+			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
 		}
-		return (BaseUser) userObj;
+		if (StringUtils.isNotBlank(sessionId)) {
+			BaseUser user =  getUser(request, sessionId);
+			if(null == user){
+				request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
+			}else{
+				return user;
+			}
+		} 
+		return null;
 	}
 
 	/**
@@ -74,11 +73,6 @@ public class LoginFilter implements Filter {
 	 * @return user
 	 */
 	private BaseUser getUser(HttpServletRequest request, String key) {
-		if (null == cache) {
-			WebApplicationContext wac = WebApplicationContextUtils
-					.getWebApplicationContext(request.getSession().getServletContext());
-			cache = (Cache) wac.getBean("cache");
-		}
 		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
 			cache.setByRedis(key, user, 60 * 60 * 24 * 7);
