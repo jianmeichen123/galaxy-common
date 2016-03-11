@@ -133,7 +133,7 @@ public class LoginFilter implements Filter {
 	@SuppressWarnings("rawtypes")
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		/*HttpServletRequest req = (HttpServletRequest) request;
+		HttpServletRequest req = (HttpServletRequest) request;
 		BaseUser user = getUser(req);
 		if (null != user && user.getId() > 0) {
 			req.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
@@ -174,8 +174,7 @@ public class LoginFilter implements Filter {
 			response.getWriter().write(GSONUtil.toJson(resposeData));
 			return;
 		}
-		chain.doFilter(req, response);*/
-		chain.doFilter(request, response);
+		chain.doFilter(req, response);
 	}
 
 	@Override
