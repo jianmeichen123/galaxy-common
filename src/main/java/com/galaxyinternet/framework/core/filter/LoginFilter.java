@@ -75,6 +75,7 @@ public class LoginFilter implements Filter {
 				return null;
 			}else{
 				request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
+				cache.setByRedis(sessionId, user, 60 * 60 * 24 * 1);
 				return user;
 			}
 		}else{
@@ -108,10 +109,11 @@ public class LoginFilter implements Filter {
 	 *            sessionId key
 	 * @return user
 	 */
+	@SuppressWarnings("unused")
 	private BaseUser getUser(HttpServletRequest request, String key) {
 		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
-			cache.setByRedis(key, user, 60 * 60 * 24 * 7);
+			cache.setByRedis(key, user, 60 * 60 * 24 * 1);
 		}
 		return user;
 	}
