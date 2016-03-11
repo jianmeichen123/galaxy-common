@@ -62,6 +62,28 @@ public class LoginFilter implements Filter {
 		} 
 		return null;*/
 
+		
+		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		if (StringUtils.isBlank(sessionId)) {
+			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
+		}
+		if (StringUtils.isNotBlank(sessionId)) {
+			BaseUser user = (BaseUser) cache.getByRedis(sessionId);
+			if(user==null){
+				request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
+				return null;
+			}else{
+				request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
+				return user;
+			}
+		}else{
+			if(userObj==null){
+				return null;
+			}
+			return (BaseUser) userObj;
+		}
+		/*	
 		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		if (userObj == null) {
 			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
@@ -74,7 +96,7 @@ public class LoginFilter implements Filter {
 				return null;
 			}
 		}
-		return (BaseUser) userObj;
+		return (BaseUser) userObj;*/
 	}
 
 	/**
