@@ -175,6 +175,7 @@ public class LoginFilter implements Filter {
 			return;
 		}
 		chain.doFilter(req, response);*/
+		chain.doFilter(request, response);
 	}
 
 	@Override
