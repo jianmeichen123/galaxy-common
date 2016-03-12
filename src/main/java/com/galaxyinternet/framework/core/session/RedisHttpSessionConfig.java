@@ -18,7 +18,7 @@ import com.galaxyinternet.framework.core.constants.Constants;
  * @date 2016年3月12日
  *
  */
-@EnableRedisHttpSession
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 7200)
 @Configuration
 public class RedisHttpSessionConfig {
 
