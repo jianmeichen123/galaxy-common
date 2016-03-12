@@ -51,15 +51,9 @@ public class LoginFilter implements Filter {
 	 * 请求参数完整性校验
 	 */
 	@SuppressWarnings({ "rawtypes", "unused" })
-	private void checkRequestParamValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-		}
-		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
-		if (StringUtils.isBlank(userId)) {
-			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
-		}
+	private String checkRequestParamValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String sessionId = getSessionId(request);
+		String userId = getUserId(request);
 		if (StringUtils.isBlank(userId) || StringUtils.isBlank(sessionId)) {
 			logger.warn("请求参数不完整：userId=" + userId + "sessionId=" + sessionId);
 			response.setCharacterEncoding("utf-8");
@@ -70,14 +64,32 @@ public class LoginFilter implements Filter {
 			result.setErrorCode(Constants.REQUEST_PARAMS_INCOMPLETE);
 			resposeData.setResult(result);
 			response.getWriter().write(GSONUtil.toJson(resposeData));
-			return;
+			return null;
 		}
+		return sessionId;
 	}
 
-	private BaseUser getUser(HttpServletRequest request, String sessionKey) {
-		if (StringUtils.isBlank(sessionKey))
+	private String getSessionId(HttpServletRequest request){
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		if (StringUtils.isBlank(sessionId)) {
+			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
+		}
+		return sessionId;
+	}
+	
+	private String getUserId(HttpServletRequest request){
+		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
+		if (StringUtils.isBlank(userId)) {
+			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
+		}
+		return userId;
+	}
+	
+	private BaseUser getUser(HttpServletRequest request) {
+		String sessionId = getSessionId(request);
+		if (StringUtils.isBlank(sessionId))
 			return null;
-		Object userObj = request.getSession().getAttribute(sessionKey);
+		Object userObj = request.getSession().getAttribute(sessionId);
 		if (userObj == null) {
 			return null;
 		}
@@ -106,8 +118,8 @@ public class LoginFilter implements Filter {
 		 */
 		// checkRequestParamValid(request, response);
 
-		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		BaseUser user = getUser(request, sessionId);
+		String sessionId = getSessionId(request);
+		BaseUser user = getUser(request);
 		if (null != user && user.getId() > 0) {
 			request.getSession().setAttribute(sessionId, user);
 		}
