@@ -7,10 +7,14 @@ public class Constants {
 	public final static String SESSION_USER_KEY = "galax_session_user";
 
 	public final static String SESSION_ID_KEY = "sessionId";
+	
+	public final static String REQUEST_HEADER_USER_ID_KEY = "guserId";
 
 	public final static String SESSION_PROJECT_CODE = "project_code";
 
 	public final static String SESSOPM_SID_KEY = "sid";
+	
+	public final static String REQUEST_URL_USER_ID_KEY = "guid";
 
 	public final static String LOGIN_TOLOGIN = "/galaxy/userlogin/toLogin";
 
@@ -27,6 +31,8 @@ public class Constants {
 	public final static String OPTION_SUCCESS = "4";
 
 	public final static String ACCESS_REJECTED = "5";
+	
+	public final static String REQUEST_PARAMS_INCOMPLETE = "6";//请求参数不完整
 
 	public final static int DEFAULT_PAGE_SIZE = 15;
 

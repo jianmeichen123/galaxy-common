@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,8 +37,6 @@ public class LoginFilter implements Filter {
 	 */
 	static String[] excludedUrlArray = {};
 
-	static Cache cache;
-
 	/**
 	 * 允许游客状态的接口
 	 */
@@ -47,75 +46,42 @@ public class LoginFilter implements Filter {
 	public void destroy() {
 	}
 
-	private BaseUser getUser(HttpServletRequest request) {
-/*		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-		}
-		if (StringUtils.isNotBlank(sessionId)) {
-			BaseUser user =  getUser(request, sessionId);
-			if(null == user){
-				request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
-			}else{
-				return user;
-			}
-		} 
-		return null;*/
-
-		
-		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+	/**
+	 * 
+	 * 请求参数完整性校验
+	 */
+	@SuppressWarnings({ "rawtypes", "unused" })
+	private void checkRequestParamValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 		if (StringUtils.isBlank(sessionId)) {
 			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
 		}
-		if (StringUtils.isNotBlank(sessionId)) {
-			BaseUser user = (BaseUser) cache.getByRedis(sessionId);
-			if(user==null){
-				request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
-				return null;
-			}else{
-				request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
-				cache.setByRedis(sessionId, user, 60 * 60 * 24 * 1);
-				return user;
-			}
-		}else{
-			if(userObj==null){
-				return null;
-			}
-			return (BaseUser) userObj;
+		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
+		if (StringUtils.isBlank(userId)) {
+			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
 		}
-		/*	
-		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		if (userObj == null) {
-			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-			if (StringUtils.isBlank(sessionId)) {
-				sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-			}
-			if (StringUtils.isNotBlank(sessionId)) {
-				return getUser(request, sessionId);
-			} else {
-				return null;
-			}
+		if (StringUtils.isBlank(userId) || StringUtils.isBlank(sessionId)) {
+			logger.warn("请求参数不完整：userId=" + userId + "sessionId=" + sessionId);
+			response.setCharacterEncoding("utf-8");
+			ResponseData resposeData = new ResponseData();
+			Result result = new Result();
+			result.setStatus(Status.ERROR);
+			result.setMessage("请求参数不完整");
+			result.setErrorCode(Constants.REQUEST_PARAMS_INCOMPLETE);
+			resposeData.setResult(result);
+			response.getWriter().write(GSONUtil.toJson(resposeData));
+			return;
 		}
-		return (BaseUser) userObj;*/
 	}
 
-	/**
-	 * 获取用户信息
-	 * 
-	 * @param request
-	 *            request
-	 * @param key
-	 *            sessionId key
-	 * @return user
-	 */
-	@SuppressWarnings("unused")
-	private BaseUser getUser(HttpServletRequest request, String key) {
-		BaseUser user = (BaseUser) cache.getByRedis(key);
-		if (user != null) {
-			cache.setByRedis(key, user, 60 * 60 * 24 * 1);
+	private BaseUser getUser(HttpServletRequest request, String sessionKey) {
+		if (StringUtils.isBlank(sessionKey))
+			return null;
+		Object userObj = request.getSession().getAttribute(sessionKey);
+		if (userObj == null) {
+			return null;
 		}
-		return user;
+		return (BaseUser) userObj;
 	}
 
 	/**
@@ -131,15 +97,22 @@ public class LoginFilter implements Filter {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		BaseUser user = getUser(req);
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) resp;
+		/**
+		 * 验证请求参数的合法性
+		 */
+		// checkRequestParamValid(request, response);
+
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		BaseUser user = getUser(request, sessionId);
 		if (null != user && user.getId() > 0) {
-			req.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
+			request.getSession().setAttribute(sessionId, user);
 		}
 
-		String url = req.getRequestURI();
+		String url = request.getRequestURI();
 		boolean loginFlag = true;
 
 		// 如果url是资源文件请求地址 直接放行
@@ -161,7 +134,8 @@ public class LoginFilter implements Filter {
 				break;
 			}
 		}
-		if (loginFlag && null == user) {
+
+		/*if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
 			String errorMessage = "用户长时间未操作或已过期,请重新登录";
@@ -173,7 +147,8 @@ public class LoginFilter implements Filter {
 			resposeData.setResult(result);
 			response.getWriter().write(GSONUtil.toJson(resposeData));
 			return;
-		}
+		}*/
+
 		chain.doFilter(req, response);
 	}
 
@@ -185,7 +160,7 @@ public class LoginFilter implements Filter {
 		}
 		ServletContext servletContext = config.getServletContext();
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		cache = (Cache) wac.getBean("cache");
+		Cache cache = (Cache) wac.getBean("cache");
 		@SuppressWarnings("unchecked")
 		Map<String, Object> configs = (Map<String, Object>) cache.get(OSSConstant.GALAXYINTERNET_FX_ENDPOINT);
 		servletContext.setAttribute(OSSConstant.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
