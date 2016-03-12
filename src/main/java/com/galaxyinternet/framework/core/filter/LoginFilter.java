@@ -113,29 +113,26 @@ public class LoginFilter implements Filter {
 		}
 
 		String url = request.getRequestURI();
-		boolean loginFlag = true;
-
 		// 如果url是资源文件请求地址 直接放行
-		loginFlag = judgeFile(url);
-		if (!loginFlag) {
+		if (!judgeFile(url)) {
 			chain.doFilter(request, response);
 			return;
 		}
 
 		for (String excludedUrl : excludedUrlArray) {
 			if (url.contains(StringEx.replaceSpecial(excludedUrl))) {
-				loginFlag = false;
-				break;
+				chain.doFilter(request, response);
+				return;
 			}
 		}
 		for (String excludedUrl : webExcludedUrl) {
 			if (url.contains(excludedUrl)) {
-				loginFlag = false;
-				break;
+				chain.doFilter(request, response);
+				return;
 			}
 		}
 
-		/*if (loginFlag && null == user) {
+		/*if (null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
 			String errorMessage = "用户长时间未操作或已过期,请重新登录";
