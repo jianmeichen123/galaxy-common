@@ -1,6 +1,7 @@
 package com.galaxyinternet.framework.core.file;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,8 +18,8 @@ import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
-import com.galaxyinternet.framework.core.oss.OSSDownloader;
 import com.galaxyinternet.framework.core.oss.GlobalCode;
+import com.galaxyinternet.framework.core.oss.OSSDownloader;
 import com.galaxyinternet.framework.core.oss.OSSFactory;
 import com.galaxyinternet.framework.core.oss.OSSUploader;
 
@@ -57,14 +58,14 @@ public class OSSHelper {
 			client.deleteObject(bucketName, key);
 			result.addOK("删除成功");
 		} catch (OSSException oe) {
-			result.addError(oe.getErrorMessage(),oe.getErrorCode());
+			result.addError(oe.getErrorMessage(), oe.getErrorCode());
 			logger.error(
 					"Caught an OSSException, which means your request made it to OSS, "
 							+ "but was rejected with an error response for some reason.",
 					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
 					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
 		} catch (ClientException ce) {
-			result.addError(ce.getErrorMessage(),ce.getErrorCode());
+			result.addError(ce.getErrorMessage(), ce.getErrorCode());
 			logger.error("Caught an ClientException, which means the client encountered "
 					+ "a serious internal problem while trying to communicate with OSS, "
 					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
@@ -103,14 +104,14 @@ public class OSSHelper {
 			fileResult.setKeysOfDeletedObjects(keysOfDeletedObjects);
 			result.addOK("批量删除成功");
 		} catch (OSSException oe) {
-			result.addError(oe.getErrorMessage(),oe.getErrorCode());
+			result.addError(oe.getErrorMessage(), oe.getErrorCode());
 			logger.error(
 					"Caught an OSSException, which means your request made it to OSS, "
 							+ "but was rejected with an error response for some reason.",
 					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
 					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
 		} catch (ClientException ce) {
-			result.addError(ce.getErrorMessage(),ce.getErrorCode());
+			result.addError(ce.getErrorMessage(), ce.getErrorCode());
 			logger.error("Caught an ClientException, which means the client encountered "
 					+ "a serious internal problem while trying to communicate with OSS, "
 					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
@@ -129,6 +130,10 @@ public class OSSHelper {
 	 */
 	public static UploadFileResult simpleUploadByOSS(File file, String key) {
 		return simpleUploadByOSS(file, defaultBucketName, key);
+	}
+
+	public static UploadFileResult simpleUploadByOSS(InputStream inputStream, String key) {
+		return simpleUploadByOSS(inputStream, defaultBucketName, key);
 	}
 
 	/**
@@ -157,14 +162,14 @@ public class OSSHelper {
 				responseFile.setEtag(putObjectResult.getETag());
 				result.addOK("上传成功");
 			} catch (OSSException oe) {
-				result.addError(oe.getErrorMessage(),oe.getErrorCode());
+				result.addError(oe.getErrorMessage(), oe.getErrorCode());
 				logger.error(
 						"Caught an OSSException, which means your request made it to OSS, "
 								+ "but was rejected with an error response for some reason.",
 						"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
 						"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
 			} catch (ClientException ce) {
-				result.addError(ce.getErrorMessage(),ce.getErrorCode());
+				result.addError(ce.getErrorMessage(), ce.getErrorCode());
 				logger.error("Caught an ClientException, which means the client encountered "
 						+ "a serious internal problem while trying to communicate with OSS, "
 						+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
@@ -176,6 +181,39 @@ public class OSSHelper {
 		} else {
 			logger.warn("file does not exist");
 		}
+		return responseFile;
+	}
+
+	public static UploadFileResult simpleUploadByOSS(InputStream inputStream, String bucketName, String key) {
+		UploadFileResult responseFile = new UploadFileResult();
+		Result result = new Result();
+		int checkBucketName = OSSFactory.getBucketName(bucketName);
+		if (checkBucketName == GlobalCode.ERROR) {
+			result.setStatus(Status.ERROR);
+			result.setMessage("Bucket name does not exist or is empty.");
+			responseFile.setResult(result);
+			return responseFile;
+		}
+		try {
+			PutObjectResult putObjectResult = client.putObject(bucketName, key, inputStream);
+			responseFile.setEtag(putObjectResult.getETag());
+			result.addOK("上传成功");
+		} catch (OSSException oe) {
+			result.addError(oe.getErrorMessage(), oe.getErrorCode());
+			logger.error(
+					"Caught an OSSException, which means your request made it to OSS, "
+							+ "but was rejected with an error response for some reason.",
+					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
+					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
+		} catch (ClientException ce) {
+			result.addError(ce.getErrorMessage(), ce.getErrorCode());
+			logger.error("Caught an ClientException, which means the client encountered "
+					+ "a serious internal problem while trying to communicate with OSS, "
+					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
+		}
+		responseFile.setBucketName(bucketName);
+		responseFile.setFileKey(key);
+		responseFile.setResult(result);
 		return responseFile;
 	}
 
@@ -212,14 +250,14 @@ public class OSSHelper {
 			responseFile.setInput(ossobjcet.getObjectContent());
 			result.addOK("下载成功");
 		} catch (OSSException oe) {
-			result.addError(oe.getErrorMessage(),oe.getErrorCode());
+			result.addError(oe.getErrorMessage(), oe.getErrorCode());
 			logger.error(
 					"Caught an OSSException, which means your request made it to OSS, "
 							+ "but was rejected with an error response for some reason.",
 					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
 					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
 		} catch (ClientException ce) {
-			result.addError(ce.getErrorMessage(),ce.getErrorCode());
+			result.addError(ce.getErrorMessage(), ce.getErrorCode());
 			logger.error("Caught an ClientException, which means the client encountered "
 					+ "a serious internal problem while trying to communicate with OSS, "
 					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
@@ -265,14 +303,14 @@ public class OSSHelper {
 			result.addOK("下载成功");
 			System.err.println("metadata=" + metadata);
 		} catch (OSSException oe) {
-			result.addError(oe.getErrorMessage(),oe.getErrorCode());
+			result.addError(oe.getErrorMessage(), oe.getErrorCode());
 			logger.error(
 					"Caught an OSSException, which means your request made it to OSS, "
 							+ "but was rejected with an error response for some reason.",
 					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
 					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
 		} catch (ClientException ce) {
-			result.addError(ce.getErrorMessage(),ce.getErrorCode());
+			result.addError(ce.getErrorMessage(), ce.getErrorCode());
 			logger.error("Caught an ClientException, which means the client encountered "
 					+ "a serious internal problem while trying to communicate with OSS, "
 					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
