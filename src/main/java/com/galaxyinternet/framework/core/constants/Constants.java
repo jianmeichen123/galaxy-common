@@ -41,11 +41,13 @@ public class Constants {
 	public final static String MAIL_SMTP_PORT_KEY = "mail.smtp.port";
 
 	public final static String HEADER_REFERER_KEY = "galaxy.header.referer";
-	public final static String SAFE_CONFIG_FILE = "safe-config.properties";
+	public final static String SAFE_CONFIG_FILE = "core-config.properties";
 
 	public final static String TOKEN_REMOVE_KEY = "token_remove";
 	public final static String REDIS_CACHE_BEAN_NAME = "cache";
 	public final static String REQUEST_SCOPE_TOKEN_KEY = "galax_requestscope_token_id";
 	public final static int TOKEN_IN_REDIS_TIMEOUT_SECONDS = 60 * 60;// 1小时
 
+	public final static String REDIS_SHARDINFO_NAME="jedis.shardInfo";
+	
 }
