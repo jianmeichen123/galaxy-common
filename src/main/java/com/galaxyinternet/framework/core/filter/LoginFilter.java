@@ -167,7 +167,7 @@ public class LoginFilter implements Filter {
 		}
 		ServletContext servletContext = config.getServletContext();
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		Cache cache = (Cache) wac.getBean("cache");
+		Cache cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
 		@SuppressWarnings("unchecked")
 		Map<String, Object> configs = (Map<String, Object>) cache.get(OSSConstant.GALAXYINTERNET_FX_ENDPOINT);
 		servletContext.setAttribute(OSSConstant.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
