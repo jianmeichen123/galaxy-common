@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +41,45 @@ public class LoginFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
+	
+	/**
+	 * 
+	 * 请求参数完整性校验
+	 */
+	@SuppressWarnings({ "rawtypes", "unused" })
+	private String checkRequestParamValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String sessionId = getSessionId(request);
+		String userId = getUserId(request);
+		if (StringUtils.isBlank(userId) || StringUtils.isBlank(sessionId)) {
+			logger.warn("请求参数不完整：userId=" + userId + "sessionId=" + sessionId);
+			response.setCharacterEncoding("utf-8");
+			ResponseData resposeData = new ResponseData();
+			Result result = new Result();
+			result.setStatus(Status.ERROR);
+			result.setMessage("请求参数不完整");
+			result.setErrorCode(Constants.REQUEST_PARAMS_INCOMPLETE);
+			resposeData.setResult(result);
+			response.getWriter().write(GSONUtil.toJson(resposeData));
+			return null;
+		}
+		return sessionId;
+	}
+	
+	private String getSessionId(HttpServletRequest request){
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		if (StringUtils.isBlank(sessionId)) {
+			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
+		}
+		return sessionId;
+	}
+	
+	private String getUserId(HttpServletRequest request){
+		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
+		if (StringUtils.isBlank(userId)) {
+			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
+		}
+		return userId;
+	}
 
 	private BaseUser getUser(HttpServletRequest request) {
 /*		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
@@ -57,7 +97,7 @@ public class LoginFilter implements Filter {
 		return null;*/
 
 		
-		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		/*Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 		if (StringUtils.isBlank(sessionId)) {
 			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
@@ -77,10 +117,10 @@ public class LoginFilter implements Filter {
 				return null;
 			}
 			return (BaseUser) userObj;
-		}
-		/*	
-		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		if (userObj == null) {
+		}*/
+			
+		//Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		//if (userObj == null) {
 			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 			if (StringUtils.isBlank(sessionId)) {
 				sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
@@ -90,8 +130,7 @@ public class LoginFilter implements Filter {
 			} else {
 				return null;
 			}
-		}
-		return (BaseUser) userObj;*/
+		//}
 	}
 
 	/**
@@ -103,7 +142,6 @@ public class LoginFilter implements Filter {
 	 *            sessionId key
 	 * @return user
 	 */
-	@SuppressWarnings("unused")
 	private BaseUser getUser(HttpServletRequest request, String key) {
 		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
@@ -131,12 +169,13 @@ public class LoginFilter implements Filter {
 		BaseUser user = getUser(req);
 		if (null != user && user.getId() > 0) {
 			req.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
+		}else{
+			req.getSession().removeAttribute(Constants.SESSION_USER_KEY);
 		}
 
 		String url = req.getRequestURI();
 		boolean loginFlag = true;
 
-		// 濡傛灉url鏄祫婧愭枃浠惰姹傚湴鍧�鐩存帴鏀捐
 		loginFlag = judgeFile(url);
 		if (!loginFlag) {
 			chain.doFilter(request, response);
@@ -145,14 +184,14 @@ public class LoginFilter implements Filter {
 
 		for (String excludedUrl : excludedUrlArray) {
 			if (url.contains(StringEx.replaceSpecial(excludedUrl))) {
-				loginFlag = false;
-				break;
+				chain.doFilter(request, response);
+				return;
 			}
 		}
 		for (String excludedUrl : webExcludedUrl) {
 			if (url.contains(excludedUrl)) {
-				loginFlag = false;
-				break;
+				chain.doFilter(request, response);
+				return;
 			}
 		}
 		if (loginFlag && null == user) {
@@ -179,7 +218,7 @@ public class LoginFilter implements Filter {
 		}
 		ServletContext servletContext = config.getServletContext();
 		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		cache = (Cache) wac.getBean("cache");
+		cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
 		@SuppressWarnings("unchecked")
 		Map<String, Object> configs = (Map<String, Object>) cache.get(OSSConstant.GALAXYINTERNET_FX_ENDPOINT);
 		servletContext.setAttribute(OSSConstant.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
