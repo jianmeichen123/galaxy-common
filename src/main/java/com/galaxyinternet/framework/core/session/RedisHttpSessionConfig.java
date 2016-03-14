@@ -18,14 +18,14 @@ import com.galaxyinternet.framework.core.constants.Constants;
  * @date 2016年3月12日
  *
  */
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 7200)
-@Configuration
+//@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 7200)
+//@Configuration
 public class RedisHttpSessionConfig {
 
-	@Autowired
+	//@Autowired
 	Cache cache;
 
-	@Bean
+	//@Bean
 	public RedisConnectionFactory jedisConnectionFactory() {
 		JedisConnectionFactory connectionFactory = new JedisConnectionFactory(
 				cache.getJedis().getShardInfo(Constants.REDIS_SHARDINFO_NAME));
