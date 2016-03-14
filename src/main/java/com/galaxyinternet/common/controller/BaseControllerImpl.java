@@ -2,9 +2,11 @@ package com.galaxyinternet.common.controller;
 
 import java.util.Arrays;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.BaseEntity;
+import com.galaxyinternet.framework.core.model.BaseUser;
 import com.galaxyinternet.framework.core.model.ControllerPath;
 import com.galaxyinternet.framework.core.model.PagableEntity;
 import com.galaxyinternet.framework.core.model.Page;
@@ -179,5 +182,17 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 			return responseBody;
 		}
 		return this.editOne(entity);
+	}
+	
+	
+	/**
+	 * 从Session中取用户
+	 */
+	protected BaseUser getUserFromSession(HttpServletRequest request){
+		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		if (userObj == null) {
+			return null;
+		}
+		return (BaseUser) userObj;
 	}
 }
