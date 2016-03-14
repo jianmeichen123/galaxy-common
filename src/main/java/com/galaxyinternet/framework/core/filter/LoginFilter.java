@@ -27,6 +27,7 @@ import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
+import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
 
 public class LoginFilter implements Filter {
@@ -52,8 +53,8 @@ public class LoginFilter implements Filter {
 	 */
 	@SuppressWarnings({ "rawtypes", "unused" })
 	private String checkRequestParamValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String sessionId = getSessionId(request);
-		String userId = getUserId(request);
+		String sessionId = SessionUtils.getSessionId(request);
+		String userId = SessionUtils.getUserId(request);
 		if (StringUtils.isBlank(userId) || StringUtils.isBlank(sessionId)) {
 			logger.warn("请求参数不完整：userId=" + userId + "sessionId=" + sessionId);
 			response.setCharacterEncoding("utf-8");
@@ -67,50 +68,6 @@ public class LoginFilter implements Filter {
 			return null;
 		}
 		return sessionId;
-	}
-
-	private String getSessionId(HttpServletRequest request) {
-		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-		}
-		return sessionId;
-	}
-
-	private String getUserId(HttpServletRequest request) {
-		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
-		if (StringUtils.isBlank(userId)) {
-			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
-		}
-		return userId;
-	}
-
-	private BaseUser getUser(HttpServletRequest request) {
-		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-		}
-		if (StringUtils.isNotBlank(sessionId)) {
-			return getUser(request, sessionId);
-		} else {
-			return (BaseUser)request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		}
-	}
-
-	/**
-	 * 获取session中用户的信息
-	 * @param request
-	 *            request
-	 * @param key
-	 *            sessionId key
-	 * @return user
-	 */
-	private BaseUser getUser(HttpServletRequest request, String key) {
-		BaseUser user = (BaseUser) cache.getByRedis(key);
-		if (user != null) {
-			cache.setByRedis(key, user, 60 * 60 * 24 * 1);
-		}
-		return user;
 	}
 
 	/**
@@ -151,12 +108,12 @@ public class LoginFilter implements Filter {
 				return;
 			}
 		}
-		
-		//checkRequestParamValid(request,response);
-		
-		BaseUser user = getUser(request);
+
+		// checkRequestParamValid(request,response);
+
+		BaseUser user = SessionUtils.getUser(request, cache);
 		request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
-		
+
 		if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
