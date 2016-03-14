@@ -17,6 +17,7 @@ public class Constants {
 	public final static String REQUEST_URL_USER_ID_KEY = "guid";
 
 	public final static String LOGIN_TOLOGIN = "/galaxy/userlogin/toLogin";
+	public final static String SOP_REDIRECT = "/galaxy/index";
 
 	public final static String LOGIN_CHECKLOGIN = "/galaxy/userlogin/login";
 
