@@ -155,12 +155,7 @@ public class LoginFilter implements Filter {
 		//checkRequestParamValid(request,response);
 		
 		BaseUser user = getUser(request);
-		if (null != user && user.getId() > 0) {
-			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
-		} else {
-			request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
-		}
-
+		request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 		
 		if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
