@@ -89,7 +89,7 @@ public class LoginFilter implements Filter {
 		String sessionId = getSessionId(request);
 		if (StringUtils.isBlank(sessionId))
 			return null;
-		Object userObj = request.getSession().getAttribute(sessionId);
+		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		if (userObj == null) {
 			return null;
 		}
