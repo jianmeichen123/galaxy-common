@@ -93,7 +93,7 @@ public class LoginFilter implements Filter {
 		if (StringUtils.isNotBlank(sessionId)) {
 			return getUser(request, sessionId);
 		} else {
-			return null;
+			return (BaseUser)request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		}
 	}
 
