@@ -108,7 +108,6 @@ public class LoginFilter implements Filter {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -118,10 +117,9 @@ public class LoginFilter implements Filter {
 		 */
 		// checkRequestParamValid(request, response);
 
-		String sessionId = getSessionId(request);
 		BaseUser user = getUser(request);
 		if (null != user && user.getId() > 0) {
-			request.getSession().setAttribute(sessionId, user);
+			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 		}
 
 		String url = request.getRequestURI();
