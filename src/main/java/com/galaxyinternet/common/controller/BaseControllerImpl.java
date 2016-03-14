@@ -195,4 +195,24 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 		}
 		return (BaseUser) userObj;
 	}
+	/**
+	 * 获取sessionId
+	 */
+	protected String getSessionId(HttpServletRequest request){
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		if (StringUtils.isBlank(sessionId)) {
+			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
+		}
+		return sessionId;
+	}
+	/**
+	 * 获取userId
+	 */
+	protected String getUserId(HttpServletRequest request){
+		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
+		if (StringUtils.isBlank(userId)) {
+			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
+		}
+		return userId;
+	}
 }
