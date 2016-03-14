@@ -31,17 +31,21 @@ import com.galaxyinternet.framework.core.utils.StringEx;
 
 public class LoginFilter implements Filter {
 	private Logger logger = LoggerFactory.getLogger(LoginFilter.class);
-
+	/**
+	 * 任何情况都不需要登录，在web.xml里面配置
+	 */
 	static String[] excludedUrlArray = {};
 
 	static Cache cache;
-
+	/**
+	 * 允许游客状态的接口
+	 */
 	static String[] webExcludedUrl = { Constants.LOGIN_TOLOGIN, Constants.LOGIN_CHECKLOGIN };
 
 	@Override
 	public void destroy() {
 	}
-	
+
 	/**
 	 * 
 	 * 请求参数完整性校验
@@ -64,16 +68,16 @@ public class LoginFilter implements Filter {
 		}
 		return sessionId;
 	}
-	
-	private String getSessionId(HttpServletRequest request){
+
+	private String getSessionId(HttpServletRequest request) {
 		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 		if (StringUtils.isBlank(sessionId)) {
 			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
 		}
 		return sessionId;
 	}
-	
-	private String getUserId(HttpServletRequest request){
+
+	private String getUserId(HttpServletRequest request) {
 		String userId = request.getHeader(Constants.REQUEST_HEADER_USER_ID_KEY);
 		if (StringUtils.isBlank(userId)) {
 			userId = request.getParameter(Constants.REQUEST_URL_USER_ID_KEY);
@@ -82,60 +86,19 @@ public class LoginFilter implements Filter {
 	}
 
 	private BaseUser getUser(HttpServletRequest request) {
-/*		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-		}
-		if (StringUtils.isNotBlank(sessionId)) {
-			BaseUser user =  getUser(request, sessionId);
-			if(null == user){
-				request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
-			}else{
-				return user;
-			}
-		} 
-		return null;*/
-
-		
-		/*Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 		if (StringUtils.isBlank(sessionId)) {
 			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
 		}
 		if (StringUtils.isNotBlank(sessionId)) {
-			BaseUser user = (BaseUser) cache.getByRedis(sessionId);
-			if(user==null){
-				request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
-				return null;
-			}else{
-				request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
-				cache.setByRedis(sessionId, user, 60 * 60 * 24 * 1);
-				return user;
-			}
-		}else{
-			if(userObj==null){
-				return null;
-			}
-			return (BaseUser) userObj;
-		}*/
-			
-		//Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		//if (userObj == null) {
-			String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-			if (StringUtils.isBlank(sessionId)) {
-				sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-			}
-			if (StringUtils.isNotBlank(sessionId)) {
-				return getUser(request, sessionId);
-			} else {
-				return null;
-			}
-		//}
+			return getUser(request, sessionId);
+		} else {
+			return null;
+		}
 	}
 
 	/**
-	 * 鑾峰彇鐢ㄦ埛淇℃伅
-	 * 
+	 * 获取session中用户的信息
 	 * @param request
 	 *            request
 	 * @param key
@@ -151,7 +114,7 @@ public class LoginFilter implements Filter {
 	}
 
 	/**
-	 * 鍘绘帀瀵硅祫婧愭枃浠剁殑鎷︽埅
+	 * 去掉对资源文件的拦截
 	 */
 	public boolean judgeFile(String url) {
 		if (url.endsWith(".gif") || url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".bmp")
@@ -163,17 +126,11 @@ public class LoginFilter implements Filter {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest) request;
-		BaseUser user = getUser(req);
-		if (null != user && user.getId() > 0) {
-			req.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
-		}else{
-			req.getSession().removeAttribute(Constants.SESSION_USER_KEY);
-		}
-
-		String url = req.getRequestURI();
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpServletResponse response = (HttpServletResponse) resp;
+		String url = request.getRequestURI();
 		boolean loginFlag = true;
 
 		loginFlag = judgeFile(url);
@@ -194,6 +151,17 @@ public class LoginFilter implements Filter {
 				return;
 			}
 		}
+		
+		//checkRequestParamValid(request,response);
+		
+		BaseUser user = getUser(request);
+		if (null != user && user.getId() > 0) {
+			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
+		} else {
+			request.getSession().removeAttribute(Constants.SESSION_USER_KEY);
+		}
+
+		
 		if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
