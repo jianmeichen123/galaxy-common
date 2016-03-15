@@ -22,7 +22,7 @@ public class Result implements Serializable {
 	/**
 	 * 错误码
 	 */
-	private String errorCode;
+	private String errorCode="";
 
 	public Result() {
 		super();
