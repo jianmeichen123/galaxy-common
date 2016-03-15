@@ -84,6 +84,7 @@ public class SessionUtils {
 		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
 			cache.setByRedis(key, user, 60 * 60 * 24 * 1);
+			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 		}
 		return user;
 	}
