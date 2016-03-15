@@ -328,13 +328,24 @@ public class OSSHelper {
 	 * 4.上传文件之前，无法确定上传文件的大小。
 	 * 
 	 */
-	public static void uploadSupportBreakpoint(String sourceFilePath, String bucketName, String key) {
-		int result = new OSSUploader(sourceFilePath, bucketName, key).uploadFile();
+	public static int uploadSupportBreakpoint(File sourceFile, String bucketName, String key) {
+		int result = new OSSUploader(sourceFile, bucketName, key).uploadFile();
 		if (result == GlobalCode.ERROR) {
 			logger.error("大文件上传失败");
 		} else {
 			logger.debug("文件上传成功");
 		}
+		return result;
+	}
+
+	public static int uploadSupportBreakpoint(File sourceFile, String key) {
+		int result = new OSSUploader(sourceFile, defaultBucketName, key).uploadFile();
+		if (result == GlobalCode.ERROR) {
+			logger.error("大文件上传失败");
+		} else {
+			logger.debug("文件上传成功");
+		}
+		return result;
 	}
 
 	/**

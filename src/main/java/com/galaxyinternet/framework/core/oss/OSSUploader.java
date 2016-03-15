@@ -48,7 +48,7 @@ public class OSSUploader implements Callable<Integer> {
 
 	// 内层线程池
 	private ExecutorService pool;
-	private String sourceFilePath;// 上次路径
+	private File uploadFile;// 上次文件
 	private String bucketName;// bucketName
 	private String key;// 云端存储路径
 
@@ -62,10 +62,10 @@ public class OSSUploader implements Callable<Integer> {
 	 * @param key
 	 *            存储key -在oss的存储路径
 	 */
-	public OSSUploader(String sourceFilePath, String bucketName, String key) {
+	public OSSUploader(File sourceFile, String bucketName, String key) {
 		// 实例化单文件上次线程池
 		pool = Executors.newFixedThreadPool(OSSConstant.SINGLE_FILE_CONCURRENT_THREADS);
-		this.sourceFilePath = sourceFilePath;
+		this.uploadFile = sourceFile;
 		this.bucketName = bucketName;
 		this.key = key;
 	}
@@ -103,9 +103,8 @@ public class OSSUploader implements Callable<Integer> {
 	@Override
 	public Integer call() {
 		OSSClient client = OSSFactory.getClientInstance();
-		File uploadFile = new File(sourceFilePath);
-		if (!uploadFile.exists()) {
-			LOGGER.info("无法找到文件：" + sourceFilePath);
+		if (null==uploadFile || !uploadFile.exists()) {
+			LOGGER.info("无法找到文件：" + uploadFile);
 			return GlobalCode.FILE_NOT_FOUND_ERROR;
 		}
 		int result = GlobalCode.ERROR;
@@ -135,7 +134,7 @@ public class OSSUploader implements Callable<Integer> {
 		String uploadId = "";
 
 		// 序列化的文件路径（与上传文件同路径使用.up.temp后缀）
-		String serializationFilePath = sourceFilePath + ".up.temp";
+		String serializationFilePath = uploadFile.getPath() + ".up.temp";
 
 		boolean isSerializationFile = false;
 
