@@ -7,13 +7,12 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
+import com.galaxyinternet.framework.core.utils.BeanContextUtils;
 
 /**
  * 令牌处理拦截器<br/>
@@ -27,9 +26,7 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 		if (cache == null) {
-			WebApplicationContext wac = WebApplicationContextUtils
-					.getWebApplicationContext(request.getSession().getServletContext());
-			cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
+			cache = (Cache)BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, request);
 		}
 		if (handler instanceof HandlerMethod) {
 			HandlerMethod handlerMethod = (HandlerMethod) handler;

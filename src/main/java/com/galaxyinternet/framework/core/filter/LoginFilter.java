@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
@@ -26,6 +24,7 @@ import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
+import com.galaxyinternet.framework.core.utils.BeanContextUtils;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
@@ -137,8 +136,7 @@ public class LoginFilter implements Filter {
 			excludedUrlArray = excludedUrl.split(",");
 		}
 		ServletContext servletContext = config.getServletContext();
-		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		cache = (Cache) wac.getBean(Constants.REDIS_CACHE_BEAN_NAME);
+		cache = (Cache)BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 		@SuppressWarnings("unchecked")
 		Map<String, Object> configs = (Map<String, Object>) cache.get(OSSConstant.GALAXYINTERNET_FX_ENDPOINT);
 		servletContext.setAttribute(OSSConstant.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
