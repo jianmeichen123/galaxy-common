@@ -10,15 +10,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class GalaxyThreadPool {
 
-	static int CPU_CORE_SIZE = Runtime.getRuntime().availableProcessors();
-	static final ExecutorService EXECUTOR_SERVICE;
+	static int cpu_core_size = Runtime.getRuntime().availableProcessors();
+	static ExecutorService executorService;
 	static {
-		EXECUTOR_SERVICE = new ThreadPoolExecutor(CPU_CORE_SIZE * 2, CPU_CORE_SIZE * 4, 5, TimeUnit.MINUTES,
-				new ArrayBlockingQueue<Runnable>(CPU_CORE_SIZE * 50), new ThreadPoolExecutor.CallerRunsPolicy());
+		executorService = new ThreadPoolExecutor(cpu_core_size * 2, cpu_core_size * 4, 5, TimeUnit.MINUTES,
+				new ArrayBlockingQueue<Runnable>(cpu_core_size * 20), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	public static ExecutorService getExecutorService() {
-		return EXECUTOR_SERVICE;
+		return executorService;
 	}
 
 	private GalaxyThreadPool() {
