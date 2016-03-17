@@ -56,5 +56,7 @@ public class Constants {
 	public final static int TOKEN_IN_REDIS_TIMEOUT_SECONDS = 60 * 60;// 1小时
 
 	public final static String REDIS_SHARDINFO_NAME="jedis.shardInfo";
+	//邮箱后缀名
+	public static final String MAIL_SUFFIX = "@galaxyinternet.com";
 	
 }
