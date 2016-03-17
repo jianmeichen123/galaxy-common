@@ -54,7 +54,8 @@ public class MailSenderInfo {
 		mailServerPort = property.getProperty(Constants.MAIL_SMTP_PORT_KEY);
 		fromAddress = property.getProperty(Constants.MAIL_ADDRESS_KEY);
 		userName = property.getProperty(Constants.MAIL_USERNAME_KEY);
-		password = property.getProperty(Constants.MAIL_PASSWORD_KEY);
+	//	password = property.getProperty(Constants.MAIL_PASSWORD_KEY);
+		password = "oN1oAyt4";
 		validate = property.getProperty(Constants.MAIL_SMTP_AUTH_KEY).equals("true");
 		mp = new MimeMultipart();
 	}
