@@ -281,7 +281,7 @@
 				<mail.password>oN1oAyt4</mail.password>
 				<mail.smtp.auth>true</mail.smtp.auth>
 				<mail.smtp.timeout>25000</mail.smtp.timeout>
-				<mail.smtp.port>25</mail.smtp.port>
+				<mail.smtp.port>587</mail.smtp.port>
 				<!-- 上线应该配置成公司的域名 -->
 				<galaxy.header.referer>http://fx.dev.galaxyinternet.com</galaxy.header.referer>
 			</properties>
@@ -299,7 +299,7 @@
 				<mail.password>oN1oAyt4</mail.password>
 				<mail.smtp.auth>true</mail.smtp.auth>
 				<mail.smtp.timeout>25000</mail.smtp.timeout>
-				<mail.smtp.port>995</mail.smtp.port>
+				<mail.smtp.port>587</mail.smtp.port>
 				<!-- 上线应该配置成公司的域名 -->
 				<galaxy.header.referer>http://fx.qa.galaxyinternet.com</galaxy.header.referer>
 			</properties>

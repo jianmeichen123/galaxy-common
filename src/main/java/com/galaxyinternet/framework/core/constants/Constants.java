@@ -59,4 +59,12 @@ public class Constants {
 	//邮箱后缀名
 	public static final String MAIL_SUFFIX = "@galaxyinternet.com";
 	
+	public static final String MAIL_TEMPLATE_FILE = "mail-template.properties";
+	//催办模板
+	public static final String MAIL_URGE_CONTENT = "mail.urge.content";
+	//重置密码模板
+	public static final String MAIL_RESTPWD_CONTENT = "mail.restPwd.content";
+	//共享文件模板
+	public static final String MAIL_FILESHARE_CONTENT = "mail.fileShare.content";
+	
 }

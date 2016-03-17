@@ -48,7 +48,7 @@ public class MailSenderInfo {
 	/**
 	 * 获得邮件会话属性
 	 */
-/*	public MailSenderInfo() {
+	public MailSenderInfo() {
 	    Properties property = PropertiesUtils.getProperties(Constants.MAIL_CONFIG_FILE);
 		mailServerHost = property.getProperty(Constants.MAIL_HOST_KEY);
 		mailServerPort = property.getProperty(Constants.MAIL_SMTP_PORT_KEY);
@@ -58,7 +58,7 @@ public class MailSenderInfo {
 		password = "oN1oAyt4";
 		validate = property.getProperty(Constants.MAIL_SMTP_AUTH_KEY).equals("true");
 		mp = new MimeMultipart();
-	}*/
+	}
 
 	public Properties getProperties() {
 		
