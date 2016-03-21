@@ -17,6 +17,7 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -148,10 +149,13 @@ public class SimpleMailSender {
 			Transport.send(mailMessage);
 			return flag;
 		} catch (MessagingException ex) {
-			flag = false;
-			ex.printStackTrace();
+			if(!(ex instanceof SendFailedException)){
+				flag = false;
+				logger.warn("xxx",ex);
+				return flag;
+			}
 			return flag;
-		} catch (NullPointerException ex) {
+		} catch (Exception ex) {
 			flag = false;
 			ex.printStackTrace();
 			return flag;
