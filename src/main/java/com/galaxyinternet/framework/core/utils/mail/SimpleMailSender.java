@@ -146,7 +146,9 @@ public class SimpleMailSender {
 			mailMessage.saveChanges();
 
 			// 发送邮件
-			Transport.send(mailMessage);
+			//Transport.send(mailMessage);
+			 Transport transport=sendMailSession.getTransport("smtp");
+			 transport.send(mailMessage);
 			return flag;
 		} catch (MessagingException ex) {
 			if(!(ex instanceof SendFailedException)){
@@ -356,7 +358,7 @@ public class SimpleMailSender {
 		 String filePath = "F:/20160223.sql";
 		 fileList.add(filePath);
 		 fileList.add(filePath);
-		 sendMailWithAttachfile(toMail,subject,content,fileList);
+		// sendMailWithAttachfile(toMail,subject,content,fileList);
 //		 sendHtmlMailWithImg(toMail,subject,content,attachList);
 		 
 	    sendHtmlMail(toMail, subject, content);

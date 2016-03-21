@@ -63,6 +63,7 @@ public class MailSenderInfo {
 	public Properties getProperties() {
 		
 		Properties p = new Properties();
+		p.put("mail.transport.protocol", "smtp");//协议 
 		p.put("mail.smtp.host", this.mailServerHost);
 		p.put("mail.smtp.port", this.mailServerPort);
 		p.put("mail.smtp.auth", validate ? "true" : "false");
