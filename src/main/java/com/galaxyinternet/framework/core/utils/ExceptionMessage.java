@@ -2,6 +2,8 @@ package com.galaxyinternet.framework.core.utils;
 
 public enum  ExceptionMessage  {
 
+	
+	DATA_NOT_EXISTS(10003, "%s"),
 	// common message
 	FIELD_NOT_ALLOWED_EMPTY(10010, "%s不能为空"),
 	FIELD_VALUE_MUST_LARGE_THAN(10011, "%s必须大于%2$.2f"),
