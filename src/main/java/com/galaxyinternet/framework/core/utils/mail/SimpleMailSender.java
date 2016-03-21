@@ -138,7 +138,7 @@ public class SimpleMailSender {
 			// 创建一个包含HTML内容的MimeBodyPart
 			BodyPart html = new MimeBodyPart();
 			// 设置HTML内容
-			html.setContent(mailInfo.getContent(), "text/html; charset=utf-8");
+			html.setContent(mailInfo.getContent(), "text/html; charset=GBK");
 
 			mainPart.addBodyPart(html);
 			// 将MiniMultipart对象设置为邮件内容
@@ -151,13 +151,13 @@ public class SimpleMailSender {
 		} catch (MessagingException ex) {
 			if(!(ex instanceof SendFailedException)){
 				flag = false;
-				logger.warn("xxx",ex);
+				logger.warn("邮件发送失败",ex);
 				return flag;
 			}
 			return flag;
 		} catch (Exception ex) {
 			flag = false;
-			ex.printStackTrace();
+			logger.warn("邮件服务异常",ex);
 			return flag;
 		} 
 	}
@@ -302,7 +302,7 @@ public class SimpleMailSender {
 			// 新建一个存放信件内容的BodyPart对象
 			BodyPart mdp = new MimeBodyPart();
 			// 给BodyPart对象设置内容和格式/编码方式
-			mdp.setContent(content.toString(), "text/html;charset=UTF-8");
+			mdp.setContent(content.toString(), "text/html;charset=GBK");
 			// 这句很重要，千万不要忘了
 			mm.setSubType("mixed");
 
@@ -339,7 +339,7 @@ public class SimpleMailSender {
 	}
 	public static void main(String[] args) {
 
-		String toMail = "sue_vip@126.com";// 收件人邮件地址
+		String toMail = "yingzhao@galaxyinternet.com";// 收件人邮件地址
 		String content = "<html>" + "<head></head>" + "<body>" + "<div align=center>"
 				+ "	<a href=http://localhost:8000/controller/vcs/login/toLogin target=_blank>" +
 				// " <img src=cid:IMG0 width=500 height=400 border=0>" +
