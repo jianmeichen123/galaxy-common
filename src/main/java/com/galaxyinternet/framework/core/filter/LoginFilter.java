@@ -123,7 +123,12 @@ public class LoginFilter implements Filter {
 			result.setMessage(errorMessage);
 			result.setErrorCode(Constants.IS_SESSIONID_EXPIRED);
 			resposeData.setResult(result);
-			response.getWriter().write(GSONUtil.toJson(resposeData));
+			String terminal = request.getHeader(Constants.REQUEST_TERMINAL_MARK);
+			if(StringUtils.isBlank(terminal)){
+				response.sendRedirect(Constants.LOGIN_TOLOGIN);
+			}else{
+				response.getWriter().write(GSONUtil.toJson(resposeData));
+			}
 			return;
 		}
 		chain.doFilter(req, response);

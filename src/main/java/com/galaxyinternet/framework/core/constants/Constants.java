@@ -70,4 +70,6 @@ public class Constants {
 	//共享文件模板
 	public static final String MAIL_FILESHARE_CONTENT = "mail.fileShare.content";
 	
+	public static final String REQUEST_TERMINAL_MARK="gt";//galaxinternet terminal
+	
 }
