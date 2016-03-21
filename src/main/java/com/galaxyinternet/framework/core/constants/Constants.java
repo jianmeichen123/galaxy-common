@@ -34,6 +34,8 @@ public class Constants {
 	public final static String ACCESS_REJECTED = "5";
 	
 	public final static String REQUEST_PARAMS_INCOMPLETE = "6";//请求参数不完整
+	
+	public final static String USER_DISABLE = "7"; //用户被禁用
 
 	public final static int DEFAULT_PAGE_SIZE = 15;
 
@@ -67,5 +69,7 @@ public class Constants {
 	public static final String MAIL_INITIALPWD_CONTENT = "mail.initialPwd.content";
 	//共享文件模板
 	public static final String MAIL_FILESHARE_CONTENT = "mail.fileShare.content";
+	
+	public static final String REQUEST_TERMINAL_MARK="gt";//galaxinternet terminal
 	
 }

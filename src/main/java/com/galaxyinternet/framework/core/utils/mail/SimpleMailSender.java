@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -104,7 +106,11 @@ public class SimpleMailSender {
 		// 发送信息
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setToAddress(toAddress);// 收件人地址
-		mailInfo.setSubject(subject);// 邮件主题
+		try {
+			mailInfo.setSubject(new String(subject.getBytes(),"utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}// 邮件主题
 		mailInfo.setContent(content);// 邮件内容
 		boolean flag = true;
 		// 判断是否需要身份认证
@@ -115,7 +121,7 @@ public class SimpleMailSender {
 			authenticator = new MyAuthenticator(mailInfo.getUserName(), mailInfo.getPassword());
 		}
 		// 根据邮件会话属性和密码验证器构造一个发送邮件的session
-		Session sendMailSession = Session.getDefaultInstance(pro, authenticator);
+		Session sendMailSession = Session.getInstance(pro, authenticator);
 		try {
 			// 根据session创建一个邮件消息
 			Message mailMessage = new MimeMessage(sendMailSession);
@@ -137,7 +143,7 @@ public class SimpleMailSender {
 			// 创建一个包含HTML内容的MimeBodyPart
 			BodyPart html = new MimeBodyPart();
 			// 设置HTML内容
-			html.setContent(mailInfo.getContent(), "text/html; charset=utf-8");
+			html.setContent(mailInfo.getContent(), "text/html; charset=GBK");
 
 			mainPart.addBodyPart(html);
 			// 将MiniMultipart对象设置为邮件内容
@@ -145,15 +151,20 @@ public class SimpleMailSender {
 			mailMessage.saveChanges();
 
 			// 发送邮件
-			Transport.send(mailMessage);
+			//Transport.send(mailMessage);
+			 Transport transport=sendMailSession.getTransport("smtp");
+			 transport.send(mailMessage);
 			return flag;
 		} catch (MessagingException ex) {
-			flag = false;
-			ex.printStackTrace();
+			if(!(ex instanceof SendFailedException)){
+				flag = false;
+				logger.warn("邮件发送失败",ex);
+				return flag;
+			}
 			return flag;
-		} catch (NullPointerException ex) {
+		} catch (Exception ex) {
 			flag = false;
-			ex.printStackTrace();
+			logger.warn("邮件服务异常",ex);
 			return flag;
 		} 
 	}
@@ -298,7 +309,7 @@ public class SimpleMailSender {
 			// 新建一个存放信件内容的BodyPart对象
 			BodyPart mdp = new MimeBodyPart();
 			// 给BodyPart对象设置内容和格式/编码方式
-			mdp.setContent(content.toString(), "text/html;charset=UTF-8");
+			mdp.setContent(content.toString(), "text/html;charset=GBK");
 			// 这句很重要，千万不要忘了
 			mm.setSubType("mixed");
 
@@ -335,7 +346,7 @@ public class SimpleMailSender {
 	}
 	public static void main(String[] args) {
 
-		String toMail = "sue_vip@126.com";// 收件人邮件地址
+		String toMail = "yingzhao@galaxyinternet.com";// 收件人邮件地址
 		String content = "<html>" + "<head></head>" + "<body>" + "<div align=center>"
 				+ "	<a href=http://localhost:8000/controller/vcs/login/toLogin target=_blank>" +
 				// " <img src=cid:IMG0 width=500 height=400 border=0>" +
@@ -352,7 +363,7 @@ public class SimpleMailSender {
 		 String filePath = "F:/20160223.sql";
 		 fileList.add(filePath);
 		 fileList.add(filePath);
-		 sendMailWithAttachfile(toMail,subject,content,fileList);
+		// sendMailWithAttachfile(toMail,subject,content,fileList);
 //		 sendHtmlMailWithImg(toMail,subject,content,attachList);
 		 
 	    sendHtmlMail(toMail, subject, content);
