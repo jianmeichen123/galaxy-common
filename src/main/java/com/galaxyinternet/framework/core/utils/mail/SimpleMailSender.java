@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,7 +106,11 @@ public class SimpleMailSender {
 		// 发送信息
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setToAddress(toAddress);// 收件人地址
-		mailInfo.setSubject(subject);// 邮件主题
+		try {
+			mailInfo.setSubject(new String(subject.getBytes(),"utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}// 邮件主题
 		mailInfo.setContent(content);// 邮件内容
 		boolean flag = true;
 		// 判断是否需要身份认证
