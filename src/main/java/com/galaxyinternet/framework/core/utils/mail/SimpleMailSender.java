@@ -107,7 +107,7 @@ public class SimpleMailSender {
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setToAddress(toAddress);// 收件人地址
 		try {
-			mailInfo.setSubject(new String(subject.getBytes(),"GB2312"));
+			mailInfo.setSubject(new String(subject.getBytes(),"UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}// 邮件主题
