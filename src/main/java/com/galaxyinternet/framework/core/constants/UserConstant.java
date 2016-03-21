@@ -23,6 +23,8 @@ public interface UserConstant {
 	public long CWJL = 12L;
 	//档案管理员
 	public long DAGLY = 17L;
+	//档案管理员
+	public long GLY = 16L;
 	//用户状态
 	String NORMAL = "0";
 	String DISABLE = "1";
