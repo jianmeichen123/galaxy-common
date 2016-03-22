@@ -25,6 +25,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.slf4j.Logger;
@@ -107,10 +108,10 @@ public class SimpleMailSender {
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setToAddress(toAddress);// 收件人地址
 		try {
-			mailInfo.setSubject(new String(subject.getBytes(),"UTF-8"));
+			mailInfo.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));// 邮件主题
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}// 邮件主题
+		}
 		mailInfo.setContent(content);// 邮件内容
 		boolean flag = true;
 		// 判断是否需要身份认证
