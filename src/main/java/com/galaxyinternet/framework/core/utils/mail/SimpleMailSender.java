@@ -351,8 +351,7 @@ public class SimpleMailSender {
 				// " <img src=cid:IMG0 width=500 height=400 border=0>" +
 				"您好，您申请的商户已经开通，请点击地址：http://localhost:8000/controller/vcs/login/toLogin  登陆 " + "	</a>" + "</div>"
 				+ "</body>" + "</html>";// 邮件内容
-		String subject = "";
-			subject = "商户开通通知";// 邮件主题
+		String subject = "商户开通通知";// 邮件主题
 		
 		 List<File> attachList = new ArrayList<File>();
 		 List<String> fileList =  new ArrayList<String>();
