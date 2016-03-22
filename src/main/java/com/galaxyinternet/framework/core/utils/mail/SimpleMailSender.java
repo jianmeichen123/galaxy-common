@@ -156,9 +156,10 @@ public class SimpleMailSender {
 			return flag;
 		} catch (MessagingException ex) {
 			if(!(ex instanceof SendFailedException)){
+				flag = true;
+			} else {
 				flag = false;
 				logger.warn("邮件发送失败",ex);
-				return flag;
 			}
 			return flag;
 		} catch (Exception ex) {
