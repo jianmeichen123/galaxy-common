@@ -25,6 +25,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.slf4j.Logger;
@@ -107,10 +108,10 @@ public class SimpleMailSender {
 		MailSenderInfo mailInfo = new MailSenderInfo();
 		mailInfo.setToAddress(toAddress);// 收件人地址
 		try {
-			mailInfo.setSubject(new String(subject.getBytes(),"utf-8"));
+			mailInfo.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));// 邮件主题
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-		}// 邮件主题
+		}
 		mailInfo.setContent(content);// 邮件内容
 		boolean flag = true;
 		// 判断是否需要身份认证
@@ -151,9 +152,7 @@ public class SimpleMailSender {
 			mailMessage.saveChanges();
 
 			// 发送邮件
-			//Transport.send(mailMessage);
-			 Transport transport=sendMailSession.getTransport("smtp");
-			 transport.send(mailMessage);
+			Transport.send(mailMessage);
 			return flag;
 		} catch (MessagingException ex) {
 			if(!(ex instanceof SendFailedException)){
@@ -346,13 +345,14 @@ public class SimpleMailSender {
 	}
 	public static void main(String[] args) {
 
-		String toMail = "yingzhao@galaxyinternet.com";// 收件人邮件地址
+		String toMail = "kaihuxing@galaxyinternet.com";// 收件人邮件地址
 		String content = "<html>" + "<head></head>" + "<body>" + "<div align=center>"
 				+ "	<a href=http://localhost:8000/controller/vcs/login/toLogin target=_blank>" +
 				// " <img src=cid:IMG0 width=500 height=400 border=0>" +
 				"您好，您申请的商户已经开通，请点击地址：http://localhost:8000/controller/vcs/login/toLogin  登陆 " + "	</a>" + "</div>"
 				+ "</body>" + "</html>";// 邮件内容
-		String subject = "商户开通通知";// 邮件主题
+		String subject = "";
+			subject = "商户开通通知";// 邮件主题
 		
 		 List<File> attachList = new ArrayList<File>();
 		 List<String> fileList =  new ArrayList<String>();
