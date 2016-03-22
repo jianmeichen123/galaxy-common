@@ -126,10 +126,11 @@ public class LoginFilter implements Filter {
 			String terminal = request.getHeader(Constants.REQUEST_TERMINAL_MARK);
 			if(StringUtils.isBlank(terminal)){
 				response.sendRedirect(Constants.LOGIN_TOLOGIN);
+				return;
 			}else{
 				response.getWriter().write(GSONUtil.toJson(resposeData));
+				return;
 			}
-			return;
 		}
 		chain.doFilter(req, response);
 	}
