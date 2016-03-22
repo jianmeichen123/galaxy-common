@@ -40,7 +40,7 @@ public class LoginFilter implements Filter {
 	/**
 	 * 允许游客状态的接口
 	 */
-	static String[] webExcludedUrl = { Constants.LOGIN_TOLOGIN, Constants.LOGIN_CHECKLOGIN, Constants.SOP_REDIRECT };
+	static String[] webExcludedUrl = { Constants.LOGIN_TOLOGIN, Constants.LOGIN_CHECKLOGIN };
 
 	@Override
 	public void destroy() {
