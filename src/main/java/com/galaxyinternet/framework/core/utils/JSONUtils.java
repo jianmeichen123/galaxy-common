@@ -48,14 +48,6 @@ public class JSONUtils {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			return "";
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 		String inputLine;
 		String str = "";
@@ -63,17 +55,10 @@ public class JSONUtils {
 			while ((inputLine = br.readLine()) != null) {
 				str += inputLine;
 			}
+			br.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		} 
 		return str;
 	}
 
