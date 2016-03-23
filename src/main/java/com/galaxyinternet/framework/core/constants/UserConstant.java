@@ -9,6 +9,8 @@ public interface UserConstant {
 	public long HHR = 3L;
 	//投资经理
 	public long TZJL = 4L;
+	//项目运营负责人
+	public long YYFZR = 6L;
 	//HR总监
 	public long HRZJ = 7L;
 	//HR经理

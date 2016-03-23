@@ -1,6 +1,8 @@
 package com.galaxyinternet.framework.core.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.galaxyinternet.framework.core.model.Result.Status;
 
@@ -110,4 +112,14 @@ public class ResponseData<T extends BaseEntity> {
 		this.entityList = entityList;
 	}
 
+	private Map<String,Object> userData = new HashMap<String,Object>();
+
+	public Map<String, Object> getUserData() {
+		return userData;
+	}
+
+	public void setUserData(Map<String, Object> userData) {
+		this.userData = userData;
+	}
+	
 }
