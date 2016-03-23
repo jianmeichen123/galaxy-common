@@ -26,7 +26,7 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	 * @return the keyword
 	 */
 	public String getKeyword() {
-		return keyword;
+		return keyword == null ? null : keyword.trim();
 	}
 	
 	private void getNewKeyword(){
@@ -46,7 +46,7 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	 * @param keyword the keyword to set
 	 */
 	public void setKeyword(String keyword) {
-		this.keyword = keyword;
+		this.keyword = keyword == null ? null : keyword.trim();
 	}
 
 	@Override
