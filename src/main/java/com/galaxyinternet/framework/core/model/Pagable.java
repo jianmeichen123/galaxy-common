@@ -10,4 +10,12 @@ public interface Pagable {
 
 	public Integer getPageNum();
 
+	public void setDirection(String direction);
+
+	public String getDirection();
+
+	public void setProperty(String property);
+
+	public String getProperty();
+
 }

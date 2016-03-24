@@ -64,6 +64,9 @@ public class Constants {
 	public static final String MAIL_TEMPLATE_FILE = "mail-template.properties";
 	//催办模板
 	public static final String MAIL_URGE_CONTENT = "mail.urge.content";
+	
+	//催办模板
+	public static final String MAIL_URGE_CONTENT_SPECIAL = "mail.urge.content.special";
 	//重置密码模板
 	public static final String MAIL_RESTPWD_CONTENT = "mail.restPwd.content";
 	public static final String MAIL_INITIALPWD_CONTENT = "mail.initialPwd.content";

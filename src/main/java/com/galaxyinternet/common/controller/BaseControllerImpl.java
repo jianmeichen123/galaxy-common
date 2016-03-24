@@ -215,4 +215,18 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 		}
 		return userId;
 	}
+	
+	protected String getCurrEndpoint(HttpServletRequest request)
+	{
+		String uri = request.getRequestURI();
+		String url = request.getRequestURL().toString();
+		String contextPath = request.getContextPath();
+		String endpoint = null;
+		if(contextPath == null || "".equals(contextPath.trim())){
+			endpoint = url.substring(0, url.indexOf(uri) + 1);
+		}else{
+			endpoint = url.substring(0, url.indexOf(contextPath) + contextPath.length() + 1);
+		}
+		return endpoint;
+	}
 }

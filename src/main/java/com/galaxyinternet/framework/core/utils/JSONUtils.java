@@ -8,11 +8,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class JSONUtils {
 
+	private static Logger logger = LoggerFactory.getLogger(JSONUtils.class);
 	private static Gson gson = new GsonBuilder().create();
 
 	/**
@@ -43,35 +47,21 @@ public class JSONUtils {
 	 */
 	public static String getBodyString(HttpServletRequest request) {
 		BufferedReader br = null;
-		try {
-			br = request.getReader();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return "";
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		String inputLine;
+		String inputLine = null;
 		String str = "";
 		try {
+			br = request.getReader();
 			while ((inputLine = br.readLine()) != null) {
 				str += inputLine;
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("从request请求体中获取json对象异常", e);
 		} finally {
-			if (br != null) {
-				try {
+			try {
+				if (null != br) {
 					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
 			}
 		}
 		return str;
