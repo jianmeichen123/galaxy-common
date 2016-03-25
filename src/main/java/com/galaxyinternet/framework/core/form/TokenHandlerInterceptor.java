@@ -85,7 +85,7 @@ public class TokenHandlerInterceptor extends HandlerInterceptorAdapter {
 	private String getSessionToken(HttpServletRequest request, String tokenValue) {
 		String sessionToken = (String) request.getSession().getAttribute(tokenValue);
 		if (null == sessionToken) {
-			Object token = cache.get(sessionToken);
+			Object token = cache.get(tokenValue);
 			if (null == token) {
 				return null;
 			} else {
