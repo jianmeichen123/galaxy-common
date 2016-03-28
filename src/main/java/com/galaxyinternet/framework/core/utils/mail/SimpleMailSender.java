@@ -21,6 +21,7 @@ import javax.mail.Multipart;
 import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -175,6 +176,95 @@ public class SimpleMailSender {
 		} 
 	}
 
+	/**
+	 *  多个邮件
+	 * @author zhaoying
+	 * @param toAddress
+	 * @param subject
+	 * @param content
+	 * @return
+	 */
+	public static boolean sendMultiMail(String toAddress, String subject, String content) {
+		String [] toAddressArray = toAddress.split(SPLIT_FLAG);
+		Address[]  addressTO = new InternetAddress[toAddressArray.length]; 
+		if (toAddressArray.length > 0 ) {
+			for (int i= 0;i< toAddressArray.length;i++) {
+				
+				try {
+					addressTO[i] = new InternetAddress(toAddressArray[i]);
+				} catch (AddressException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}  
+			
+			}
+		}
+		// 发送信息
+		MailSenderInfo mailInfo = new MailSenderInfo();
+		//mailInfo.setToAddress(toAddress);// 收件人地址
+		try {
+			mailInfo.setSubject(MimeUtility.encodeText(subject, "UTF-8", "B"));// 邮件主题
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		mailInfo.setContent(content);// 邮件内容
+		boolean flag = true;
+		// 判断是否需要身份认证
+		MyAuthenticator authenticator = null;
+		Properties pro = mailInfo.getProperties();
+		// 如果需要身份认证，则创建一个密码验证器
+		if (mailInfo.isValidate()) {
+			authenticator = new MyAuthenticator(mailInfo.getUserName(), mailInfo.getPassword());
+		}
+		// 根据邮件会话属性和密码验证器构造一个发送邮件的session
+		Session sendMailSession = Session.getInstance(pro, authenticator);
+		try {
+			// 根据session创建一个邮件消息
+			Message mailMessage = new MimeMessage(sendMailSession);
+			// 创建邮件发送者地址
+			Address from = new InternetAddress(mailInfo.getFromAddress());
+			// 设置邮件消息的发送者
+			mailMessage.setFrom(from);
+			// 创建邮件的接收者地址，并设置到邮件消息中
+			//Address to = new InternetAddress(mailInfo.getToAddress());
+			// Message.RecipientType.TO属性表示接收者的类型为TO
+			mailMessage.setRecipients(Message.RecipientType.TO, addressTO);
+			// 设置邮件消息的主题
+			mailMessage.setSubject(mailInfo.getSubject());
+			// 设置邮件消息发送的时间
+			mailMessage.setSentDate(new Date());
+
+			// MiniMultipart类是一个容器类，包含MimeBodyPart类型的对象
+			Multipart mainPart = new MimeMultipart();
+			// 创建一个包含HTML内容的MimeBodyPart
+			BodyPart html = new MimeBodyPart();
+			// 设置HTML内容
+			html.setContent(mailInfo.getContent(), "text/html; charset=GBK");
+
+			mainPart.addBodyPart(html);
+			// 将MiniMultipart对象设置为邮件内容
+			mailMessage.setContent(mainPart);
+			mailMessage.saveChanges();
+
+			// 发送邮件
+			//Transport.send(mailMessage);
+			 Transport transport=sendMailSession.getTransport("smtp");
+			 transport.send(mailMessage);
+			return flag;
+		} catch (MessagingException ex) {
+			if(!(ex instanceof SendFailedException)){
+				flag = true;
+			} else {
+				flag = false;
+				logger.warn("邮件发送失败",ex);
+			}
+			return flag;
+		} catch (Exception ex) {
+			flag = false;
+			logger.warn("邮件服务异常",ex);
+			return flag;
+		} 
+	}
 	/**
 	 * 发送多个邮件 返回失败列表
 	 * @author zhaoying
@@ -403,7 +493,7 @@ public class SimpleMailSender {
 		//使用模板发送邮件
 		String str = MailTemplateUtils.getContentByTemplate(Constants.MAIL_RESTPWD_CONTENT);
 		content = PlaceholderConfigurer.formatText(str, "test","test","123","www.baidu.com","www.baidu.com");
-		sendMutilHtmlMail(toMail, subject, content);
+		sendMultiMail(toMail, subject, content);
 		System.out.println("send");
 	}
 }
