@@ -177,7 +177,7 @@ public class OSSUploader implements Callable<Integer> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.info("==" + e.getMessage());
+			LOGGER.error("==" + e.getMessage());
 			return GlobalCode.THREAD_ERROR;
 		}
 

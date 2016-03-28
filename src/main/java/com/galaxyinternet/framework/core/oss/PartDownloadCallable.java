@@ -64,7 +64,7 @@ public class PartDownloadCallable implements Callable<PartDownloadCallable>, Ser
 			}
 			this.etag = ossObject.getObjectMetadata().getETag();
 		} catch (Exception e) {
-			LOGGER.info("==" + e.getMessage());
+			LOGGER.error("==" + e.getMessage());
 		} finally {
 			if (ossObject != null)
 				IOUtils.safeClose(ossObject.getObjectContent());

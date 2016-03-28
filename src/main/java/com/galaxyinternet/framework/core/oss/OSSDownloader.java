@@ -86,7 +86,7 @@ public class OSSDownloader implements Callable<Integer> {
 		try {
 			objectMetadata = client.getObjectMetadata(bucketName, key);
 		} catch (OSSException e) {
-			LOGGER.info("==请检查bucketName或key");
+			LOGGER.error("==请检查bucketName或key");
 			return GlobalCode.ERROR;
 		}
 		long fileLength = objectMetadata.getContentLength();
@@ -126,10 +126,10 @@ public class OSSDownloader implements Callable<Integer> {
 			while (download(downloadPartObj, serializationFilePath).isResult() == false) {
 				if (++i == OSSConstant.RETRY)
 					break;
-				LOGGER.info(Thread.currentThread().getName() + "重试第" + i + "次");
+				LOGGER.warn(Thread.currentThread().getName() + "重试第" + i + "次");
 			}
 		} catch (Exception e) {
-			LOGGER.info("==" + e.getMessage());
+			LOGGER.error("==" + e.getMessage());
 			return GlobalCode.THREAD_ERROR;
 		}
 		if (!downloadPartObj.isResult()) {
@@ -172,7 +172,7 @@ public class OSSDownloader implements Callable<Integer> {
 				FileSerializableUtil.delSerlzFile(serializationFilePath);
 
 		} catch (Exception e) {
-			LOGGER.info("==" + e.getMessage());
+			LOGGER.error("==" + e.getMessage());
 		}
 		return partThreadObj;
 	}

@@ -66,7 +66,7 @@ public class OSSFactory {
 				// 设置bucket的访问权限，public-read-write权限
 				ossClient.setBucketAcl(bucketName, CannedAccessControlList.PublicRead);
 			} catch (Exception e) {
-				logger.info("==" + e.getMessage());
+				logger.error("==" + e.getMessage());
 				return GlobalCode.ERROR;
 			}
 		}
