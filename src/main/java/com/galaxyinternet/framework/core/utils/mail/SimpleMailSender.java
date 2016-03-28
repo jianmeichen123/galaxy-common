@@ -28,14 +28,18 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.galaxyinternet.framework.core.config.PlaceholderConfigurer;
+import com.galaxyinternet.framework.core.constants.Constants;
 
 /**
  * 简单邮件（不带附件的邮件）发送器
  */
 public class SimpleMailSender {
-
+    static final String SPLIT_FLAG = ";";
 	static final Logger logger = LoggerFactory.getLogger(SimpleMailSender.class);
 	/**
 	 * 
@@ -172,6 +176,34 @@ public class SimpleMailSender {
 	}
 
 	/**
+	 * 发送多个邮件 返回失败列表
+	 * @author zhaoying
+	 * @param toAddress
+	 * @param subject
+	 * @param content
+	 * @return
+	 */
+	public static List<String> sendMutilHtmlMail(String toAddress, String subject, String content){
+		String [] toAddressArray = toAddress.split(SPLIT_FLAG);
+		List<String> failList = new ArrayList<String>();
+		if (toAddressArray.length > 0 ) {
+			for (int i= 0;i< toAddressArray.length;i++) {
+				if (StringUtils.isNoneBlank(toAddressArray[i])) {
+					boolean flag = sendHtmlMail(toAddressArray[i],subject,content);
+					
+					if (flag == false) {
+						failList.add(toAddressArray[i]);
+					}
+				}
+				
+			}
+		}
+		return failList;
+	}
+	
+	
+
+	/**
 	 * 
 	 * 方法描述:以HTML格式发送邮件,待发送的邮件的信息
 	 * 
@@ -293,6 +325,7 @@ public class SimpleMailSender {
 		try {
 			// 根据session创建一个邮件消息
 			MimeMessage message = new MimeMessage(sendMailSession);
+		
 			// 创建邮件发送者地址
 			Address from = new InternetAddress(mailInfo.getFromAddress());
 			// 设置邮件消息的发送者
@@ -348,7 +381,7 @@ public class SimpleMailSender {
 	}
 	public static void main(String[] args) {
 
-		String toMail = "yingzhao@galaxyinternet.com";// 收件人邮件地址
+		String toMail = "yingzhao@galaxyinternet.com;zhaoying505@126.com";// 收件人邮件地址
 		String content = "<html>" + "<head></head>" + "<body>" + "<div align=center>"
 				+ "	<a href=http://localhost:8000/controller/vcs/login/toLogin target=_blank>" +
 				// " <img src=cid:IMG0 width=500 height=400 border=0>" +
@@ -367,8 +400,10 @@ public class SimpleMailSender {
 		 fileList.add(filePath);
 		// sendMailWithAttachfile(toMail,subject,content,fileList);
 //		 sendHtmlMailWithImg(toMail,subject,content,attachList);
-		 
-	    sendHtmlMail(toMail, subject, content);
+		//使用模板发送邮件
+		String str = MailTemplateUtils.getContentByTemplate(Constants.MAIL_RESTPWD_CONTENT);
+		content = PlaceholderConfigurer.formatText(str, "test","test","123","www.baidu.com","www.baidu.com");
+		sendMutilHtmlMail(toMail, subject, content);
 		System.out.println("send");
 	}
 }
