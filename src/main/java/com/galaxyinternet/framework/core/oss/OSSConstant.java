@@ -1,9 +1,9 @@
 package com.galaxyinternet.framework.core.oss;
 
 public class OSSConstant {
-	public final static long DOWNLOAD_PART_SIZE = 6 * 1024 * 1024L; // 每个下载Part的大小设置为6MB
+	public final static long DOWNLOAD_PART_SIZE = 4 * 1024 * 1024L; // 每个下载Part的大小设置为4MB
 
-	public final static long UPLOAD_PART_SIZE = 6 * 1024 * 1024L; // 每个上传Part的大小设置为6MB
+	public final static long UPLOAD_PART_SIZE = 4 * 1024 * 1024L; // 每个上传Part的大小设置为4MB
 
 	public final static int CONCURRENT_FILE_NUMBER = 10; // 并发文件数。
 
@@ -11,7 +11,7 @@ public class OSSConstant {
 
 	public static int RETRY = 2;// 失败重试次数
 
-	public static int SERIALIZATION_TIME = 5;// 断点保存时间间隔(秒)
+	public static int SERIALIZATION_TIME = 1;// 断点保存时间间隔(秒)
 	
 	public static final String X_OSS_META_MY_MD5 = "x-oss-meta-galaxy-md5";
 
