@@ -1,11 +1,11 @@
 package com.galaxyinternet.framework.core.oss;
 
 public class OSSConstant {
-	public final static long DOWNLOAD_PART_SIZE = 4 * 1024 * 1024L; // 每个下载Part的大小设置为4MB
+	public final static long DOWNLOAD_PART_SIZE = 3 * 1024 * 1024L; // 每个下载Part的大小设置为4MB
 
-	public final static long UPLOAD_PART_SIZE = 4 * 1024 * 1024L; // 每个上传Part的大小设置为4MB
+	public final static long UPLOAD_PART_SIZE = 3 * 1024 * 1024L; // 每个上传Part的大小设置为4MB
 
-	public final static int CONCURRENT_FILE_NUMBER = 10 * 2; // 并发文件数。
+	public final static int CONCURRENT_FILE_NUMBER = 12; // 并发文件数。
 
 	public static int SINGLE_FILE_CONCURRENT_THREADS = Runtime.getRuntime().availableProcessors() * 2; // 单文件并发线程数。
 
