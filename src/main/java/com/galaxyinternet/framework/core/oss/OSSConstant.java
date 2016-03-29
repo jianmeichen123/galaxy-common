@@ -7,7 +7,7 @@ public class OSSConstant {
 
 	public final static int CONCURRENT_FILE_NUMBER = 10; // 并发文件数。
 
-	public static int SINGLE_FILE_CONCURRENT_THREADS = Runtime.getRuntime().availableProcessors() * 3; // 单文件并发线程数。
+	public static int SINGLE_FILE_CONCURRENT_THREADS = Runtime.getRuntime().availableProcessors() * 2; // 单文件并发线程数。
 
 	public static int RETRY = 2;// 失败重试次数
 
