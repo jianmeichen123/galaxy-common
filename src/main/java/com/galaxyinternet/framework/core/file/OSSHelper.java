@@ -364,4 +364,21 @@ public class OSSHelper {
 			logger.debug("文件下载成功");
 		}
 	}
+	
+	/**
+	 * 多线程断点下载文件
+	 * 
+	 * @param localFilePath
+	 * @param bucketName
+	 * @param key
+	 */
+	public static void downloadSupportBreakpoint(String localFilePath, String key) {
+		int result = new OSSDownloader(localFilePath, defaultBucketName, key).downloadFile();
+		;
+		if (result == GlobalCode.ERROR) {
+			logger.error("大文件下载失败");
+		} else {
+			logger.debug("文件下载成功");
+		}
+	}
 }

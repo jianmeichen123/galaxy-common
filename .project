@@ -3,6 +3,7 @@
 	<name>galaxy-common</name>
 	<comment></comment>
 	<projects>
+		<project>galaxy-jexcel</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

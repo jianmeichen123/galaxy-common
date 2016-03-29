@@ -74,7 +74,7 @@ public class LoginFilter implements Filter {
 	 */
 	public boolean judgeFile(String url) {
 		if (url.endsWith(".gif") || url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".bmp")
-				|| url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".jsx")) {
+				|| url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".jsx") || url.endsWith(".ico") || url.endsWith("html/installReadme.html")) {
 			return false;
 		} else {
 			return true;
