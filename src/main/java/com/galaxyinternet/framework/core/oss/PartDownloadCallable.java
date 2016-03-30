@@ -54,7 +54,7 @@ public class PartDownloadCallable implements Callable<PartDownloadCallable>, Ser
 			getObjectRequest.setRange(startPos, endPos);
 			ossObject = OSSFactory.getClientInstance().getObject(getObjectRequest);
 			file.seek(startPos);
-			int bufSize = 1024 * 300;
+			int bufSize = 1024 * 512;
 			byte[] buffer = new byte[bufSize];
 			int bytesRead;
 			while ((bytesRead = ossObject.getObjectContent().read(buffer)) > -1) {
