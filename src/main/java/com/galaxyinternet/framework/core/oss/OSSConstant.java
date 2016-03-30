@@ -11,7 +11,7 @@ public class OSSConstant {
 
 	public static int RETRY = 2;// 失败重试次数
 
-	public static int SERIALIZATION_TIME = 1;// 断点保存时间间隔(秒)
+	public static int SERIALIZATION_TIME = 4;// 断点保存时间间隔(秒)
 	
 	public static final String X_OSS_META_MY_MD5 = "x-oss-meta-galaxy-md5";
 
