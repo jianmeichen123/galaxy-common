@@ -4,8 +4,7 @@
 	<groupId>com.galaxyinternet</groupId>
 	<artifactId>galaxy-common</artifactId>
 	<packaging>jar</packaging>
-	<!-- QA版本 -->
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<!-- 线上版本 -->
 	<!-- <version>1.0.0</version> -->
 	<name />
