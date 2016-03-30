@@ -122,7 +122,7 @@ public class OSSDownloader implements Callable<Integer> {
 
 		try {
 			int i = 0;
-			// download方法提交分块下载线程至子线程池下砸，while循环用于下载失败重复下载，OSSConstant.RETRY定义重复下载次数
+			// download方法提交分块下载线程至子线程池下载，while循环用于下载失败重复下载，OSSConstant.RETRY定义重复下载次数
 			while (download(downloadPartObj, serializationFilePath).isResult() == false) {
 				if (++i == OSSConstant.RETRY)
 					break;
