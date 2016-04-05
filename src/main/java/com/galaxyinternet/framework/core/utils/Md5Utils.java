@@ -104,8 +104,16 @@ public class Md5Utils {
 				}
 			}
 		}
-		digest.update(byteBuffer);
-		return bufferToHex(digest.digest());
+		if(null == digest){
+			try {
+				digest = MessageDigest.getInstance("MD5");
+				digest.update(byteBuffer);
+				return bufferToHex(digest.digest());
+			} catch (NoSuchAlgorithmException e) {
+				LOGGER.error("Md5Utils messagedigest初始化失败", e);
+			}
+		}
+		return "";
 	}
 
 	public static String getMD5String(byte[] bytes) {
