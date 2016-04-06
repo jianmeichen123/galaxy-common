@@ -26,7 +26,7 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	/**
 	 * 
 	 */
-	protected String flag;
+	protected String flagkeyword;
 	
 	/**
 	 * @return the keyword
@@ -94,11 +94,14 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 		this.escapeChar = escapeChar;
 	}
 
-	public String getFlag() {
-		return flag;
+	
+	public String getFlagkeyword() {
+		return flagkeyword;
 	}
 
-	public void setFlag(String flag) {
-		this.flag = flag;
+	public void setFlagkeyword(String flagkeyword) {
+		this.flagkeyword = flagkeyword;
 	}
+
+	
 }
