@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class JSONUtils {
+
 	private static Logger logger = LoggerFactory.getLogger(JSONUtils.class);
 	private static Gson gson = new GsonBuilder().create();
 
