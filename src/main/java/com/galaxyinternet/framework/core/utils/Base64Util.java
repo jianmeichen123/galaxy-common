@@ -31,8 +31,8 @@ public class Base64Util {
 	
 	public static void main(String[] args) {
 		try {
-			System.out.println(encoded("name"));
-			System.out.println(decode("bmFtZQ=="));
+			System.out.println(encoded("pan"));
+			System.out.println(encoded("123"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}

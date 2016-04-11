@@ -36,6 +36,8 @@ public class Constants {
 	public final static String REQUEST_PARAMS_INCOMPLETE = "6";//请求参数不完整
 	
 	public final static String USER_DISABLE = "7"; //用户被禁用
+	
+	public final static String INVALID_SESSIONID = "8"; //sessionId不正确
 
 	public final static int DEFAULT_PAGE_SIZE = 15;
 

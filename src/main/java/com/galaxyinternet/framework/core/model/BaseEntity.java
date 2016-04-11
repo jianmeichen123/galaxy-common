@@ -17,10 +17,16 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	@Transient
 	protected Boolean escapeChar;
 	
+	
 	/**
 	 * 模糊查询关键字
 	 */
 	protected String keyword;
+	
+	/**
+	 * 
+	 */
+	protected String flagkeyword;
 	
 	/**
 	 * @return the keyword
@@ -87,4 +93,15 @@ public abstract class BaseEntity extends PrimaryKeyObject<Long>{
 	public void setEscapeChar(Boolean escapeChar) {
 		this.escapeChar = escapeChar;
 	}
+
+	
+	public String getFlagkeyword() {
+		return flagkeyword;
+	}
+
+	public void setFlagkeyword(String flagkeyword) {
+		this.flagkeyword = flagkeyword;
+	}
+
+	
 }
