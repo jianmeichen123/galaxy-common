@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.CannedAccessControlList;
+import com.galaxyinternet.framework.core.file.UploadModeType;
 import com.galaxyinternet.framework.core.id.IdGenerator;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
@@ -24,6 +25,7 @@ public class OSSFactory {
 	public final static String ACCESS_KEY_ID;
 	public final static String accessKeySecret;
 	private static String bucketName;
+	public final static String UPLOAD_MODE;
 	
 	private OSSFactory() {
 	}
@@ -35,6 +37,7 @@ public class OSSFactory {
 		ACCESS_KEY_ID = property.getProperty(OSSConstant.OSS_ACCESS_KEY);
 		accessKeySecret = property.getProperty(OSSConstant.OSS_ACCESS_KEY_SECRET);
 		ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, accessKeySecret);
+		UPLOAD_MODE = property.getProperty(OSSConstant.OSS_UPLOAD_MODE_KEY);
 	}
 
 	/*public static OSSClient getInstance() {

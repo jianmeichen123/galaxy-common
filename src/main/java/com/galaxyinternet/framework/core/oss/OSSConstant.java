@@ -24,6 +24,8 @@ public class OSSConstant {
 	public final static String OSS_ACCESS_KEY_SECRET = "oss.access.key.secret";
 
 	public final static String OSS_BUCKET_NAME_KEY = "oss.bucket.name";
+	
+	public final static String OSS_UPLOAD_MODE_KEY = "oss.upload.mode";
 
 	public final static String OSS_CONFIG_FILE = "oss-config.properties";
 
