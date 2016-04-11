@@ -20,9 +20,9 @@ import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 public class OSSFactory {
 	private static Logger logger = LoggerFactory.getLogger(OSSFactory.class);
 	private static OSSClient ossClient = null;
-	private static String endpoint;
-	private static String accessKeyId;
-	private static String accessKeySecret;
+	public final static String ENDPOINT;
+	public final static String ACCESS_KEY_ID;
+	public final static String accessKeySecret;
 	private static String bucketName;
 	
 	private OSSFactory() {
@@ -31,10 +31,10 @@ public class OSSFactory {
 	static {
 		Properties property = PropertiesUtils.getProperties(OSSConstant.OSS_CONFIG_FILE);
 		bucketName = property.getProperty(OSSConstant.OSS_BUCKET_NAME_KEY);
-		endpoint = property.getProperty(OSSConstant.OSS_ENDPOINT_KEY);
-		accessKeyId = property.getProperty(OSSConstant.OSS_ACCESS_KEY);
+		ENDPOINT = property.getProperty(OSSConstant.OSS_ENDPOINT_KEY);
+		ACCESS_KEY_ID = property.getProperty(OSSConstant.OSS_ACCESS_KEY);
 		accessKeySecret = property.getProperty(OSSConstant.OSS_ACCESS_KEY_SECRET);
-		ossClient = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+		ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, accessKeySecret);
 	}
 
 	/*public static OSSClient getInstance() {
