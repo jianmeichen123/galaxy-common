@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.CannedAccessControlList;
-import com.galaxyinternet.framework.core.file.UploadModeType;
 import com.galaxyinternet.framework.core.id.IdGenerator;
 import com.galaxyinternet.framework.core.utils.PropertiesUtils;
 
