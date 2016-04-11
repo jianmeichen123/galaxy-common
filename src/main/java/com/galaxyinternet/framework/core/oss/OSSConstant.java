@@ -10,6 +10,8 @@ public class OSSConstant {
 	public static int SINGLE_FILE_CONCURRENT_THREADS = Runtime.getRuntime().availableProcessors() * 2; // 单文件并发线程数。
 
 	public static int RETRY = 2;// 失败重试次数
+	
+	public static long OSS_UPLOAD_FILE_EXPIRE_TIME = 600;// 上传文件的过期时间(秒)
 
 	public static int SERIALIZATION_TIME = 5;// 断点保存时间间隔(秒)
 	
@@ -22,6 +24,8 @@ public class OSSConstant {
 	public final static String OSS_ACCESS_KEY_SECRET = "oss.access.key.secret";
 
 	public final static String OSS_BUCKET_NAME_KEY = "oss.bucket.name";
+	
+	public final static String OSS_UPLOAD_MODE_KEY = "oss.upload.mode";
 
 	public final static String OSS_CONFIG_FILE = "oss-config.properties";
 

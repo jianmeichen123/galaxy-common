@@ -275,6 +275,7 @@
 				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
 				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
 				<oss.bucket.name>galaxydev-xhhl-fx</oss.bucket.name>
+				<oss.upload.mode>oss</oss.upload.mode>
 				<mail.host>mail.galaxyinternet.com</mail.host>
 				<mail.address>fx-admin@galaxyinternet.com</mail.address>
 				<mail.username>fx-admin</mail.username>
@@ -293,6 +294,7 @@
 				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
 				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
 				<oss.bucket.name>galaxytest-xhhl-fx</oss.bucket.name>
+				<oss.upload.mode>oss</oss.upload.mode>
 				<mail.host>mail.galaxyinternet.com</mail.host>
 				<mail.address>fx-admin@galaxyinternet.com</mail.address>
 				<mail.username>fx-admin</mail.username>
