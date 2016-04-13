@@ -211,7 +211,7 @@ public class OSSHelper {
 		if (file.exists()) {
 			try {
 				PutObjectResult putObjectResult = null;
-				if (OSSFactory.UPLOAD_MODE.equalsIgnoreCase("local")) {
+				if (OSSFactory.UPLOAD_MODE.equalsIgnoreCase(UploadModeType.LOCAL.getKey())) {
 					putObjectResult = client.putObject(bucketName, key, file);
 				} else {
 					putObjectResult = client.putObject(bucketName, key, file, metadata);
@@ -335,7 +335,7 @@ public class OSSHelper {
 		}
 		try {
 			PutObjectResult putObjectResult = null;
-			if (OSSFactory.UPLOAD_MODE.equalsIgnoreCase("local")) {
+			if (OSSFactory.UPLOAD_MODE.equalsIgnoreCase(UploadModeType.LOCAL.getKey())) {
 				putObjectResult = client.putObject(bucketName, key, inputStream);
 			} else {
 				putObjectResult = client.putObject(bucketName, key, inputStream, metadata);
