@@ -13,6 +13,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.aliyun.oss.ClientException;
@@ -23,6 +24,7 @@ import com.aliyun.oss.model.InitiateMultipartUploadRequest;
 import com.aliyun.oss.model.InitiateMultipartUploadResult;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PartETag;
+import com.galaxyinternet.framework.core.file.UploadModeType;
 import com.galaxyinternet.framework.core.utils.FileSerializableUtil;
 import com.galaxyinternet.framework.core.utils.Md5Utils;
 
@@ -51,7 +53,8 @@ public class OSSUploader implements Callable<Integer> {
 	private File uploadFile;// 上次文件
 	private String bucketName;// bucketName
 	private String key;// 云端存储路径
-
+	private String fileFullName;//文件全名，带后缀
+	
 	/**
 	 * oss上传 支持断点续传
 	 * 
@@ -68,6 +71,15 @@ public class OSSUploader implements Callable<Integer> {
 		this.uploadFile = sourceFile;
 		this.bucketName = bucketName;
 		this.key = key;
+	}
+	
+	public OSSUploader(File sourceFile, String bucketName, String key,String fileFullName) {
+		// 实例化单文件上次线程池
+		pool = Executors.newFixedThreadPool(OSSConstant.SINGLE_FILE_CONCURRENT_THREADS);
+		this.uploadFile = sourceFile;
+		this.bucketName = bucketName;
+		this.key = key;
+		this.fileFullName = fileFullName;
 	}
 
 	/**
@@ -115,13 +127,13 @@ public class OSSUploader implements Callable<Integer> {
 		if (result == GlobalCode.ERROR)
 			return result;
 		// 使用multipart的方式上传文件
-		result = uploadBigFile(client, bucketName, key, uploadFile);
+		result = uploadBigFile(client, bucketName, key, uploadFile,fileFullName);
 		pool = null;
 		return result;
 	}
 
 	// 通过Multipart的方式上传一个大文件
-	private int uploadBigFile(OSSClient client, String bucketName, String key, File uploadFile) {
+	private int uploadBigFile(OSSClient client, String bucketName, String key, File uploadFile,String fileFullName) {
 
 		// 自定义的每个上传分块大小
 		long partSize = OSSConstant.UPLOAD_PART_SIZE;
@@ -153,8 +165,16 @@ public class OSSUploader implements Callable<Integer> {
 		if (uploadPartObj == null || !isSerializationFile) {
 			uploadPartObj = new PartUploadObj();
 			try {
-				// 初始化MultipartUpload 返回uploadId
-				uploadId = initMultipartUpload(client, bucketName, key, fileDM5Str);
+				if(OSSFactory.UPLOAD_MODE.equalsIgnoreCase(UploadModeType.OSS.getKey()) && StringUtils.isNotBlank(fileFullName)){
+					//fileFullName
+					ObjectMetadata objectMetadata = new ObjectMetadata();
+					objectMetadata.setContentDisposition("attachment;filename=" + fileFullName);
+					uploadId = initMultipartUpload(client, bucketName, key, fileDM5Str,objectMetadata);
+				}else{
+					// 初始化MultipartUpload 返回uploadId
+					uploadId = initMultipartUpload(client, bucketName, key, fileDM5Str);
+				}
+				
 			} catch (OSSException | ClientException e) {
 				e.printStackTrace();
 				return GlobalCode.OSS_SUBMIT_ERROR;
@@ -249,6 +269,19 @@ public class OSSUploader implements Callable<Integer> {
 	private static String initMultipartUpload(OSSClient client, String bucketName, String key, String fileDM5Str)
 			throws OSSException, ClientException {
 		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.getUserMetadata().put(OSSConstant.X_OSS_META_MY_MD5, fileDM5Str);
+		InitiateMultipartUploadRequest initUploadRequest = new InitiateMultipartUploadRequest(bucketName, key,
+				objectMetadata);
+		InitiateMultipartUploadResult initResult = client.initiateMultipartUpload(initUploadRequest);
+		String uploadId = initResult.getUploadId();
+		return uploadId;
+	}
+	
+	private static String initMultipartUpload(OSSClient client, String bucketName, String key, String fileDM5Str,ObjectMetadata objectMetadata)
+			throws OSSException, ClientException {
+		if(null == objectMetadata){
+			objectMetadata = new ObjectMetadata();
+		}
 		objectMetadata.getUserMetadata().put(OSSConstant.X_OSS_META_MY_MD5, fileDM5Str);
 		InitiateMultipartUploadRequest initUploadRequest = new InitiateMultipartUploadRequest(bucketName, key,
 				objectMetadata);

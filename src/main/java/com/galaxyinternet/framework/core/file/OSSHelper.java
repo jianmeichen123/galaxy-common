@@ -492,6 +492,16 @@ public class OSSHelper {
 		}
 		return result;
 	}
+	
+	public static int uploadSupportBreakpoint(String fileFullName, File sourceFile, String key) {
+		int result = new OSSUploader(sourceFile, defaultBucketName, key,fileFullName).uploadFile();
+		if (result == GlobalCode.ERROR) {
+			logger.error("大文件上传失败");
+		} else {
+			logger.debug("文件上传成功");
+		}
+		return result;
+	}
 
 	/**
 	 * 多线程断点下载文件
