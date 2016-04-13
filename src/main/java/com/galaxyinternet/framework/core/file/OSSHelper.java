@@ -185,6 +185,8 @@ public class OSSHelper {
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileFullName);
 		objectMetadata.setHeader(OSSHeaders.CONTENT_LENGTH, fileSize);
+		objectMetadata.setContentEncoding("utf-8");
+		objectMetadata.setHeader(OSSHeaders.TRANSFER_ENCODING, "utf-8");
 		return objectMetadata;
 	}
 
