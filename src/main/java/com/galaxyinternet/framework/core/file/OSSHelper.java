@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
+import com.aliyun.oss.internal.OSSHeaders;
 import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.aliyun.oss.model.DeleteObjectsResult;
 import com.aliyun.oss.model.GetObjectRequest;
@@ -182,8 +183,8 @@ public class OSSHelper {
 	 */
 	public static ObjectMetadata setRequestHeader(String fileFullName, long fileSize) {
 		ObjectMetadata objectMetadata = new ObjectMetadata();
-		objectMetadata.setHeader("Content-Disposition", "attachment;filename=" + fileFullName);
-		objectMetadata.setHeader("Content-Length", fileSize);
+		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileFullName);
+		objectMetadata.setHeader(OSSHeaders.CONTENT_LENGTH, fileSize);
 		return objectMetadata;
 	}
 
