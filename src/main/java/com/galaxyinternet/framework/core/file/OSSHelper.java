@@ -2,6 +2,7 @@ package com.galaxyinternet.framework.core.file;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -183,7 +184,7 @@ public class OSSHelper {
 	 */
 	public static ObjectMetadata setRequestHeader(String fileFullName, long fileSize) {
 		ObjectMetadata objectMetadata = new ObjectMetadata();
-		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileFullName);
+		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + new String(fileFullName.getBytes(),Charset.forName("UTF-8")));
 		objectMetadata.setHeader(OSSHeaders.CONTENT_LENGTH, fileSize);
 		return objectMetadata;
 	}
