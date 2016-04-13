@@ -24,9 +24,8 @@ public class OSSFactory {
 	public final static String ACCESS_KEY_ID;
 	public final static String accessKeySecret;
 	private static String bucketName;
-	public final static String UPLOAD_MODE;
 	public final static String OSS_SERVICE_ENDPOINT_PREFIX;
-	
+	public static String UPLOAD_MODE = null;
 	private OSSFactory() {
 	}
 
@@ -37,7 +36,12 @@ public class OSSFactory {
 		ACCESS_KEY_ID = property.getProperty(OSSConstant.OSS_ACCESS_KEY);
 		accessKeySecret = property.getProperty(OSSConstant.OSS_ACCESS_KEY_SECRET);
 		ossClient = new OSSClient(ENDPOINT, ACCESS_KEY_ID, accessKeySecret);
-		UPLOAD_MODE = property.getProperty(OSSConstant.OSS_UPLOAD_MODE_KEY);
+		String temp = property.getProperty(OSSConstant.OSS_UPLOAD_MODE_KEY);
+		if (StringUtils.isNotBlank(temp)) {
+			UPLOAD_MODE = temp;
+		} else {
+			UPLOAD_MODE = OSSConstant.OSS_DEFAULT_UPLOAD_MODE;
+		}
 		OSS_SERVICE_ENDPOINT_PREFIX = property.getProperty(OSSConstant.OSS_SERVICE_ENDPOINT_PREFIX_KEY);
 	}
 
