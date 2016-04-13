@@ -180,7 +180,7 @@ public class OSSHelper {
 	 * @return ObjectMetadata web端直连oss需要的参数设置
 	 *
 	 */
-	public static ObjectMetadata setWebRequestHeader(String fileFullName, int fileSize) {
+	public static ObjectMetadata setRequestHeader(String fileFullName, int fileSize) {
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		objectMetadata.setHeader("Content-Disposition", "attachment;filename=" + fileFullName);
 		objectMetadata.setHeader("Content-Length", fileSize);
