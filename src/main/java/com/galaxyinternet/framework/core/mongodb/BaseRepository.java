@@ -13,6 +13,6 @@ import org.springframework.data.repository.CrudRepository;
  * @param <T>
  * @param <PK>
  */
-public interface BaseRepository<T extends MongoModel, PK extends Serializable> extends CrudRepository<T, PK> {
+public interface BaseRepository<T extends MongoEntity<ID>, ID extends Serializable> extends CrudRepository<T, ID> {
 
 }
