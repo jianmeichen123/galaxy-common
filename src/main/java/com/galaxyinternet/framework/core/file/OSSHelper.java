@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
+import com.aliyun.oss.internal.OSSHeaders;
 import com.aliyun.oss.model.DeleteObjectsRequest;
 import com.aliyun.oss.model.DeleteObjectsResult;
 import com.aliyun.oss.model.GetObjectRequest;
@@ -132,8 +133,113 @@ public class OSSHelper {
 		return simpleUploadByOSS(file, defaultBucketName, key);
 	}
 
+	/**
+	 * 
+	 * @Description:简单的文件上传接口
+	 * @param file
+	 *            上传文件对象
+	 * @param key
+	 *            oss存储文件的唯一标示
+	 * @param metadata
+	 *            OSS中Object的元数据。
+	 *            包含了用户自定义的元数据，也包含了OSS发送的标准HTTP头(如Content-Length, ETag等）。
+	 * @return UploadFileResult 上传是否成功的结果对象
+	 *
+	 */
+	public static UploadFileResult simpleUploadByOSS(File file, String key, ObjectMetadata metadata) {
+		return simpleUploadByOSS(file, defaultBucketName, key, metadata);
+	}
+
 	public static UploadFileResult simpleUploadByOSS(InputStream inputStream, String key) {
 		return simpleUploadByOSS(inputStream, defaultBucketName, key);
+	}
+
+	/**
+	 * 
+	 * @Description:简单的文件上传接口
+	 * @param inputStream
+	 *            上传文件的数据流对象
+	 * @param key
+	 *            oss存储文件的唯一标示
+	 * @param metadata
+	 *            OSS中Object的元数据。
+	 *            包含了用户自定义的元数据，也包含了OSS发送的标准HTTP头(如Content-Length, ETag等）。
+	 * @return UploadFileResult 上传是否成功的结果对象
+	 *
+	 */
+	public static UploadFileResult simpleUploadByOSS(InputStream inputStream, String key, ObjectMetadata metadata) {
+		return simpleUploadByOSS(inputStream, defaultBucketName, key);
+	}
+
+	/**
+	 * 
+	 * @Description:设置web端下载需要的请求头参数
+	 * @param fileFullName
+	 *            文件名带后缀
+	 * @param fileSize
+	 *            文件大小
+	 * @return ObjectMetadata web端直连oss需要的参数设置
+	 *
+	 */
+	public static ObjectMetadata setRequestHeader(String fileFullName, long fileSize) {
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileFullName);
+		objectMetadata.setHeader(OSSHeaders.CONTENT_LENGTH, fileSize);
+		return objectMetadata;
+	}
+
+	/**
+	 * 简单的文件上传
+	 * 
+	 * @param file
+	 *            上传的文件
+	 * @param bucketName
+	 *            oss中存储文件的队列
+	 * @param key
+	 *            文件的唯一标示
+	 */
+	public static UploadFileResult simpleUploadByOSS(File file, String bucketName, String key,
+			ObjectMetadata metadata) {
+		UploadFileResult responseFile = new UploadFileResult();
+		Result result = new Result();
+		int checkBucketName = OSSFactory.getBucketName(bucketName);
+		if (checkBucketName == GlobalCode.ERROR) {
+			result.setStatus(Status.ERROR);
+			result.setMessage("Bucket name does not exist or is empty.");
+			responseFile.setResult(result);
+			return responseFile;
+		}
+		if (file.exists()) {
+			try {
+				PutObjectResult putObjectResult = null;
+				if (OSSFactory.UPLOAD_MODE.equalsIgnoreCase(UploadModeType.LOCAL.getKey())) {
+					putObjectResult = client.putObject(bucketName, key, file);
+				} else {
+					putObjectResult = client.putObject(bucketName, key, file, metadata);
+				}
+				responseFile.setEtag(putObjectResult.getETag());
+				result.addOK("上传成功");
+			} catch (OSSException oe) {
+				result.addError(oe.getErrorMessage(), oe.getErrorCode());
+				logger.error(
+						"Caught an OSSException, which means your request made it to OSS, "
+								+ "but was rejected with an error response for some reason.",
+						"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
+						"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
+			} catch (ClientException ce) {
+				result.addError(ce.getErrorMessage(), ce.getErrorCode());
+				logger.error("Caught an ClientException, which means the client encountered "
+						+ "a serious internal problem while trying to communicate with OSS, "
+						+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
+			}
+			responseFile.setBucketName(bucketName);
+			responseFile.setFileKey(key);
+			responseFile.setContentLength(file.length());
+			responseFile.setResult(result);
+		} else {
+			logger.warn("file does not exist");
+		}
+		return responseFile;
 	}
 
 	/**
@@ -196,6 +302,45 @@ public class OSSHelper {
 		}
 		try {
 			PutObjectResult putObjectResult = client.putObject(bucketName, key, inputStream);
+			responseFile.setEtag(putObjectResult.getETag());
+			result.addOK("上传成功");
+		} catch (OSSException oe) {
+			result.addError(oe.getErrorMessage(), oe.getErrorCode());
+			logger.error(
+					"Caught an OSSException, which means your request made it to OSS, "
+							+ "but was rejected with an error response for some reason.",
+					"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
+					"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
+		} catch (ClientException ce) {
+			result.addError(ce.getErrorMessage(), ce.getErrorCode());
+			logger.error("Caught an ClientException, which means the client encountered "
+					+ "a serious internal problem while trying to communicate with OSS, "
+					+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
+		}
+		responseFile.setBucketName(bucketName);
+		responseFile.setFileKey(key);
+		responseFile.setResult(result);
+		return responseFile;
+	}
+
+	public static UploadFileResult simpleUploadByOSS(InputStream inputStream, String bucketName, String key,
+			ObjectMetadata metadata) {
+		UploadFileResult responseFile = new UploadFileResult();
+		Result result = new Result();
+		int checkBucketName = OSSFactory.getBucketName(bucketName);
+		if (checkBucketName == GlobalCode.ERROR) {
+			result.setStatus(Status.ERROR);
+			result.setMessage("Bucket name does not exist or is empty.");
+			responseFile.setResult(result);
+			return responseFile;
+		}
+		try {
+			PutObjectResult putObjectResult = null;
+			if (OSSFactory.UPLOAD_MODE.equalsIgnoreCase(UploadModeType.LOCAL.getKey())) {
+				putObjectResult = client.putObject(bucketName, key, inputStream);
+			} else {
+				putObjectResult = client.putObject(bucketName, key, inputStream, metadata);
+			}
 			responseFile.setEtag(putObjectResult.getETag());
 			result.addOK("上传成功");
 		} catch (OSSException oe) {
@@ -347,6 +492,16 @@ public class OSSHelper {
 		}
 		return result;
 	}
+	
+	public static int uploadSupportBreakpoint(String fileFullName, File sourceFile, String key) {
+		int result = new OSSUploader(sourceFile, defaultBucketName, key,fileFullName).uploadFile();
+		if (result == GlobalCode.ERROR) {
+			logger.error("大文件上传失败");
+		} else {
+			logger.debug("文件上传成功");
+		}
+		return result;
+	}
 
 	/**
 	 * 多线程断点下载文件
@@ -364,7 +519,7 @@ public class OSSHelper {
 			logger.debug("文件下载成功");
 		}
 	}
-	
+
 	/**
 	 * 多线程断点下载文件
 	 * 

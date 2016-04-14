@@ -1,5 +1,7 @@
 package com.galaxyinternet.framework.core.oss;
 
+import com.galaxyinternet.framework.core.file.UploadModeType;
+
 public class OSSConstant {
 	public final static long DOWNLOAD_PART_SIZE = 4 * 1024 * 1024L; // 每个下载Part的大小设置为4MB
 
@@ -26,6 +28,10 @@ public class OSSConstant {
 	public final static String OSS_BUCKET_NAME_KEY = "oss.bucket.name";
 	
 	public final static String OSS_UPLOAD_MODE_KEY = "oss.upload.mode";
+	
+	public final static String OSS_DEFAULT_UPLOAD_MODE = UploadModeType.LOCAL.getKey();
+	
+	public final static String OSS_SERVICE_ENDPOINT_PREFIX_KEY = "oss.service.endpoint.prefix";
 
 	public final static String OSS_CONFIG_FILE = "oss-config.properties";
 
