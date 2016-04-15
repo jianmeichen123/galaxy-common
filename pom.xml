@@ -4,7 +4,7 @@
 	<groupId>com.galaxyinternet</groupId>
 	<artifactId>galaxy-common</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.2.Q-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name />
 	<description />
 	<properties>
