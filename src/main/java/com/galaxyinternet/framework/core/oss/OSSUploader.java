@@ -33,7 +33,7 @@ import com.galaxyinternet.framework.core.utils.Md5Utils;
  */
 public class OSSUploader implements Callable<Integer> {
 
-	public static final Logger LOGGER = Logger.getLogger(OSSUploader.class);
+	public final Logger logger = Logger.getLogger(OSSUploader.class);
 
 	// 外层线程池
 	public static ExecutorService uploadMainPool = null;
@@ -116,7 +116,7 @@ public class OSSUploader implements Callable<Integer> {
 	public Integer call() {
 		OSSClient client = OSSFactory.getClientInstance();
 		if (null==uploadFile || !uploadFile.exists()) {
-			LOGGER.info("无法找到文件：" + uploadFile);
+			logger.info("无法找到文件：" + uploadFile);
 			return GlobalCode.FILE_NOT_FOUND_ERROR;
 		}
 		int result = GlobalCode.ERROR;
@@ -197,7 +197,7 @@ public class OSSUploader implements Callable<Integer> {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			LOGGER.error("==" + e.getMessage());
+			logger.error("==" + e.getMessage());
 			return GlobalCode.THREAD_ERROR;
 		}
 

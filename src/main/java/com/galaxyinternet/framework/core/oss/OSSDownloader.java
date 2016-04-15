@@ -20,7 +20,7 @@ import com.galaxyinternet.framework.core.utils.FileSerializableUtil;
  * oss多线程分段下载文件
  */
 public class OSSDownloader implements Callable<Integer> {
-	public static final Logger LOGGER = Logger.getLogger(OSSDownloader.class);
+	public final Logger logger = Logger.getLogger(OSSDownloader.class);
 	// 外层线程池
 	public static ExecutorService downloadMainPool = null;
 	// 内层线程池
@@ -86,7 +86,7 @@ public class OSSDownloader implements Callable<Integer> {
 		try {
 			objectMetadata = client.getObjectMetadata(bucketName, key);
 		} catch (OSSException e) {
-			LOGGER.error("==请检查bucketName或key");
+			logger.error("==请检查bucketName或key");
 			return GlobalCode.ERROR;
 		}
 		long fileLength = objectMetadata.getContentLength();
@@ -126,10 +126,10 @@ public class OSSDownloader implements Callable<Integer> {
 			while (download(downloadPartObj, serializationFilePath).isResult() == false) {
 				if (++i == OSSConstant.RETRY)
 					break;
-				LOGGER.warn(Thread.currentThread().getName() + "重试第" + i + "次");
+				logger.warn(Thread.currentThread().getName() + "重试第" + i + "次");
 			}
 		} catch (Exception e) {
-			LOGGER.error("==" + e.getMessage());
+			logger.error("==" + e.getMessage());
 			return GlobalCode.THREAD_ERROR;
 		}
 		if (!downloadPartObj.isResult()) {
@@ -172,7 +172,7 @@ public class OSSDownloader implements Callable<Integer> {
 				FileSerializableUtil.delSerlzFile(serializationFilePath);
 
 		} catch (Exception e) {
-			LOGGER.error("==" + e.getMessage());
+			logger.error("==" + e.getMessage());
 		}
 		return partThreadObj;
 	}

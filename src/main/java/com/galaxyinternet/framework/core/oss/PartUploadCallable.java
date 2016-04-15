@@ -18,7 +18,7 @@ import com.aliyun.oss.model.UploadPartResult;
 public class PartUploadCallable implements Callable<PartUploadCallable>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public static final Logger LOGGER = Logger.getLogger(PartUploadCallable.class);
+	public final Logger logger = Logger.getLogger(PartUploadCallable.class);
 
 	private File uploadFile;
 	private String bucket;
@@ -66,7 +66,7 @@ public class PartUploadCallable implements Callable<PartUploadCallable>, Seriali
 				try {
 					in.close();
 				} catch (Exception e) {
-					LOGGER.error("关闭读入流失败：" + e.getMessage());
+					logger.error("关闭读入流失败：" + e.getMessage());
 				}
 			}
 		}
