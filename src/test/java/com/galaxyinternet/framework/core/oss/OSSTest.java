@@ -77,9 +77,9 @@ public class OSSTest {
 	public  void createBucketName() {
 		String devBucketName = BucketName.DEV.getName();
 		String testBucketName = BucketName.TEST.getName();
-		String proBucketName = BucketName.PRODUCT.getName();
+		//String proBucketName = BucketName.PRODUCT.getName();
 		OSSFactory.getBucketName(devBucketName);
 		OSSFactory.getBucketName(testBucketName);
-		OSSFactory.getBucketName(proBucketName);
+		//OSSFactory.getBucketName(proBucketName);
 	}
 }
