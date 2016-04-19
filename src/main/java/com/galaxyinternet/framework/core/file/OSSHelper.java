@@ -543,7 +543,7 @@ public class OSSHelper {
 			result.addError("大文件上传失败");
 		} else {
 			logger.debug("文件上传成功");
-			result.addError("文件上传成功");
+			result.addOK("文件上传成功");
 		}
 		result.setErrorCode(resultCode + "");
 		uploadFileResult.setResult(result);
