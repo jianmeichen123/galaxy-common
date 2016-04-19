@@ -255,6 +255,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 			sopFile.setFileKey(String.valueOf(IdGenerator.generateId(OSSHelper.class)));
 		}
 	 * @param tempfilePath  服务器保存文件的临时目录
+	 * @return 不会出现null，只需要对result.getResult().getStatus().equals(Status.ERROR)验证即可知道操作结果状态
 	 */
 	protected UploadFileResult uploadFileToOSS(HttpServletRequest request,  String fileKey, String tempfilePath) {
 		UploadFileResult result = null;
@@ -272,16 +273,18 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 			if(asize > OSSConstant.UPLOAD_PART_SIZE){//大文件线程池上传
 				result = OSSHelper.uploadWithBreakpoint(fileName, tempFile, fileKey);
 				if(result.getResult().getStatus()==null || result.getResult().getStatus().equals(Status.ERROR)){
-					return null;
+					return result;
 				}
 			}else{
 				result = OSSHelper.simpleUploadByOSS(tempFile, fileKey, OSSHelper.setRequestHeader(fileName, multipartFile.getSize())); //上传至阿里云
 				//若文件上传成功
 				if(result.getResult().getStatus()==null || result.getResult().getStatus().equals(Status.ERROR)){
-					return null;
+					return result;
 				}
 			}
 		} catch (Exception e) {
+			result = new UploadFileResult();
+			result.setResult(new Result(Status.ERROR, null, "异常"));
 		}
 		return result;
 	}
