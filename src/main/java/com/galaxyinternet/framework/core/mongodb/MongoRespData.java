@@ -1,11 +1,13 @@
-package com.galaxyinternet.framework.core.model;
+package com.galaxyinternet.framework.core.mongodb;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.galaxyinternet.framework.core.model.Header;
+import com.galaxyinternet.framework.core.model.Page;
+import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
-import com.galaxyinternet.framework.core.mongodb.MongoEntity;
 
 public class MongoRespData<T extends MongoEntity<String>> {
 
