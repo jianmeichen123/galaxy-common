@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -466,6 +467,90 @@ public class OSSHelper {
 	}
 
 	/**
+	 * 
+	 * @Description:分片上传
+	 * @param bucketName
+	 *            文件存储的桶名称
+	 * @param sourceFile
+	 *            上传的文件
+	 * @param key
+	 *            文件的唯一key
+	 * @return UploadFileResult 上传文件的结果
+	 *
+	 */
+	public static UploadFileResult uploadWithBreakpoint(File sourceFile, String bucketName, String key) {
+		int resultCode = new OSSUploader(sourceFile, bucketName, key).uploadFile();
+		return populateResult(sourceFile.length(), bucketName, key, resultCode);
+	}
+
+	/**
+	 * 
+	 * @Description:分片上传
+	 * @param sourceFile
+	 *            上传的文件
+	 * @param key
+	 *            文件的唯一key
+	 * @return UploadFileResult 上传文件的结果
+	 *
+	 */
+	public static UploadFileResult uploadWithBreakpoint(File sourceFile, String key) {
+		int resultCode = new OSSUploader(sourceFile, defaultBucketName, key).uploadFile();
+		return populateResult(sourceFile.length(), null, key, resultCode);
+	}
+
+	/**
+	 * 
+	 * @Description:分片上传
+	 * @param fileFullName
+	 *            文件的全名，带后缀
+	 * @param sourceFile
+	 *            上传的文件
+	 * @param key
+	 *            文件的唯一key
+	 * @return UploadFileResult 上传文件的结果
+	 *
+	 */
+	public static UploadFileResult uploadWithBreakpoint(String fileFullName, File sourceFile, String key) {
+		int resultCode = new OSSUploader(sourceFile, defaultBucketName, key, fileFullName).uploadFile();
+		return populateResult(sourceFile.length(), null, key, resultCode);
+	}
+
+	/**
+	 * 
+	 * @Description:封装上传文件的结果
+	 * @param fileSize
+	 *            文件的大小
+	 * @param bucketName
+	 *            桶名称
+	 * @param key
+	 *            文件唯一key
+	 * @param resultCode
+	 *            1成功，其他均是失败
+	 * @return UploadFileResult 上传文件的结果
+	 *
+	 */
+	private static UploadFileResult populateResult(Long fileSize, String bucketName, String key, int resultCode) {
+		UploadFileResult uploadFileResult = new UploadFileResult();
+		if (StringUtils.isBlank(bucketName)) {
+			bucketName = defaultBucketName;
+		}
+		uploadFileResult.setBucketName(bucketName);
+		uploadFileResult.setFileKey(key);
+		uploadFileResult.setContentLength(fileSize);
+		Result result = new Result();
+		if (resultCode == GlobalCode.ERROR) {
+			logger.error("大文件上传失败");
+			result.addError("大文件上传失败");
+		} else {
+			logger.debug("文件上传成功");
+			result.addError("文件上传成功");
+		}
+		result.setErrorCode(resultCode + "");
+		uploadFileResult.setResult(result);
+		return uploadFileResult;
+	}
+	
+	/**
 	 * 分片上传文件，应用场景： <br/>
 	 * 1.需要支持断点上传。<br/>
 	 * 2.上传超过100MB大小的文件。 <br/>
@@ -482,7 +567,7 @@ public class OSSHelper {
 		}
 		return result;
 	}
-
+	
 	public static int uploadSupportBreakpoint(File sourceFile, String key) {
 		int result = new OSSUploader(sourceFile, defaultBucketName, key).uploadFile();
 		if (result == GlobalCode.ERROR) {
@@ -502,6 +587,7 @@ public class OSSHelper {
 		}
 		return result;
 	}
+	
 
 	/**
 	 * 多线程断点下载文件
@@ -512,7 +598,6 @@ public class OSSHelper {
 	 */
 	public static void downloadSupportBreakpoint(String localFilePath, String bucketName, String key) {
 		int result = new OSSDownloader(localFilePath, bucketName, key).downloadFile();
-		;
 		if (result == GlobalCode.ERROR) {
 			logger.error("大文件下载失败");
 		} else {
@@ -529,7 +614,6 @@ public class OSSHelper {
 	 */
 	public static void downloadSupportBreakpoint(String localFilePath, String key) {
 		int result = new OSSDownloader(localFilePath, defaultBucketName, key).downloadFile();
-		;
 		if (result == GlobalCode.ERROR) {
 			logger.error("大文件下载失败");
 		} else {
