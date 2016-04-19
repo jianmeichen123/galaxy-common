@@ -538,12 +538,12 @@ public class OSSHelper {
 		uploadFileResult.setFileKey(key);
 		uploadFileResult.setContentLength(fileSize);
 		Result result = new Result();
-		if (resultCode == GlobalCode.ERROR) {
-			logger.error("大文件上传失败");
-			result.addError("大文件上传失败");
-		} else {
+		if (resultCode == GlobalCode.SUCCESS) {
 			logger.debug("文件上传成功");
 			result.addOK("文件上传成功");
+		} else {
+			logger.error("大文件上传失败");
+			result.addError("大文件上传失败");
 		}
 		result.setErrorCode(resultCode + "");
 		uploadFileResult.setResult(result);
