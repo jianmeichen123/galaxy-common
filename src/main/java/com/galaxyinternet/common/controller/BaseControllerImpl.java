@@ -1,6 +1,8 @@
 package com.galaxyinternet.common.controller;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -17,8 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.galaxyinternet.framework.core.constants.Constants;
+import com.galaxyinternet.framework.core.file.OSSHelper;
+import com.galaxyinternet.framework.core.file.UploadFileResult;
 import com.galaxyinternet.framework.core.model.BaseEntity;
 import com.galaxyinternet.framework.core.model.BaseUser;
 import com.galaxyinternet.framework.core.model.ControllerPath;
@@ -28,7 +34,9 @@ import com.galaxyinternet.framework.core.model.PageRequest;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
+import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.service.BaseService;
+import com.galaxyinternet.framework.core.utils.FileUtils;
 import com.galaxyinternet.framework.core.validator.ValidatorResultHandler;
 
 /**
@@ -215,9 +223,17 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 		}
 		return userId;
 	}
-	
-	protected String getCurrEndpoint(HttpServletRequest request)
-	{
+	/**
+	 * 获取当前请求路径的前置部分
+	 * https://www.galaxyinternet.com/galaxy-sop-server/galaxy/user/add
+	 * 得
+	 * https://www.galaxyinternet.com/galaxy-sop-server/
+	 * 或
+	 * https://www.galaxyinternet.com/galaxy/user/add
+	 * 得
+	 * https://www.galaxyinternet.com/
+	 */
+	protected String getCurrEndpoint(HttpServletRequest request) {
 		String uri = request.getRequestURI();
 		String url = request.getRequestURL().toString();
 		String contextPath = request.getContextPath();
@@ -228,5 +244,45 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 			endpoint = url.substring(0, url.indexOf(contextPath) + contextPath.length() + 1);
 		}
 		return endpoint;
+	}
+	
+	/**
+	 * 文件上传/更新
+	 * @param fileKey  OSS对文件的唯一标识
+	 * 注意点：对于上传操作，fileKey需要新生成；但对于更新操作，fileKey需要从sop_file表中获取到老的fileKey进行覆盖
+	 * 类似于：
+	    if(StringUtils.isBlank(sopFile.getFileKey())){
+			sopFile.setFileKey(String.valueOf(IdGenerator.generateId(OSSHelper.class)));
+		}
+	 * @param tempfilePath  服务器保存文件的临时目录
+	 */
+	protected UploadFileResult uploadFileToOSS(HttpServletRequest request,  String fileKey, String tempfilePath) {
+		UploadFileResult result = null;
+		try {
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			MultipartFile multipartFile = multipartRequest.getFile("file");
+			String fileName = multipartFile.getOriginalFilename();
+			Map<String,String> nameMap = FileUtils.transFileNames(fileName);
+			File tempFile = new File(tempfilePath, fileKey + "_" + nameMap.get("fileName"));
+			if (!tempFile.exists()) {
+				tempFile.mkdirs();
+			}
+			multipartFile.transferTo(tempFile);
+			long asize = multipartFile.getSize(); 
+			if(asize > OSSConstant.UPLOAD_PART_SIZE){//大文件线程池上传
+				result = OSSHelper.uploadWithBreakpoint(fileName, tempFile, fileKey);
+				if(result.getResult().getStatus()==null || result.getResult().getStatus().equals(Status.ERROR)){
+					return null;
+				}
+			}else{
+				result = OSSHelper.simpleUploadByOSS(tempFile, fileKey, OSSHelper.setRequestHeader(fileName, multipartFile.getSize())); //上传至阿里云
+				//若文件上传成功
+				if(result.getResult().getStatus()==null || result.getResult().getStatus().equals(Status.ERROR)){
+					return null;
+				}
+			}
+		} catch (Exception e) {
+		}
+		return result;
 	}
 }
