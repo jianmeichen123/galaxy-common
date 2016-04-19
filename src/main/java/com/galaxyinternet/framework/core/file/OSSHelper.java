@@ -32,7 +32,12 @@ public class OSSHelper {
 	private static Logger logger = LoggerFactory.getLogger(OSSHelper.class);
 	private static OSSClient client = OSSFactory.getClientInstance();
 	private static String defaultBucketName = OSSFactory.getDefaultBucketName();
-
+	private static String UPLOAD_ERROR_MESSAGE="文件上传失败";
+	private static String UPLOAD_OK_MESSAGE="文件上传成功";
+	private static String DOWNLOAD_OK_MESSAGE="文件下载成功";
+	private static String DOWNLOAD_ERROR_MESSAGE="文件下载失败";
+	
+	
 	/**
 	 * 删除单个文件
 	 * 
@@ -539,11 +544,11 @@ public class OSSHelper {
 		uploadFileResult.setContentLength(fileSize);
 		Result result = new Result();
 		if (resultCode == GlobalCode.SUCCESS) {
-			logger.debug("文件上传成功");
-			result.addOK("文件上传成功");
+			logger.debug(UPLOAD_OK_MESSAGE);
+			result.addOK(UPLOAD_OK_MESSAGE);
 		} else {
-			logger.error("大文件上传失败");
-			result.addError("大文件上传失败");
+			logger.error(UPLOAD_ERROR_MESSAGE);
+			result.addError(UPLOAD_ERROR_MESSAGE);
 		}
 		result.setErrorCode(resultCode + "");
 		uploadFileResult.setResult(result);
@@ -560,34 +565,33 @@ public class OSSHelper {
 	 */
 	public static int uploadSupportBreakpoint(File sourceFile, String bucketName, String key) {
 		int result = new OSSUploader(sourceFile, bucketName, key).uploadFile();
-		if (result == GlobalCode.ERROR) {
-			logger.error("大文件上传失败");
+		if (result == GlobalCode.SUCCESS) {
+			logger.debug(UPLOAD_OK_MESSAGE);
 		} else {
-			logger.debug("文件上传成功");
+			logger.error(UPLOAD_ERROR_MESSAGE);
 		}
 		return result;
 	}
-	
+
 	public static int uploadSupportBreakpoint(File sourceFile, String key) {
 		int result = new OSSUploader(sourceFile, defaultBucketName, key).uploadFile();
-		if (result == GlobalCode.ERROR) {
-			logger.error("大文件上传失败");
+		if (result == GlobalCode.SUCCESS) {
+			logger.debug(UPLOAD_OK_MESSAGE);
 		} else {
-			logger.debug("文件上传成功");
+			logger.error(UPLOAD_ERROR_MESSAGE);
 		}
 		return result;
 	}
-	
+
 	public static int uploadSupportBreakpoint(String fileFullName, File sourceFile, String key) {
-		int result = new OSSUploader(sourceFile, defaultBucketName, key,fileFullName).uploadFile();
-		if (result == GlobalCode.ERROR) {
-			logger.error("大文件上传失败");
+		int result = new OSSUploader(sourceFile, defaultBucketName, key, fileFullName).uploadFile();
+		if (result == GlobalCode.SUCCESS) {
+			logger.debug(UPLOAD_OK_MESSAGE);
 		} else {
-			logger.debug("文件上传成功");
+			logger.error(UPLOAD_ERROR_MESSAGE);
 		}
 		return result;
 	}
-	
 
 	/**
 	 * 多线程断点下载文件
@@ -598,10 +602,10 @@ public class OSSHelper {
 	 */
 	public static void downloadSupportBreakpoint(String localFilePath, String bucketName, String key) {
 		int result = new OSSDownloader(localFilePath, bucketName, key).downloadFile();
-		if (result == GlobalCode.ERROR) {
-			logger.error("大文件下载失败");
+		if (result == GlobalCode.SUCCESS) {
+			logger.debug(DOWNLOAD_OK_MESSAGE);
 		} else {
-			logger.debug("文件下载成功");
+			logger.error(DOWNLOAD_ERROR_MESSAGE);
 		}
 	}
 
@@ -614,10 +618,10 @@ public class OSSHelper {
 	 */
 	public static void downloadSupportBreakpoint(String localFilePath, String key) {
 		int result = new OSSDownloader(localFilePath, defaultBucketName, key).downloadFile();
-		if (result == GlobalCode.ERROR) {
-			logger.error("大文件下载失败");
+		if (result == GlobalCode.SUCCESS) {
+			logger.debug(DOWNLOAD_OK_MESSAGE);
 		} else {
-			logger.debug("文件下载成功");
+			logger.error(DOWNLOAD_ERROR_MESSAGE);
 		}
 	}
 }
