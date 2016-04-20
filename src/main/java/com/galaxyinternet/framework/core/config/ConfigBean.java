@@ -79,7 +79,10 @@ public class ConfigBean implements BeanFactoryAware {
 	 */
 	private void destory() {
 		this.file = null;
-		this.keys = null;
+		if(null != keys){
+			keys.clear();
+			keys = null;
+		}
 		this.redisKey = null;
 		/*String[] names = beanFactory.getBeanDefinitionNames();
 		List<String> nameList = Arrays.asList(names);

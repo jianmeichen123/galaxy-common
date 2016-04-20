@@ -33,6 +33,17 @@ public class AESUtil {
 	 * 
 	 * @param content
 	 *            需要加密的内容
+	 */
+	public static String defaultEncrypt(String content) {
+		byte[] result = encrypt(content, defaultPrivatePassword);
+		return new String(result);
+	}
+	
+	/**
+	 * 加密
+	 * 
+	 * @param content
+	 *            需要加密的内容
 	 * @param password
 	 *            加密密码
 	 * @return
@@ -62,9 +73,20 @@ public class AESUtil {
 	 *            待解密内容
 	 * @return
 	 */
-
 	public static byte[] decrypt(byte[] content) {
 		return decrypt(content, defaultPrivatePassword);
+	}
+
+	/**
+	 * 解密
+	 * 
+	 * @param content
+	 *            待解密内容
+	 * @return
+	 */
+	public static String defaultDecrypt(String content) {
+		byte[] result = encrypt(content);
+		return new String(result);
 	}
 
 	/**
@@ -96,7 +118,7 @@ public class AESUtil {
 
 	public static void main(String[] args) throws Exception {
 
-		String content = "test";
+		String content = "测试";
 		// 加密
 		System.out.println("加密前：" + content);
 		byte[] encryptResult = encrypt(content);

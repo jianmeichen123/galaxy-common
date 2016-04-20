@@ -2,7 +2,7 @@ package com.galaxyinternet.framework.core.mongodb;
 
 import java.io.Serializable;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
  * 
@@ -13,6 +13,6 @@ import org.springframework.data.repository.CrudRepository;
  * @param <T>
  * @param <PK>
  */
-public interface BaseRepository<T extends MongoEntity<ID>, ID extends Serializable> extends CrudRepository<T, ID> {
+public interface BaseRepository<T extends MongoEntity<ID>, ID extends Serializable> extends MongoRepository<T, ID> {
 
 }
