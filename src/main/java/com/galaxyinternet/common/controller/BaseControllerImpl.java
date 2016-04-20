@@ -256,6 +256,7 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 		}
 	 * @param tempfilePath  服务器保存文件的临时目录
 	 * @return 不会出现null，只需要对result.getResult().getStatus().equals(Status.ERROR)验证即可知道操作结果状态
+	 *         其包含文件fileKey、bucketName、文件名、文件后缀、文件大小
 	 */
 	protected UploadFileResult uploadFileToOSS(HttpServletRequest request,  String fileKey, String tempfilePath) {
 		UploadFileResult result = null;
