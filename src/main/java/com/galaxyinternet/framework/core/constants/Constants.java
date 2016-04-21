@@ -77,4 +77,11 @@ public class Constants {
 	
 	public static final String REQUEST_TERMINAL_MARK="gt";//galaxinternet terminal
 	
+	
+	public static final String AJAX_REQUEST_CORE_OBJECT_NAME="XMLHttpRequest";
+	
+	public static final String REQUEST_HEADER_MARK="X-Requested-With";
+	
+	
+	
 }

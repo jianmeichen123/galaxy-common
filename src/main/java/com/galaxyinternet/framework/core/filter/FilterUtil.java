@@ -2,6 +2,8 @@ package com.galaxyinternet.framework.core.filter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -17,7 +19,7 @@ import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
-import com.galaxyinternet.framework.core.utils.AESUtil;
+import com.galaxyinternet.framework.core.utils.Base64Util;
 import com.galaxyinternet.framework.core.utils.BeanContextUtils;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
@@ -71,7 +73,7 @@ public class FilterUtil {
 	public static Cache getCache(ServletContext servletContext) {
 		return (Cache) BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 	}
-	
+
 	public static String getBodyString(BufferedReader br) {
 		String inputLine = null;
 		String str = "";
@@ -89,6 +91,13 @@ public class FilterUtil {
 			} catch (IOException e) {
 			}
 		}
-		return AESUtil.defaultDecrypt(str);
+		return Base64Util.decode(str);
+		//return str;
 	}
+
+	public static String getBodyString(InputStream in) {
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		return getBodyString(br);
+	}
+
 }
