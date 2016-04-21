@@ -85,6 +85,7 @@ public class DecrypEncryptionFilter implements Filter {
 						return;
 					}
 				}
+				chain.doFilter(request, response);
 			}
 
 		} else {// 非ajax就不处理了
