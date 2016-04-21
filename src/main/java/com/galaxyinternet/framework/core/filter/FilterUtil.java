@@ -152,10 +152,28 @@ public class FilterUtil {
 	 *
 	 */
 	public static String[] getWebXmlConfigParamters(FilterConfig filterConfig, String configParamKey) {
-		String excludedUrl = filterConfig.getInitParameter(configParamKey);
-		if (!StringEx.isNullOrEmpty(excludedUrl)) {
-			return excludedUrl.split(",");
+		String configPath = filterConfig.getInitParameter(configParamKey);
+		if (!StringEx.isNullOrEmpty(configPath)) {
+			return configPath.split(",");
 		}
 		return new String[0];
+	}
+
+	/**
+	 * 
+	 * @Description:获取web.xml配置文件中的配置参数
+	 * @param filterConfig
+	 * @param configParamKey
+	 *            配置参数的<param-name>元素的值, 拦截所有请求配置为*
+	 * @return 是否拦截加解密所有请求
+	 *
+	 */
+	public static boolean decrypEncrypAllRequeset(FilterConfig filterConfig, String configParamKey) {
+		String configPath = filterConfig.getInitParameter(configParamKey);
+		if (Constants.INCLUED_ALL_REQUEST_URL.equals(StringUtils.trimToEmpty(configPath))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

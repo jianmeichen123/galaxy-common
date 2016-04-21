@@ -84,6 +84,8 @@ public class Constants {
 	public static final String EXCLUDE_REQUEST_URL = "excludedUrl";
 
 	public static final String INCLUED_REQUEST_URL = "incluedUrl";
+	
+	public static final String INCLUED_ALL_REQUEST_URL = "*";
 
 	public static final String DECRYP_ENCRYPTION_MARK = "decrypEncryption";
 

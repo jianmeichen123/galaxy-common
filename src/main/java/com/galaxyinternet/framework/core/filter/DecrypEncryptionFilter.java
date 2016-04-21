@@ -42,7 +42,11 @@ public class DecrypEncryptionFilter implements Filter {
 	 * 是否加密解密的标示，true 需要加密解密；false不需要,默认值
 	 */
 	static boolean isDecrypEncryption;
-	
+	/**
+	 * 是否所有请求都需加解密
+	 */
+	static boolean isDecrypEncrypAllRequeset;
+
 	Collection<Object> collection;
 
 	@Override
@@ -55,11 +59,12 @@ public class DecrypEncryptionFilter implements Filter {
 
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) resp;
-		
-		if(!isDecrypEncryption){//不需要加密解密
+
+		if (!isDecrypEncryption) {// 不需要加密解密
 			chain.doFilter(request, response);
 			return;
 		}
+
 		boolean isAjax = Constants.AJAX_REQUEST_CORE_OBJECT_NAME
 				.equals(request.getHeader(Constants.REQUEST_HEADER_MARK));
 		if (isAjax) {// 如果是ajax请求
@@ -70,28 +75,40 @@ public class DecrypEncryptionFilter implements Filter {
 					return;
 				}
 			}
-			
-			for (String incluedUrl : incluedUrlArray) {
-				if (url.contains(StringEx.replaceSpecial(incluedUrl))) {
-					request = new DecryptionRequestWrapper(request);// 请求解密
-					EncryptionResponseWrapper wrapper = new EncryptionResponseWrapper(response);
-					chain.doFilter(request, wrapper);
-					String responseData = wrapper.getResponseEncrypData();
-					ServletOutputStream output = response.getOutputStream();
-					output.write(responseData.getBytes());
-					output.flush();
-					return;
+			if (isDecrypEncrypAllRequeset) {
+				doResponse(request, response, chain);
+				return;
+			} else {
+				for (String incluedUrl : incluedUrlArray) {
+					if (url.contains(StringEx.replaceSpecial(incluedUrl))) {
+						doResponse(request, response, chain);
+						return;
+					}
 				}
 			}
+
 		} else {// 非ajax就不处理了
-			/*
-			 * if (FilterUtil.checkUrl(collection, request.getRequestURL().toString())) {//
-			 * 需要解密 request = new DecryptionRequestWrapper(request);//请求解密
-			 * response = new EncryptionResponseWrapper(response);//响应加密
-			 * chain.doFilter(request, response); return; }
-			 */
+
+			/*if (FilterUtil.checkUrl(collection, request.getRequestURL().toString())) {// 需要解密
+				request = new DecryptionRequestWrapper(request);// 请求解密
+				response = new EncryptionResponseWrapper(response);// 响应加密
+				chain.doFilter(request, response);
+				return;
+			}*/
+
 			chain.doFilter(request, response);
 		}
+	}
+
+	private void doResponse(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		request = new DecryptionRequestWrapper(request);// 请求解密
+		EncryptionResponseWrapper wrapper = new EncryptionResponseWrapper(response);
+		chain.doFilter(request, wrapper);
+		String responseData = wrapper.getResponseEncrypData();
+		ServletOutputStream output = response.getOutputStream();
+		output.write(responseData.getBytes());
+		output.flush();
 	}
 
 	@Override
@@ -99,6 +116,7 @@ public class DecrypEncryptionFilter implements Filter {
 		excludedUrlArray = FilterUtil.getWebXmlConfigParamters(filterConfig, Constants.EXCLUDE_REQUEST_URL);
 		incluedUrlArray = FilterUtil.getWebXmlConfigParamters(filterConfig, Constants.INCLUED_REQUEST_URL);
 		isDecrypEncryption = Boolean.valueOf(filterConfig.getInitParameter(Constants.DECRYP_ENCRYPTION_MARK));
+		isDecrypEncrypAllRequeset = FilterUtil.decrypEncrypAllRequeset(filterConfig, Constants.INCLUED_REQUEST_URL);
 		ServletContext servletContext = filterConfig.getServletContext();
 		Cache cache = (Cache) BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 		@SuppressWarnings("unchecked")
