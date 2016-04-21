@@ -68,11 +68,19 @@ public class FilterUtil {
 		return sessionId;
 	}
 
+	/**
+	 * 
+	 * @Description:在过滤器中获取cache对象
+	 */
 	public static Cache getCache(FilterConfig config) {
 		ServletContext servletContext = config.getServletContext();
 		return (Cache) BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 	}
 
+	/**
+	 * 
+	 * @Description:在servlet中获取cache对象
+	 */
 	public static Cache getCache(ServletContext servletContext) {
 		return (Cache) BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 	}
@@ -95,28 +103,55 @@ public class FilterUtil {
 			}
 		}
 		return Base64Util.decode(str);
-		//return str;
+		// return str;
 	}
 
+	/**
+	 * 
+	 * @Description：获取请求体内的数据，并加密
+	 * @param in
+	 *            输入流
+	 * @return String 返回加密后的数据
+	 *
+	 */
 	public static String getBodyString(InputStream in) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		return getBodyString(br);
 	}
 
+	/**
+	 * 
+	 * @Description:检查请求的url是否需要解密
+	 * @param collection
+	 *            子项目基础服务地址，如：http://fx.galaxyinternet.com/platform
+	 * @param requestUrl
+	 *            客户端发送的请求地址
+	 * @return boolean true需要解密，false不需要
+	 *
+	 */
 	public static boolean checkUrl(Collection<Object> collection, String requestUrl) {
 		Iterator<Object> iterator = collection.iterator();
 		boolean result = false;
 		while (iterator.hasNext()) {
 			String endpoint = String.valueOf(iterator.next());
 			if (requestUrl.startsWith(endpoint) && FilterUtil.judgeFile(requestUrl)) {
-				result = true;//需要解密
+				result = true;// 需要解密
 				break;
 			}
 		}
 		return result;
 	}
-	
-	public static String[] getWebXmlConfigParamters(FilterConfig filterConfig,String configParamKey){
+
+	/**
+	 * 
+	 * @Description:获取web.xml配置文件中的配置参数
+	 * @param filterConfig
+	 * @param configParamKey
+	 *            配置参数的<param-name>元素的值
+	 * @return String[] 返回获取的配置参数的值，多个参数用逗号隔开
+	 *
+	 */
+	public static String[] getWebXmlConfigParamters(FilterConfig filterConfig, String configParamKey) {
 		String excludedUrl = filterConfig.getInitParameter(configParamKey);
 		if (!StringEx.isNullOrEmpty(excludedUrl)) {
 			return excludedUrl.split(",");
