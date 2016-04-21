@@ -7,13 +7,13 @@ public class Constants {
 	public final static String SESSION_USER_KEY = "galax_session_user";
 
 	public final static String SESSION_ID_KEY = "sessionId";
-	
+
 	public final static String REQUEST_HEADER_USER_ID_KEY = "guserId";
 
 	public final static String SESSION_PROJECT_CODE = "project_code";
 
 	public final static String SESSOPM_SID_KEY = "sid";
-	
+
 	public final static String REQUEST_URL_USER_ID_KEY = "guid";
 
 	public final static String LOGIN_TOLOGIN = "/galaxy/userlogin/toLogin";
@@ -32,12 +32,12 @@ public class Constants {
 	public final static String OPTION_SUCCESS = "4";
 
 	public final static String ACCESS_REJECTED = "5";
-	
-	public final static String REQUEST_PARAMS_INCOMPLETE = "6";//请求参数不完整
-	
-	public final static String USER_DISABLE = "7"; //用户被禁用
-	
-	public final static String INVALID_SESSIONID = "8"; //sessionId不正确
+
+	public final static String REQUEST_PARAMS_INCOMPLETE = "6";// 请求参数不完整
+
+	public final static String USER_DISABLE = "7"; // 用户被禁用
+
+	public final static String INVALID_SESSIONID = "8"; // sessionId不正确
 
 	public final static int DEFAULT_PAGE_SIZE = 15;
 
@@ -59,29 +59,32 @@ public class Constants {
 	public final static String REQUEST_SCOPE_TOKEN_KEY = "galax_requestscope_token_id";
 	public final static int TOKEN_IN_REDIS_TIMEOUT_SECONDS = 60 * 60;// 1小时
 
-	public final static String REDIS_SHARDINFO_NAME="jedis.shardInfo";
-	//邮箱后缀名
+	public final static String REDIS_SHARDINFO_NAME = "jedis.shardInfo";
+	// 邮箱后缀名
 	public static final String MAIL_SUFFIX = "@galaxyinternet.com";
-	
+
 	public static final String MAIL_TEMPLATE_FILE = "mail-template.properties";
-	//催办模板
+	// 催办模板
 	public static final String MAIL_URGE_CONTENT = "mail.urge.content";
-	
-	//催办模板
+
+	// 催办模板
 	public static final String MAIL_URGE_CONTENT_SPECIAL = "mail.urge.content.special";
-	//重置密码模板
+	// 重置密码模板
 	public static final String MAIL_RESTPWD_CONTENT = "mail.restPwd.content";
 	public static final String MAIL_INITIALPWD_CONTENT = "mail.initialPwd.content";
-	//共享文件模板
+	// 共享文件模板
 	public static final String MAIL_FILESHARE_CONTENT = "mail.fileShare.content";
-	
-	public static final String REQUEST_TERMINAL_MARK="gt";//galaxinternet terminal
-	
-	
-	public static final String AJAX_REQUEST_CORE_OBJECT_NAME="XMLHttpRequest";
-	
-	public static final String REQUEST_HEADER_MARK="X-Requested-With";
-	
-	
-	
+
+	public static final String REQUEST_TERMINAL_MARK = "gt";// galaxinternet  terminal
+
+	public static final String AJAX_REQUEST_CORE_OBJECT_NAME = "XMLHttpRequest";
+
+	public static final String REQUEST_HEADER_MARK = "X-Requested-With";
+
+	public static final String EXCLUDE_REQUEST_URL = "excludedUrl";
+
+	public static final String INCLUED_REQUEST_URL = "incluedUrl";
+
+	public static final String DECRYP_ENCRYPTION_MARK = "decrypEncryption";
+
 }

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -23,6 +25,7 @@ import com.galaxyinternet.framework.core.utils.Base64Util;
 import com.galaxyinternet.framework.core.utils.BeanContextUtils;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
+import com.galaxyinternet.framework.core.utils.StringEx;
 
 public class FilterUtil {
 
@@ -100,4 +103,24 @@ public class FilterUtil {
 		return getBodyString(br);
 	}
 
+	public static boolean checkUrl(Collection<Object> collection, String requestUrl) {
+		Iterator<Object> iterator = collection.iterator();
+		boolean result = false;
+		while (iterator.hasNext()) {
+			String endpoint = String.valueOf(iterator.next());
+			if (requestUrl.startsWith(endpoint) && FilterUtil.judgeFile(requestUrl)) {
+				result = true;//需要解密
+				break;
+			}
+		}
+		return result;
+	}
+	
+	public static String[] getWebXmlConfigParamters(FilterConfig filterConfig,String configParamKey){
+		String excludedUrl = filterConfig.getInitParameter(configParamKey);
+		if (!StringEx.isNullOrEmpty(excludedUrl)) {
+			return excludedUrl.split(",");
+		}
+		return new String[0];
+	}
 }

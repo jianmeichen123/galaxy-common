@@ -101,10 +101,7 @@ public class LoginFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		String excludedUrl = config.getInitParameter("excludedUrl");
-		if (!StringEx.isNullOrEmpty(excludedUrl)) {
-			excludedUrlArray = excludedUrl.split(",");
-		}
+		excludedUrlArray = FilterUtil.getWebXmlConfigParamters(config,Constants.EXCLUDE_REQUEST_URL);
 		ServletContext servletContext = config.getServletContext();
 		cache = FilterUtil.getCache(servletContext);
 		@SuppressWarnings("unchecked")
