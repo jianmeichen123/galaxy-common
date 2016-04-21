@@ -27,6 +27,14 @@ import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
 
+/**
+ * 
+ *
+ * @Description: 过滤器工具栏
+ * @author keifer
+ * @date 2016年4月20日
+ *
+ */
 public class FilterUtil {
 
 	static Logger logger = LoggerFactory.getLogger(FilterUtil.class);

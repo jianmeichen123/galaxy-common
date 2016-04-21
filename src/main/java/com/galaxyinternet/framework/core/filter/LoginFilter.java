@@ -27,7 +27,13 @@ import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
-
+/**
+ * 
+ *
+ * @Description: 登录过滤器
+ * @author keifer
+ *
+ */
 public class LoginFilter implements Filter {
 	private Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 	/**
