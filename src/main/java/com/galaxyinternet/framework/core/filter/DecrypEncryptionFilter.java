@@ -43,7 +43,7 @@ public class DecrypEncryptionFilter implements Filter {
 	 */
 	static boolean isDecrypEncryption;
 	/**
-	 * 是否所有请求都需加解密
+	 * 是否所有请求都需加解密。配置为*表示处理所有请求
 	 */
 	static boolean isDecrypEncrypAllRequeset;
 
