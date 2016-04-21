@@ -46,6 +46,9 @@ public class DecrypEncryptionFilter implements Filter {
 	 * 是否所有请求都需加解密。配置为*表示处理所有请求
 	 */
 	static boolean isDecrypEncrypAllRequeset;
+	
+	static 
+	
 
 	Collection<Object> collection;
 
@@ -64,9 +67,12 @@ public class DecrypEncryptionFilter implements Filter {
 			chain.doFilter(request, response);
 			return;
 		}
-
+		
 		boolean isAjax = Constants.AJAX_REQUEST_CORE_OBJECT_NAME
 				.equals(request.getHeader(Constants.REQUEST_HEADER_MARK));
+		//String terminal = request.getHeader(Constants.REQUEST_TERMINAL_MARK);
+		//boolean isApp = Terminal.isAppAccess(terminal);
+		//if (isAjax || isApp) {// 如果是ajax或是app请求
 		if (isAjax) {// 如果是ajax请求
 			String url = request.getRequestURI();
 			for (String excludedUrl : excludedUrlArray) {
@@ -86,9 +92,8 @@ public class DecrypEncryptionFilter implements Filter {
 					}
 				}
 			}
-
+			chain.doFilter(request, response);
 		} else {// 非ajax就不处理了
-
 			/*if (FilterUtil.checkUrl(collection, request.getRequestURL().toString())) {// 需要解密
 				request = new DecryptionRequestWrapper(request);// 请求解密
 				response = new EncryptionResponseWrapper(response);// 响应加密
