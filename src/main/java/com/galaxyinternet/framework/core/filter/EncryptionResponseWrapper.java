@@ -10,6 +10,8 @@ import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import com.galaxyinternet.framework.core.utils.Base64Util;
+
 /**
  * @Description: 加密响应数据
  * @author keifer
@@ -72,7 +74,7 @@ public class EncryptionResponseWrapper extends HttpServletResponseWrapper {
 	public String getResponseEncrypData() throws IOException {
 		byte[] responseByteData = getResponseData();
 		if(null != responseByteData && responseByteData.length > 0){
-			return new String(getResponseData());
+			return Base64Util.encodedSafe(new String(getResponseData()));
 		}
 		return null;
 	}
