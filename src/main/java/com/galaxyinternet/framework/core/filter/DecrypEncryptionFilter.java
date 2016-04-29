@@ -88,13 +88,7 @@ public class DecrypEncryptionFilter implements Filter {
 				return;
 			} else {
 				for (String incluedUrl : incluedUrlArray) {
-					logger.debug("======================================Start==========================================");
-					logger.debug("URL : "+url);
-					logger.debug("Item : "+StringEx.replaceSpecial(incluedUrl));
-					logger.debug("Filter : "+url.contains(StringEx.replaceSpecial(incluedUrl)));
-					logger.debug("======================================End==========================================");
 					if (url.contains(StringEx.replaceSpecial(incluedUrl))) {
-						logger.debug("======================================Decryp==========================================");
 						doResponse(request, response, chain);
 						return;
 					}
