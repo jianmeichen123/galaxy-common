@@ -15,8 +15,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
-
 import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
@@ -31,7 +29,7 @@ import com.galaxyinternet.framework.core.utils.StringEx;
  *
  */
 public class DecrypEncryptionFilter implements Filter {
-	private static final Logger logger = Logger.getLogger(DecrypEncryptionFilter.class);
+	//private static final Logger logger = Logger.getLogger(DecrypEncryptionFilter.class);
 	/**
 	 * 任何情况都不需要加密解密的请求地址在web.xml里面配置
 	 */
@@ -88,7 +86,7 @@ public class DecrypEncryptionFilter implements Filter {
 				return;
 			} else {
 				for (String incluedUrl : incluedUrlArray) {
-					if (url.contains(StringEx.replaceSpecial(incluedUrl))) {
+					if (url.equalsIgnoreCase(StringEx.replaceSpecial(incluedUrl))) {
 						doResponse(request, response, chain);
 						return;
 					}
