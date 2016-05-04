@@ -55,7 +55,7 @@ public class DecrypEncryptionFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
-
+	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
@@ -74,12 +74,7 @@ public class DecrypEncryptionFilter implements Filter {
 		//boolean isApp = Terminal.isAppAccess(terminal);
 		//if (isAjax || isApp) {// 如果是ajax或是app请求
 		if (isAjax) {// 如果是ajax请求
-			String contextPath = request.getContextPath();
 			String url = request.getRequestURI();
-			if(contextPath != null && !"".equals(contextPath.trim())){
-				url = url.substring(contextPath.length() + 1);
-			}
-			
 			for (String excludedUrl : excludedUrlArray) {
 				if (url.contains(StringEx.replaceSpecial(excludedUrl))) {
 					chain.doFilter(request, response);
@@ -91,7 +86,7 @@ public class DecrypEncryptionFilter implements Filter {
 				return;
 			} else {
 				for (String incluedUrl : incluedUrlArray) {
-					if (url.equalsIgnoreCase(StringEx.replaceSpecial(incluedUrl))) {
+					if (url.endsWith(StringEx.replaceSpecial(incluedUrl))) {
 						doResponse(request, response, chain);
 						return;
 					}
