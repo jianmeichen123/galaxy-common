@@ -170,13 +170,21 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@RequestMapping(value = "/addValid", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseData<T> addOne(@RequestBody @Valid Q entity, BindingResult result) {
+		ResponseData<T> responseBody = getErrorResponse(entity, result);
+		if(null != responseBody){
+			return responseBody;
+		}
+		return this.addOne(entity);
+	}
+	
+	public ResponseData<T> getErrorResponse(Q entity, BindingResult result){
 		ResponseData<T> responseBody = new ResponseData<T>();
 		Result validationResult = ValidatorResultHandler.handle(result);
 		if (validationResult.getStatus() == Status.ERROR) {
 			responseBody.setResult(validationResult);
 			return responseBody;
 		}
-		return this.addOne(entity);
+		return null;
 	}
 
 	@Override
