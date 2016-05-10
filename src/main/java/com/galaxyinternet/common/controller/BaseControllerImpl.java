@@ -316,9 +316,9 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 				if(result.getResult().getStatus()==null || result.getResult().getStatus().equals(Status.ERROR)){
 					return result;
 				}
-				result.setFileName(nameMap.get("fileName"));
-				result.setFileSuffix(nameMap.get("fileSuffix"));
 			}
+			result.setFileName(nameMap.get("fileName"));
+			result.setFileSuffix(nameMap.get("fileSuffix"));
 		} catch (Exception e) {
 			result = new UploadFileResult();
 			result.setResult(new Result(Status.ERROR, null, "异常"));
