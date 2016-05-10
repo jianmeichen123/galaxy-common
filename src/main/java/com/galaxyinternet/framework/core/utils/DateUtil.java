@@ -21,6 +21,13 @@ public class DateUtil {
 		sdf.setTimeZone(GTM8TimeZone);
 		return sdf.parse(time);
 	}
+	
+	public static Date convertStringtoD(String time)throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormatForChina);
+		sdf.setTimeZone(GTM8TimeZone);
+		return sdf.parse(time);
+	}
+	
 
 	public static String refFormatNowDate() {
 		Date nowTime = new Date(System.currentTimeMillis());
