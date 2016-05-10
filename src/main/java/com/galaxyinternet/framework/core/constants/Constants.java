@@ -74,6 +74,9 @@ public class Constants {
 	public static final String MAIL_INITIALPWD_CONTENT = "mail.initialPwd.content";
 	// 共享文件模板
 	public static final String MAIL_FILESHARE_CONTENT = "mail.fileShare.content";
+	
+	// 排期池发送邮件
+	public static final String MAIL_PQC_CONTENT = "mail.urge.content.pjc";
 
 	public static final String REQUEST_TERMINAL_MARK = "gt";// galaxinternet  terminal
 
