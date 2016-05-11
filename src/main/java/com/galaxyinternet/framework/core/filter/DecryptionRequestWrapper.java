@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.nio.charset.Charset;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -69,7 +70,7 @@ public class DecryptionRequestWrapper extends HttpServletRequestWrapper {
 	public ServletInputStream getInputStream() throws IOException {
 		final ServletInputStream sinputStream = super.getInputStream();
 		String encrypString = FilterUtil.getBodyString(sinputStream);
-		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(encrypString.getBytes());
+		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(encrypString.getBytes(Charset.forName("UTF-8")));
 		return new ServletInputStream() {
 			public int read() throws IOException {
 				return byteArrayInputStream.read();
