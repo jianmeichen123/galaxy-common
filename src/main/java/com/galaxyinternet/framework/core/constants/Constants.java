@@ -77,6 +77,9 @@ public class Constants {
 	
 	// 排期池发送邮件
 	public static final String MAIL_PQC_CONTENT = "mail.urge.content.pjc";
+	
+	// 排期池发送邮件-取消会议
+	public static final String MAIL_PQC_CONTENT_CANCLE = "mail.urge.content.pjc.cancle";
 
 	public static final String REQUEST_TERMINAL_MARK = "gt";// galaxinternet  terminal
 
