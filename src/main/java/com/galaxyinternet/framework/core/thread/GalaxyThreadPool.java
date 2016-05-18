@@ -7,13 +7,14 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author keifer
  */
 public class GalaxyThreadPool {
-	public static Logger logger = Logger.getLogger(GalaxyThreadPool.class);
+	final static Logger logger = LoggerFactory.getLogger(GalaxyThreadPool.class);
 	static int cpu_core_size = Runtime.getRuntime().availableProcessors();
 	static ExecutorService executorService;
 	static {
