@@ -3,9 +3,13 @@ package com.galaxyinternet.common.controller;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -170,15 +174,45 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	@RequestMapping(value = "/addValid", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseData<T> addOne(@RequestBody @Valid Q entity, BindingResult result) {
+		ResponseData<T> responseBody = getErrorResponse(entity, result);
+		if(null != responseBody){
+			return responseBody;
+		}
+		return this.addOne(entity);
+	}
+	
+	public ResponseData<T> getErrorResponse(Q entity, BindingResult result){
 		ResponseData<T> responseBody = new ResponseData<T>();
 		Result validationResult = ValidatorResultHandler.handle(result);
 		if (validationResult.getStatus() == Status.ERROR) {
 			responseBody.setResult(validationResult);
 			return responseBody;
 		}
-		return this.addOne(entity);
+		return null;
 	}
-
+	
+	public ResponseData<T> getErrorResponse(Q entity) {
+		ResponseData<T> responseBody = null;
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		javax.validation.Validator validator = factory.getValidator();
+		Set<ConstraintViolation<Q>> constraintViolations = validator
+				.validate(entity);
+		Result validationResult = new Result();
+		for (ConstraintViolation<Q> constraintViolation : constraintViolations) {
+			String errorMessage = constraintViolation.getMessage();
+			if (StringUtils.isNoneBlank(errorMessage)) {
+				responseBody = new ResponseData<T>();
+				log.error("对象属性:" + constraintViolation.getPropertyPath()
+						+ ",错误信息:" + constraintViolation.getMessage());
+				validationResult.addError(errorMessage);
+				responseBody.setResult(validationResult);
+				break;
+			}
+		}
+		return responseBody;
+	}
+	
+	
 	@Override
 	@ResponseBody
 	@RequestMapping(value = "/editValid", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -282,9 +316,9 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 				if(result.getResult().getStatus()==null || result.getResult().getStatus().equals(Status.ERROR)){
 					return result;
 				}
-				result.setFileName(nameMap.get("fileName"));
-				result.setFileSuffix(nameMap.get("fileSuffix"));
 			}
+			result.setFileName(nameMap.get("fileName"));
+			result.setFileSuffix(nameMap.get("fileSuffix"));
 		} catch (Exception e) {
 			result = new UploadFileResult();
 			result.setResult(new Result(Status.ERROR, null, "异常"));
