@@ -26,7 +26,7 @@ public class GalaxyThreadPool {
 	}
 
 	private static ThreadPoolExecutor getThreadPoolExector() {
-		final ThreadPoolExecutor result = new ThreadPoolExecutor(cpu_core_size * 2, cpu_core_size * 2, 5,
+		final ThreadPoolExecutor result = new ThreadPoolExecutor(cpu_core_size * 2, cpu_core_size * 4, 5,
 				TimeUnit.MINUTES, new ArrayBlockingQueue<Runnable>(cpu_core_size * 6),
 				new ThreadPoolExecutor.CallerRunsPolicy());
 		result.setThreadFactory(new ThreadFactory() {
