@@ -38,7 +38,7 @@ public class GalaxyThreadPool {
 					public void uncaughtException(Thread t, Throwable e) {
 						e.printStackTrace();
 						logger.error("Thread exception: " + t.getName(), e);
-						result.shutdown();
+						//result.shutdown();
 					}
 				});
 				return t;
