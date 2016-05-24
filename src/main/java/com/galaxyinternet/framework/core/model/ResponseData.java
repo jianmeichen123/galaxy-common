@@ -121,5 +121,8 @@ public class ResponseData<T extends BaseEntity> {
 	public void setUserData(Map<String, Object> userData) {
 		this.userData = userData;
 	}
+	public void put(String key, Object value){
+		userData.put(key, value);
+	}
 	
 }
