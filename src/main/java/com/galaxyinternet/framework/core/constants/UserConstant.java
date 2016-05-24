@@ -27,6 +27,10 @@ public interface UserConstant {
 	public long DAGLY = 17L;
 	//档案管理员
 	public long GLY = 16L;
+	//董事长秘书
+	public long DMS = 18L;
+	//ceo秘书
+	public long CEOMS = 19L;
 	//用户状态
 	String NORMAL = "0";
 	String DISABLE = "1";

@@ -3,6 +3,8 @@ package com.galaxyinternet.framework.core.enums;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.galaxyinternet.framework.core.exception.BaseException;
 
 /**
@@ -16,11 +18,11 @@ public enum Terminal {
 	WEB(1, "web"), IOS(2, "ios"), ANDROID(3, "android");
 
 	private int key;
-	private String description;
+	private String terminalName;
 
-	private Terminal(int key, String description) {
+	private Terminal(int key, String terminalName) {
 		this.key = key;
-		this.description = description;
+		this.terminalName = terminalName;
 	}
 
 	public int getKey() {
@@ -31,12 +33,12 @@ public enum Terminal {
 		this.key = key;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getTerminalName() {
+		return terminalName;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setTerminalName(String terminalName) {
+		this.terminalName = terminalName;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -50,5 +52,15 @@ public enum Terminal {
 			throw new BaseException("参数[ " + value + " ]错误,不支持该设备登录");
 		}
 		return value;
+	}
+
+	public static boolean isAppAccess(String description) {
+		description = StringUtils.trimToEmpty(description);
+		if (Terminal.IOS.getTerminalName().equalsIgnoreCase(description)
+				|| Terminal.ANDROID.getTerminalName().equalsIgnoreCase(description)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

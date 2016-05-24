@@ -27,7 +27,13 @@ import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
-
+/**
+ * 
+ *
+ * @Description: 登录过滤器
+ * @author keifer
+ *
+ */
 public class LoginFilter implements Filter {
 	private Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 	/**
@@ -77,7 +83,7 @@ public class LoginFilter implements Filter {
 		BaseUser user = SessionUtils.getUser(request, cache);
 		request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 
-		if (loginFlag && null == user) {
+		/*if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
 			String errorMessage = "用户长时间未操作或已过期,请重新登录";
@@ -95,16 +101,13 @@ public class LoginFilter implements Filter {
 				response.getWriter().write(GSONUtil.toJson(resposeData));
 				return;
 			}
-		}
+		}*/
 		chain.doFilter(req, response);
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		String excludedUrl = config.getInitParameter("excludedUrl");
-		if (!StringEx.isNullOrEmpty(excludedUrl)) {
-			excludedUrlArray = excludedUrl.split(",");
-		}
+		excludedUrlArray = FilterUtil.getWebXmlConfigParamters(config,Constants.EXCLUDE_REQUEST_URL);
 		ServletContext servletContext = config.getServletContext();
 		cache = FilterUtil.getCache(servletContext);
 		@SuppressWarnings("unchecked")

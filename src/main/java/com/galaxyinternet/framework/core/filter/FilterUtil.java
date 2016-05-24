@@ -2,6 +2,10 @@ package com.galaxyinternet.framework.core.filter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
@@ -17,11 +21,20 @@ import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
-import com.galaxyinternet.framework.core.utils.AESUtil;
+import com.galaxyinternet.framework.core.utils.Base64Util;
 import com.galaxyinternet.framework.core.utils.BeanContextUtils;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
+import com.galaxyinternet.framework.core.utils.StringEx;
 
+/**
+ * 
+ *
+ * @Description: 过滤器工具栏
+ * @author keifer
+ * @date 2016年4月20日
+ *
+ */
 public class FilterUtil {
 
 	static Logger logger = LoggerFactory.getLogger(FilterUtil.class);
@@ -63,15 +76,23 @@ public class FilterUtil {
 		return sessionId;
 	}
 
+	/**
+	 * 
+	 * @Description:在过滤器中获取cache对象
+	 */
 	public static Cache getCache(FilterConfig config) {
 		ServletContext servletContext = config.getServletContext();
 		return (Cache) BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 	}
 
+	/**
+	 * 
+	 * @Description:在servlet中获取cache对象
+	 */
 	public static Cache getCache(ServletContext servletContext) {
 		return (Cache) BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
 	}
-	
+
 	public static String getBodyString(BufferedReader br) {
 		String inputLine = null;
 		String str = "";
@@ -89,6 +110,78 @@ public class FilterUtil {
 			} catch (IOException e) {
 			}
 		}
-		return AESUtil.defaultDecrypt(str);
+		return Base64Util.decode(str);
+		// return str;
+	}
+
+	/**
+	 * 
+	 * @Description：获取请求体内的数据，并加密
+	 * @param in
+	 *            输入流
+	 * @return String 返回加密后的数据
+	 *
+	 */
+	public static String getBodyString(InputStream in) {
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		return getBodyString(br);
+	}
+
+	/**
+	 * 
+	 * @Description:检查请求的url是否需要解密
+	 * @param collection
+	 *            子项目基础服务地址，如：http://fx.galaxyinternet.com/platform
+	 * @param requestUrl
+	 *            客户端发送的请求地址
+	 * @return boolean true需要解密，false不需要
+	 *
+	 */
+	public static boolean checkUrl(Collection<Object> collection, String requestUrl) {
+		Iterator<Object> iterator = collection.iterator();
+		boolean result = false;
+		while (iterator.hasNext()) {
+			String endpoint = String.valueOf(iterator.next());
+			if (requestUrl.startsWith(endpoint) && FilterUtil.judgeFile(requestUrl)) {
+				result = true;// 需要解密
+				break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @Description:获取web.xml配置文件中的配置参数
+	 * @param filterConfig
+	 * @param configParamKey
+	 *            配置参数的<param-name>元素的值
+	 * @return String[] 返回获取的配置参数的值，多个参数用逗号隔开
+	 *
+	 */
+	public static String[] getWebXmlConfigParamters(FilterConfig filterConfig, String configParamKey) {
+		String configPath = filterConfig.getInitParameter(configParamKey);
+		if (!StringEx.isNullOrEmpty(configPath)) {
+			return configPath.split(",");
+		}
+		return new String[0];
+	}
+
+	/**
+	 * 
+	 * @Description:获取web.xml配置文件中的配置参数
+	 * @param filterConfig
+	 * @param configParamKey
+	 *            配置参数的<param-name>元素的值, 拦截所有请求配置为*
+	 * @return 是否拦截加解密所有请求
+	 *
+	 */
+	public static boolean decrypEncrypAllRequeset(FilterConfig filterConfig, String configParamKey) {
+		String configPath = filterConfig.getInitParameter(configParamKey);
+		if (Constants.INCLUED_ALL_REQUEST_URL.equals(StringUtils.trimToEmpty(configPath))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

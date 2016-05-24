@@ -41,6 +41,7 @@ public class ConfigBean implements BeanFactoryAware {
 
 	/**
 	 * 初始化数据到redis
+	 * TODO 此处可以用hash存储进行优化(by keifer)
 	 */
 	@SuppressWarnings("unchecked")
 	private void init() {

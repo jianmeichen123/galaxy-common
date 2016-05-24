@@ -51,7 +51,7 @@ public class AESUtil {
 	public static byte[] encrypt(String content, String password) {
 		try {
 			KeyGenerator kgen = KeyGenerator.getInstance("AES");
-			kgen.init(128, new SecureRandom(password.getBytes()));
+			kgen.init(128, new SecureRandom(password.getBytes()));//密钥长度为128比特
 			SecretKey secretKey = kgen.generateKey();
 			byte[] enCodeFormat = secretKey.getEncoded();
 			SecretKeySpec key = new SecretKeySpec(enCodeFormat, "AES");
@@ -118,7 +118,7 @@ public class AESUtil {
 
 	public static void main(String[] args) throws Exception {
 
-		String content = "测试";
+		String content = "{\"id\":\"222\",\"realName\":\"keifer\",\"nickName\":\"xingkaihu\",\"email\":\"xingkaihu\"}";
 		// 加密
 		System.out.println("加密前：" + content);
 		byte[] encryptResult = encrypt(content);
