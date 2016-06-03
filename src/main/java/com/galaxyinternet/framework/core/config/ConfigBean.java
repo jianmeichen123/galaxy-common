@@ -41,6 +41,7 @@ public class ConfigBean implements BeanFactoryAware {
 
 	/**
 	 * 初始化数据到redis
+	 * TODO 此处可以用hash存储进行优化(by keifer)
 	 */
 	@SuppressWarnings("unchecked")
 	private void init() {
@@ -79,7 +80,10 @@ public class ConfigBean implements BeanFactoryAware {
 	 */
 	private void destory() {
 		this.file = null;
-		this.keys = null;
+		if(null != keys){
+			keys.clear();
+			keys = null;
+		}
 		this.redisKey = null;
 		/*String[] names = beanFactory.getBeanDefinitionNames();
 		List<String> nameList = Arrays.asList(names);

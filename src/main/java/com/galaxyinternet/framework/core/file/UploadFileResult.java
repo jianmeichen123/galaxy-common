@@ -10,6 +10,14 @@ public class UploadFileResult extends FileResult {
 	 */
 	private String bucketName;
 	/**
+	 * 文件名
+	 */
+	private String fileName;
+	/**
+	 * 文件的后缀名
+	 */
+	private String fileSuffix;
+	/**
 	 * 文件大小
 	 */
 	private long contentLength;
@@ -38,6 +46,22 @@ public class UploadFileResult extends FileResult {
 
 	public void setContentLength(long contentLength) {
 		this.contentLength = contentLength;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileSuffix() {
+		return fileSuffix;
+	}
+
+	public void setFileSuffix(String fileSuffix) {
+		this.fileSuffix = fileSuffix;
 	}
 
 	public String getEtag() {

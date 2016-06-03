@@ -24,11 +24,16 @@ import com.galaxyinternet.framework.core.model.ResponseData;
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
-import com.galaxyinternet.framework.core.utils.BeanContextUtils;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
-
+/**
+ * 
+ *
+ * @Description: 登录过滤器
+ * @author keifer
+ *
+ */
 public class LoginFilter implements Filter {
 	private Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 	/**
@@ -46,41 +51,6 @@ public class LoginFilter implements Filter {
 	public void destroy() {
 	}
 
-	/**
-	 * 
-	 * 请求参数完整性校验
-	 */
-	@SuppressWarnings({ "rawtypes", "unused" })
-	private String checkRequestParamValid(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String sessionId = SessionUtils.getSessionId(request);
-		String userId = SessionUtils.getUserId(request);
-		if (StringUtils.isBlank(userId) || StringUtils.isBlank(sessionId)) {
-			logger.warn("请求参数不完整：userId=" + userId + "sessionId=" + sessionId);
-			response.setCharacterEncoding("utf-8");
-			ResponseData resposeData = new ResponseData();
-			Result result = new Result();
-			result.setStatus(Status.ERROR);
-			result.setMessage("请求参数不完整");
-			result.setErrorCode(Constants.REQUEST_PARAMS_INCOMPLETE);
-			resposeData.setResult(result);
-			response.getWriter().write(GSONUtil.toJson(resposeData));
-			return null;
-		}
-		return sessionId;
-	}
-
-	/**
-	 * 去掉对资源文件的拦截
-	 */
-	public boolean judgeFile(String url) {
-		if (url.endsWith(".gif") || url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".bmp")
-				|| url.endsWith(".css") || url.endsWith(".js") || url.endsWith(".jsx") || url.endsWith(".ico") || url.endsWith("installReadme.html")) {
-			return false;
-		} else {
-			return true;
-		}
-	}
-
 	@SuppressWarnings("rawtypes")
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
@@ -89,7 +59,7 @@ public class LoginFilter implements Filter {
 		String url = request.getRequestURI();
 		boolean loginFlag = true;
 
-		loginFlag = judgeFile(url);
+		loginFlag = FilterUtil.judgeFile(url);
 		if (!loginFlag) {
 			chain.doFilter(request, response);
 			return;
@@ -113,7 +83,7 @@ public class LoginFilter implements Filter {
 		BaseUser user = SessionUtils.getUser(request, cache);
 		request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 
-		if (loginFlag && null == user) {
+		/*if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
 			String errorMessage = "用户长时间未操作或已过期,请重新登录";
@@ -131,18 +101,15 @@ public class LoginFilter implements Filter {
 				response.getWriter().write(GSONUtil.toJson(resposeData));
 				return;
 			}
-		}
+		}*/
 		chain.doFilter(req, response);
 	}
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
-		String excludedUrl = config.getInitParameter("excludedUrl");
-		if (!StringEx.isNullOrEmpty(excludedUrl)) {
-			excludedUrlArray = excludedUrl.split(",");
-		}
+		excludedUrlArray = FilterUtil.getWebXmlConfigParamters(config,Constants.EXCLUDE_REQUEST_URL);
 		ServletContext servletContext = config.getServletContext();
-		cache = (Cache)BeanContextUtils.getBean(Constants.REDIS_CACHE_BEAN_NAME, servletContext);
+		cache = FilterUtil.getCache(servletContext);
 		@SuppressWarnings("unchecked")
 		Map<String, Object> configs = (Map<String, Object>) cache.get(OSSConstant.GALAXYINTERNET_FX_ENDPOINT);
 		servletContext.setAttribute(OSSConstant.GALAXYINTERNET_FX_ENDPOINT, GSONUtil.toJson(configs));
