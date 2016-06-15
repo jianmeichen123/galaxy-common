@@ -18,7 +18,8 @@ import com.aliyun.oss.model.OSSObject;
 public class PartDownloadCallable implements Callable<PartDownloadCallable>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public final Logger logger = Logger.getLogger(PartDownloadCallable.class);
+	
+	static final Logger logger = Logger.getLogger(PartDownloadCallable.class);
 	// 当前线程的下载开始位置
 	private long startPos;
 
