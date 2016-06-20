@@ -163,7 +163,14 @@ public abstract class BaseDaoImpl<T extends PrimaryKeyObject<ID>, ID extends Ser
 		if (pageable != null && pageable.getSort() != null) {
 			String sorting = pageable.getSort().toString();
 			params.put("sorting", sorting.replace(":", ""));
+			String str=(String)params.get("sorting");
+			if(str.contains("---")){
+				
+				params.put("sorting", str.replace("---", ":"));
+			}
+		
 		}
+
 		return params;
 	}
 
