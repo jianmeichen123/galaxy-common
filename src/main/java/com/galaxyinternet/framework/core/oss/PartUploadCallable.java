@@ -18,7 +18,7 @@ import com.aliyun.oss.model.UploadPartResult;
 public class PartUploadCallable implements Callable<PartUploadCallable>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	public final Logger logger = Logger.getLogger(PartUploadCallable.class);
+	static final Logger logger = Logger.getLogger(PartUploadCallable.class);
 
 	private File uploadFile;
 	private String bucket;
