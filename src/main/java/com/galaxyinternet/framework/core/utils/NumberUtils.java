@@ -44,7 +44,16 @@ public class NumberUtils {
 	public static double toFormatNoSplit(String number) {
 		return Double.parseDouble(perc(Double.parseDouble(number), 2).replace(",", ""));
 	}
-
+	/**
+	 * <br/>
+	 * 方法描述: 将含有科学计数法的数值进行格式化 参数为double类型的
+	 * 
+	 * @param money
+	 * @return
+	 */
+	public static double toFormatNoSplitFour(String number) {
+		return Double.parseDouble(perc(Double.parseDouble(number), 4).replace(",", ""));
+	}
 	/**
 	 * 将含有科学计数法的数值进行格式化 参数为Double类型的
 	 * 
