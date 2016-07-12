@@ -283,7 +283,26 @@
 	</build>
 
 	<profiles>
-
+		<profile>
+			<id>nginx</id>
+			<properties>
+				<oss.service.endpoint.prefix>oss-cn-hangzhou</oss.service.endpoint.prefix>
+				<oss.service.endpoint>oss-cn-hangzhou.aliyuncs.com</oss.service.endpoint>
+				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
+				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
+				<oss.bucket.name>galaxydev-xhhl-fx</oss.bucket.name>
+				<oss.upload.mode>local</oss.upload.mode>
+				<mail.host>mail.galaxyinternet.com</mail.host>
+				<mail.address>fx-admin@galaxyinternet.com</mail.address>
+				<mail.username>fx-admin</mail.username>
+				<mail.password>oN1oAyt4</mail.password>
+				<mail.smtp.auth>true</mail.smtp.auth>
+				<mail.smtp.timeout>25000</mail.smtp.timeout>
+				<mail.smtp.port>587</mail.smtp.port>
+				<!-- 上线应该配置成公司的域名 -->
+				<galaxy.header.referer>http://fx.dev.galaxyinternet.com</galaxy.header.referer>
+			</properties>
+		</profile>
 		<profile>
 			<id>dev</id>
 			<properties>
