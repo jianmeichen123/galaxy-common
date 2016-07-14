@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-
 import com.galaxyinternet.framework.core.exception.BaseException;
 
 /**
@@ -40,6 +39,18 @@ public enum Terminal {
 	public void setTerminalName(String terminalName) {
 		this.terminalName = terminalName;
 	}
+	
+	 public static String getNameByKey(String key) {	        
+        if (key != null && !key.trim().equals("")) {            
+        	Terminal[] values = Terminal.values();
+            for (int i = 0;i < values.length;i++) {
+                if (key.equals(values[i].getKey())) {
+                    return values[i].getTerminalName();
+                }                
+            }
+        }
+        return null;
+	 }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public int getTerminalValue(int value) {
