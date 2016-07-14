@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.galaxyinternet</groupId>
 	<artifactId>galaxy-common</artifactId>
-	<packaging>jar</packaging>
-	<version>1.0.1-mobile</version>
+	<packaging>jar</packaging>	
+    <version>1.0.3.mobile</version>
 	<name />
 	<description />
 	<properties>

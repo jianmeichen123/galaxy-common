@@ -111,6 +111,7 @@ public class DecrypEncryptionFilter implements Filter {
 		EncryptionResponseWrapper wrapper = new EncryptionResponseWrapper(response);
 		chain.doFilter(request, wrapper);
 		String responseData = wrapper.getResponseEncrypData();
+		responseData = responseData == null ? "" : responseData;
 		ServletOutputStream output = response.getOutputStream();
 		output.write(responseData.getBytes());
 		output.flush();

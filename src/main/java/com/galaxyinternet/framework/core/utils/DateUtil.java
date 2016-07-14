@@ -15,6 +15,7 @@ public class DateUtil {
 	private static final String dateTimeFormat = "MM/dd/yyyy HH:mm:ss";
 	private static final String dateTimeFormatForChina = "yyyy-MM-dd HH:mm:ss";
 	private static final String dateFormatForTeamCode = "yyyyMMdd";
+	private static final String dateTimeFormatChina = "yyyy-MM-dd HH:mm";
 
 	public static Date convertStringToDate(String time) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
@@ -74,6 +75,12 @@ public class DateUtil {
 		return sdf.format(date);
 	}
 
+	public static String convertDateToStringChina(Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormatChina);
+		sdf.setTimeZone(GTM8TimeZone);
+		return sdf.format(date);
+	}
+	
 	public static String convertDateToString(Date date) {
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
 		sdf.setTimeZone(GTM8TimeZone);
