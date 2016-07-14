@@ -1,9 +1,12 @@
 package com.galaxyinternet.framework.core.utils;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 /**
@@ -356,6 +359,7 @@ public class DateUtil {
 			return currentTime;
 		}
 	}
+	
 	
 	
 }
