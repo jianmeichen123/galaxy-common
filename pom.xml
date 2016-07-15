@@ -5,7 +5,6 @@
 	<artifactId>galaxy-common</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.3.mobile-SNAPSHOT</version>
-<!-- 	<version>1.0.3.mobile</version> -->
 	<name />
 	<description />
 	<properties>
