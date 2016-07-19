@@ -351,4 +351,50 @@ public class DateUtil {
 	}
 	
 	
+	
+	/**
+	 * type = 1 ;  当年第一天
+	 * type ＝ 2;  当月第一天
+	 * type = 3 ; 当季度第一天
+	 * type = 4 ; 本周第一天
+	 * @return
+	 */
+	public static String getDefaultSdate(Integer type){
+		String rsdate = null;
+		if(type==1){
+			rsdate = DateUtil.getFormatDateTime(new Date(),"yyyy-01-01");
+		}else if(type==2){
+			rsdate = DateUtil.getFormatDateTime(DateUtil.getCurrentDate(),"yyyy-mm-01");
+		}else if(type==3){
+		}else if(type==4){
+		}else {
+		}
+		return rsdate;
+	}
+	
+	
+	/**
+	 * 获取结束时间
+	 * type = 1 ;  当天
+	 * type ＝ 2　; 当月最后一天
+	 * type = 3 ;  当季度最后一天
+	 * type = 4 ;  本周最后一天
+	 * @return
+	 */
+	public static String getDefaultEdate(Integer type){
+		String redate = null;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
+		Calendar ca = Calendar.getInstance(); 
+		if(type==1){
+			redate = DateUtil.getFormatDateTime(new Date(),"yyyy-MM-dd");
+		}else if(type==2){
+			ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));  
+			redate = format.format(ca.getTime());
+		}else if(type==3){
+		}else if(type==4){
+		}else {
+		}
+		return redate;
+	}
+	
 }
