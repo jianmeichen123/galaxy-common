@@ -6,6 +6,7 @@ public class Constants {
 
 	public final static String SESSION_USER_KEY = "galax_session_user";
 	public static final String _session_resource_mark_key_ = "resourceMark";
+	public static final String SESSION_USER_MENUS_KEY = "user_menus_";
 
 	public final static String SESSION_ID_KEY = "sessionId";
 
