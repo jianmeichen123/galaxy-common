@@ -5,7 +5,7 @@ public class Constants {
 	public final static String SECRET_KEY = "2B4eWxHdTaWPRGnN";
 
 	public final static String SESSION_USER_KEY = "galax_session_user";
-	public static final String _session_resource_mark_key_ = "resource_mark";
+	public static final String _session_resource_mark_key_ = "resourceMark";
 
 	public final static String SESSION_ID_KEY = "sessionId";
 

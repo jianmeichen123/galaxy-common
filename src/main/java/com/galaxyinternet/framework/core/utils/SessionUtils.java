@@ -67,6 +67,7 @@ public class SessionUtils {
 	 * @return
 	 */
 	public static String getValueFromRequest(HttpServletRequest request, String key){
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
 		String value = request.getHeader(key);
 		if (StringUtils.isBlank(value)) {
 			value = request.getParameter(key);
