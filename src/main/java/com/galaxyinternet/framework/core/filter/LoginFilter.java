@@ -13,12 +13,16 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.model.BaseUser;
+import com.galaxyinternet.framework.core.model.ResponseData;
+import com.galaxyinternet.framework.core.model.Result;
+import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
 import com.galaxyinternet.framework.core.utils.SessionUtils;
@@ -47,6 +51,7 @@ public class LoginFilter implements Filter {
 	public void destroy() {
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
 			throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) req;
@@ -78,7 +83,7 @@ public class LoginFilter implements Filter {
 		BaseUser user = SessionUtils.getUser(request, cache);
 		request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 
-		/*if (loginFlag && null == user) {
+		if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
 			response.setCharacterEncoding("utf-8");
 			String errorMessage = "用户长时间未操作或已过期,请重新登录";
@@ -96,7 +101,7 @@ public class LoginFilter implements Filter {
 				response.getWriter().write(GSONUtil.toJson(resposeData));
 				return;
 			}
-		}*/
+		}
 		chain.doFilter(req, response);
 	}
 
