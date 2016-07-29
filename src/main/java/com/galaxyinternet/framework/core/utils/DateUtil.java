@@ -351,4 +351,100 @@ public class DateUtil {
 	}
 	
 	
+	
+	/**
+	 * type = 1 ;  当年第一天
+	 * type ＝ 2;  当月第一天
+	 * type = 3 ; 当季度第一天
+	 * type = 4 ; 本周第一天
+	 * @return
+	 */
+	public static String getDefaultSdate(Integer type){
+		String rsdate = null;
+		if(type==1){
+			rsdate = DateUtil.getFormatDateTime(new Date(),"yyyy-01-01");
+		}else if(type==2){
+			rsdate = DateUtil.getFormatDateTime(DateUtil.getCurrentDate(),"yyyy-mm-01");
+		}else if(type==3){
+		}else if(type==4){
+		}else {
+		}
+		return rsdate;
+	}
+	
+	
+	/**
+	 * 获取结束时间
+	 * type = 1 ;  当天
+	 * type ＝ 2　; 当月最后一天
+	 * type = 3 ;  当季度最后一天
+	 * type = 4 ;  本周最后一天
+	 * @return
+	 */
+	public static String getDefaultEdate(Integer type){
+		String redate = null;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
+		Calendar ca = Calendar.getInstance(); 
+		if(type==1){
+			redate = DateUtil.getFormatDateTime(new Date(),"yyyy-MM-dd");
+		}else if(type==2){
+			ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));  
+			redate = format.format(ca.getTime());
+		}else if(type==3){
+		}else if(type==4){
+		}else {
+		}
+		return redate;
+	}
+	
+	/**
+	 * 根据年 月 获取对应的月份 天数
+	 * */
+	public static int getDaysByYearMonth(int year, int month) {
+
+		Calendar a = Calendar.getInstance();
+		a.set(Calendar.YEAR, year);
+		a.set(Calendar.MONTH, month - 1);
+		a.set(Calendar.DATE, 1);
+		a.roll(Calendar.DATE, -1);
+		int maxDate = a.get(Calendar.DATE);
+		return maxDate;
+	}
+	
+	/**
+	 * 获取当前年份
+	 * @return
+	 */
+	public static int getCurrentYear(){
+		//获取年份
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.YEAR);
+	}
+	
+	
+	
+	/**
+	 * 获取当前年份第一天
+	 * @return
+	 */
+	public static Date getCurrYearFirst() {
+		int currentYear = getCurrentYear();
+		return getYearFirst(currentYear);
+	}
+
+	/**
+	 * 获取指定年份第一天
+	 * @param year
+	 * @return
+	 */
+	public static Date getYearFirst(int year) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(Calendar.YEAR, year);
+		Date currYearFirst = calendar.getTime();
+		return currYearFirst;
+	}
+
+
+	
 }
