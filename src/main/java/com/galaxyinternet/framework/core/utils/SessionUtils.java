@@ -58,6 +58,22 @@ public class SessionUtils {
 		}
 		return userId;
 	}
+	
+	/**
+	 * 如果是href，则从请求地址后边获取参数值
+	 * 如果是ajax，则从header中获取
+	 * @param request
+	 * @param key
+	 * @return
+	 */
+	public static String getValueFromRequest(HttpServletRequest request, String key){
+		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
+		String value = request.getHeader(key);
+		if (StringUtils.isBlank(value)) {
+			value = request.getParameter(key);
+		}
+		return value;
+	}
 
 	public static BaseUser getUser(HttpServletRequest request, Cache cache) {
 		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);

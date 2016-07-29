@@ -10,7 +10,7 @@ public class PagableEntity extends BaseEntity implements Pagable {
 
 	@Override
 	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
+		this.pageSize = pageSize==null?10:pageSize;
 	}
 
 	@Override
@@ -20,7 +20,7 @@ public class PagableEntity extends BaseEntity implements Pagable {
 
 	@Override
 	public void setPageNum(Integer pageNum) {
-		this.pageNum = pageNum;
+		this.pageNum = pageNum==null?0:pageNum;
 
 	}
 

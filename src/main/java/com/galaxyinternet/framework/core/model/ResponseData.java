@@ -48,6 +48,8 @@ public class ResponseData<T extends BaseEntity> {
 	 */
 	private Header header;
 
+	private String queryParamsJsonStr;
+	
 	public ResponseData() {
 		result = new Result(Status.OK, null);
 		pageList = new Page<T>(null, null, null);
@@ -123,6 +125,14 @@ public class ResponseData<T extends BaseEntity> {
 	}
 	public void putAttachmentItem(String key, Object value){
 		userData.put(key, value);
+	}
+
+	public String getQueryParamsJsonStr() {
+		return queryParamsJsonStr;
+	}
+
+	public void setQueryParamsJsonStr(String queryParamsJsonStr) {
+		this.queryParamsJsonStr = queryParamsJsonStr;
 	}
 	
 }

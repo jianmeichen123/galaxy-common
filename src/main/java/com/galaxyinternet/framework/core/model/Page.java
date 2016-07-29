@@ -11,6 +11,12 @@ public class Page<T> implements Serializable {
 	private Pageable pageable;
 	private List<T> content;
 
+	public Page(List<T> content, Long total) {
+		super();
+		this.total = total;
+		this.content = content;
+	}
+	
 	public Page(List<T> content, Pageable pageable, Long total) {
 		super();
 		this.total = total;
