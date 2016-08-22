@@ -43,6 +43,13 @@ public class DateUtil {
 		return retStrFormatNowDate;
 	}
 	
+	public static String longToString(long time, String format){
+		Date nowTime = new Date(time);
+		SimpleDateFormat sdFormatter = new SimpleDateFormat(format);
+		String retStrFormatNowDate = sdFormatter.format(nowTime);
+		return retStrFormatNowDate;
+	}
+	
 	public static String longString(long time){
 		Date nowTime = new Date(time);
 		SimpleDateFormat sdFormatter = new SimpleDateFormat(dateTimeFormatForChina);
