@@ -31,6 +31,8 @@ public interface UserConstant {
 	public long DMS = 18L;
 	//ceo秘书
 	public long CEOMS = 19L;
+	//投后运营
+	public long THYY = 20L;
 	//用户状态
 	String NORMAL = "0";
 	String DISABLE = "1";

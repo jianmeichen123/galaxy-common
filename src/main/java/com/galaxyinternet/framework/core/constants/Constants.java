@@ -97,5 +97,7 @@ public class Constants {
 	public static final String INCLUED_ALL_REQUEST_URL = "*";
 
 	public static final String DECRYP_ENCRYPTION_MARK = "decrypEncryption";
+	
+	public static final String PUSH_MESSAGE_LIST = "pushMessageList";
 
 }
