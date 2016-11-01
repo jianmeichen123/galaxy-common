@@ -7,7 +7,7 @@ import com.galaxyinternet.framework.core.exception.MongoDBException;
 /**
  * 通用基础DAO
  */
-public interface MongodbBaseDao<T> {
+public interface MongodbBaseDao<T, ID> {
 	
 	/**
 	 * 持久化对象到MongoDB中
@@ -28,7 +28,7 @@ public interface MongodbBaseDao<T> {
 	 * @param id   目前只支持key为"id"
 	 * @throws MongoDBException
 	 */
-	public <ID> void deleteById(ID id) throws MongoDBException;
+	public void deleteById(ID id) throws MongoDBException;
 	
 	/**
 	 * 根据ID更新指定的文档
@@ -36,7 +36,7 @@ public interface MongodbBaseDao<T> {
 	 * @param t
 	 * @throws MongoDBException
 	 */
-	public <ID> void updateById(ID id, T t) throws MongoDBException;
+	public void updateById(ID id, T t) throws MongoDBException;
 	
 	/**
 	 * 根据条件查询文档集合
@@ -58,6 +58,6 @@ public interface MongodbBaseDao<T> {
 	 * @return
 	 * @throws MongoDBException
 	 */
-	public <ID> T findOneById(ID id) throws MongoDBException;
+	public T findOneById(ID id) throws MongoDBException;
 	
 }

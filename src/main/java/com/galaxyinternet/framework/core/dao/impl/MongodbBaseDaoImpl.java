@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import com.galaxyinternet.framework.core.dao.MongodbBaseDao;
 import com.galaxyinternet.framework.core.exception.MongoDBException;
 import com.galaxyinternet.framework.core.utils.MongoDB.QueryField;
-public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
+public class MongodbBaseDaoImpl<T, ID> implements MongodbBaseDao<T, ID> {
 	
 	@Autowired
 	protected MongoTemplate mongoTemplate;
@@ -35,7 +35,7 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
 	}
 	
-	public <ID> void deleteById(ID id) throws MongoDBException {
+	public void deleteById(ID id) throws MongoDBException {
 		try {
 			Query query = new Query();
 			query.addCriteria(Criteria.where("id").is(id));
@@ -45,7 +45,7 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
 	}
 
-    public <ID> void updateById(ID id, T t) throws MongoDBException {
+    public void updateById(ID id, T t) throws MongoDBException {
         try {
         	 Query query = new Query();
              query.addCriteria(Criteria.where("id").is(id));
@@ -76,7 +76,7 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
     }
 
-    public <ID> T findOneById(ID id) throws MongoDBException {
+    public T findOneById(ID id) throws MongoDBException {
         try {
 			return mongoTemplate.findById(id, this.getEntityClass());
 		} catch (Exception e) {
