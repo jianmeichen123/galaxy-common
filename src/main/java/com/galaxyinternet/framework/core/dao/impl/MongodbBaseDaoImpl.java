@@ -18,7 +18,6 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 	@Autowired
 	protected MongoTemplate mongoTemplate;
 
-	//保存一个对象到mongodb
 	public void save(T bean) throws MongoDBException {
 	    try {
 			mongoTemplate.save(bean);
@@ -27,7 +26,6 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
 	}
 	
-	// 根据对象的属性删除
 	public void deleteByCondition(T query) throws MongoDBException {
 	    try {
 			Query q = buildBaseQuery(query);
@@ -37,7 +35,6 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
 	}
 	
-	// 根据id删除对象
 	public <ID> void deleteById(ID id) throws MongoDBException {
 		try {
 			Query query = new Query();
@@ -48,22 +45,7 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
 	}
 
-	
-
-    // 通过条件查询更新数据
-	public void update(T query, T bean) throws MongoDBException {
-		try {
-			Query q = buildBaseQuery(query);
-			Update update = buildBaseUpdate(bean);
-			mongoTemplate.updateMulti(q, update, this.getEntityClass());
-		} catch (Exception e) {
-			throw new MongoDBException(e, "MongoDB update error:" + query.toString());
-		}
-	}
-
-	// 根据id进行更新
-    public void updateById(String id, T t) throws MongoDBException {
-       
+    public <ID> void updateById(ID id, T t) throws MongoDBException {
         try {
         	 Query query = new Query();
              query.addCriteria(Criteria.where("id").is(id));
@@ -74,41 +56,42 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 		}
     }
 
-	// 通过条件查询实体(集合)
-	public List<T> find(T t) {
-		Query query = new Query();
-		query=buildBaseQuery(t);
-		return mongoTemplate.find(query, this.getEntityClass());
+	public List<T> find(T t) throws MongoDBException {
+		try {
+			Query query = new Query();
+			query=buildBaseQuery(t);
+			return mongoTemplate.find(query, this.getEntityClass());
+		} catch (Exception e) {
+			throw new MongoDBException(e, "MongoDB find error:" + t.toString());
+		}
 	}
 
-	public List<T> findByCondition(T t) {
-	    Query query = buildBaseQuery(t);
-	    query=buildBaseQuery(t);
-	    return mongoTemplate.find(query, getEntityClass());
-	}
+    public T findOne(T t) throws MongoDBException {
+    	try {
+    		Query query = new Query();
+			query=buildBaseQuery(t);
+			return mongoTemplate.findOne(query, this.getEntityClass());
+		} catch (Exception e) {
+			throw new MongoDBException(e, "MongoDB find error:" + t.toString());
+		}
+    }
 
-    // 通过一定的条件查询一个实体
-    public T findOne(T t) {
-    	 Query query = buildBaseQuery(t);
- 	    query=buildBaseQuery(t);
-        return mongoTemplate.findOne(query, this.getEntityClass());
+    public <ID> T findOneById(ID id) throws MongoDBException {
+        try {
+			return mongoTemplate.findById(id, this.getEntityClass());
+		} catch (Exception e) {
+			throw new MongoDBException(e, "MongoDB find error:" + id.toString());
+		}
     }
 
 
-    // 通过ID获取记录
-    public T get(String id) {
-        return mongoTemplate.findById(id, this.getEntityClass());
-    }
-
-    // 通过ID获取记录,并且指定了集合名(表的意思)
-    public T get(String id, String collectionName) {
-        return mongoTemplate.findById(id, this.getEntityClass(), collectionName);
-    }
-
-    // 根据vo构建查询条件Query
+    /**
+     * 通过反射的方式将T转换为org.springframework.data.mongodb.core.query.Query
+     * @param t
+     * @return
+     */
     private Query buildBaseQuery(T t) {
         Query query = new Query();
-
 	    Field[] fields = t.getClass().getDeclaredFields();
 	    for (Field field : fields) {
 	        field.setAccessible(true);
@@ -128,10 +111,14 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
 	    }
         return query;
     }
-
+    
+    /**
+     * 通过反射的方式将T转换为org.springframework.data.mongodb.core.query.Update
+     * @param t
+     * @return
+     */
     private Update buildBaseUpdate(T t) {
         Update update = new Update();
-
         Field[] fields = t.getClass().getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
@@ -147,15 +134,11 @@ public class MongodbBaseDaoImpl<T> implements MongodbBaseDao<T> {
         return update;
     }
 
-	// 获取需要操作的实体类class
+	/**
+	 * 获取泛型实例的完全限定名
+	 */
 	@SuppressWarnings("unchecked")
     protected Class<T> getEntityClass() {
 	    return ((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
 	}
-
-    public MongoTemplate getMongoTemplate() {
-        return mongoTemplate;
-    }
-
-
 }
