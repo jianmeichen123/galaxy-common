@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Jon Brisbin
  */
-public abstract class UUIDUtils {
+public class UUIDUtils {
 
 	private static boolean IS_THREADLOCALRANDOM_AVAILABLE = false;
 	private static Random random;

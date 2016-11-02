@@ -1,10 +1,9 @@
-package com.galaxyinternet.framework.core.utils.MongoDB;
+package com.galaxyinternet.framework.core.dao.utils;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 
 
 public enum QueryType {

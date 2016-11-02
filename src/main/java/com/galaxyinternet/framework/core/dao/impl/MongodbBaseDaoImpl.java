@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.galaxyinternet.framework.core.dao.MongodbBaseDao;
+import com.galaxyinternet.framework.core.dao.utils.QueryField;
 import com.galaxyinternet.framework.core.exception.MongoDBException;
-import com.galaxyinternet.framework.core.utils.MongoDB.QueryField;
 
 
 public class MongodbBaseDaoImpl<T, ID> implements MongodbBaseDao<T, ID> {

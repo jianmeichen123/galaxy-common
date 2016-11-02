@@ -1,4 +1,4 @@
-package com.galaxyinternet.framework.core.utils.MongoDB;
+package com.galaxyinternet.framework.core.dao.utils;
 
 import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
