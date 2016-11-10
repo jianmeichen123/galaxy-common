@@ -38,11 +38,11 @@ public class SmsUtil {
     //企业代码
     private static String spCode = "";
     //账号
-    private static String loginName = "";
+    private static String loginName = "DL-fudl";
     //密码
-    private static String password = "";
+    private static String password = "1uA6RvGL";
     //产品编号
-    private static String productId = "";
+    private static String productId = "1012818";
 
 
     /**
@@ -158,5 +158,12 @@ public class SmsUtil {
         } finally {
             instream.close();
         }
+    }
+
+
+    public static void main(String[] args) {
+
+        SmsUtil.send("ok","18311090309");
+
     }
 }
