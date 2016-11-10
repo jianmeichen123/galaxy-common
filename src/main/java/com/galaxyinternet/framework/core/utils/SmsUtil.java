@@ -34,7 +34,7 @@ public class SmsUtil {
     private static HttpClient client = null;
 
     //短信平台地址
-    private static final String url = "http://cf.51welink.com/submitdata/mmswebinterface.asmx";
+    private static final String url = "http://cf.51welink.com/submitdata/Service.asmx/g_Submit";
     //企业代码
     private static String spCode = "";
     //账号
@@ -116,13 +116,22 @@ public class SmsUtil {
     private static Map<String,String> _convert(String str)throws BaseException{
         Map<String,String> map = new HashMap<String,String>();
         try {
-            String[] strs = str.split("&");
+        	if (str.indexOf("<State>")<0||str.indexOf("</State>")<0) {
+        		map.put("result", "-1");
+        	} else {
+        		int start = str.indexOf("<State>")+7;
+            	int end = str.indexOf("</State>");
+            	String result = str.substring(start, end);
+            	map.put("result", result);
+        	}
+        	
+        	/* String[] strs = str.split("<State>");
             for (String s : strs) {
                 String[] ss= s.split("=");
                 if(ss.length == 2){
                     map.put(ss[0], ss[1]);
                 }
-            }
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException("转换响应参数异常");
@@ -163,7 +172,8 @@ public class SmsUtil {
 
     public static void main(String[] args) {
 
-        SmsUtil.send("ok","18311090309");
+       boolean flag = SmsUtil.send("ok","18311082369");
+       System.out.println(flag);
 
     }
 }
