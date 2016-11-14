@@ -39,6 +39,12 @@ public class EndpointFilter implements Filter
 		HttpServletRequest req = (HttpServletRequest)request;
 		String ctxPath = req.getContextPath();
 		request.setAttribute("ctxPath", ctxPath);
+		
+		if(cache != null)
+		{
+			endpoints = cache.hgetAll("endpoints");
+			req.getSession().getServletContext().setAttribute("endpoints", endpoints);
+		}
 		chain.doFilter(request, response);
 	}
 

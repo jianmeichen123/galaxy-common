@@ -58,6 +58,18 @@ public class PageRequest extends AbstractPageRequest {
 		super(page, size);
 		this.sort = sort;
 	}
+	public PageRequest(PagableEntity entity) 
+	{
+		super(entity.getPageNum(), entity.getPageSize());
+		if(entity.getProperty() != null)
+		{
+			this.sort = new Sort( Direction.fromString(entity.getDirection()), entity.getProperty());
+		}
+		else
+		{
+			this.sort = null;
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
