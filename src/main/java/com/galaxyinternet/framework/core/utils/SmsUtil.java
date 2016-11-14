@@ -1,6 +1,17 @@
 package com.galaxyinternet.framework.core.utils;
 
-import com.galaxyinternet.framework.core.exception.BaseException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -13,12 +24,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.CharArrayBuffer;
 import org.apache.log4j.Logger;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.galaxyinternet.framework.core.exception.BaseException;
 
 /**
  * 短信接口
@@ -191,7 +197,17 @@ public class SmsUtil {
         }
     }
 
-
+    public static String generateCode(int length)
+    {
+    	StringBuilder code = new StringBuilder();
+    	Random r = new Random();
+    	while(length-->0)
+    	{
+    		code.append(r.nextInt(10));
+    	}
+    	
+    	return code.toString();
+    }
     public static void main(String[] args) {
 
        boolean flag = SmsUtil.send("ok","18311082369");
