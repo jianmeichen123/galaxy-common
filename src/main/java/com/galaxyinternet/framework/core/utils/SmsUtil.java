@@ -56,7 +56,7 @@ public class SmsUtil {
         try {
             client = new DefaultHttpClient();
             //建立HttpPost对象
-            HttpPost httpPost = createPost(messages, mobile);
+            HttpPost httpPost = createPost(messages, mobile,null);
             //发送Post,并返回一个HttpResponse对象
             HttpResponse response=client.execute(httpPost);
             //如果状态码是200，则正常返回
@@ -72,7 +72,26 @@ public class SmsUtil {
     }
 
 
-    private static HttpPost createPost(String messages,String mobile)
+   public static boolean send(String messages,String model,String mobile) throws BaseException {
+        try {
+            client = new DefaultHttpClient();
+            //建立HttpPost对象
+            HttpPost httpPost = createPost(messages, mobile,model);
+            //发送Post,并返回一个HttpResponse对象
+            HttpResponse response=client.execute(httpPost);
+            //如果状态码是200，则正常返回
+            Map<String, String> map = passer(response);
+            return TRUE.equals(map.get(FLAG));
+        }catch (Exception e) {
+            throw new BaseException("发送短信异常",e);
+        }finally{
+            if(null != client){
+                client.getConnectionManager().shutdown();
+            }
+        }
+    }
+
+    private static HttpPost createPost(String messages,String mobile,String model)
             throws UnsupportedEncodingException {
         HttpPost httpPost=new HttpPost(url);
         //建立一个NameValuePair数组，用于存储欲传递的参数
@@ -85,6 +104,9 @@ public class SmsUtil {
         nvps.add(new BasicNameValuePair("sdst", mobile));
         nvps.add(new BasicNameValuePair("smsg",messages));
 
+        if(model!=null) {
+        	nvps.add(new BasicNameValuePair("key",model));
+        }
         //设置编码
         httpPost.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
         return httpPost;
