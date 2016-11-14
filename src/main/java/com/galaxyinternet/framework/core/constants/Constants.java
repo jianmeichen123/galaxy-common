@@ -99,5 +99,10 @@ public class Constants {
 	public static final String DECRYP_ENCRYPTION_MARK = "decrypEncryption";
 	
 	public static final String PUSH_MESSAGE_LIST = "pushMessageList";
+	
+	public static final String IDENTY_URL_FILE = "url.properties";
+	
+	public static final String IDENTY_URL = "identyUrl";
+	
 
 }
