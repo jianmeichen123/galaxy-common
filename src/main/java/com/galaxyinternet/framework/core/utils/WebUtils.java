@@ -18,8 +18,6 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +32,6 @@ import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.util.SystemPropertyUtils;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 
 
 
@@ -560,4 +553,14 @@ public abstract class WebUtils {
 	        }
 	        return result;
 	    }
+	 
+	 public static boolean isAjax(HttpServletRequest request)
+	 {
+		 String xReq = request.getHeader("X-Requested-With");
+		 if(xReq != null && "XMLHttpRequest".equals(xReq))
+		 {
+			 return true;
+		 }
+		 return false;
+	 }
 }
