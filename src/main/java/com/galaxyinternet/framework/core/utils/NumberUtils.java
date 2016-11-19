@@ -434,4 +434,17 @@ public class NumberUtils {
 
 		return param;
 	}
+	
+	public static boolean isNumber(String num)
+	{
+		try
+		{
+			new BigDecimal(num);
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
+		return true;
+	}
 }
