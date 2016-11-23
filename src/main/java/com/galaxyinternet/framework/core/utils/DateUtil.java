@@ -451,6 +451,7 @@ public class DateUtil {
 		Date currYearFirst = calendar.getTime();
 		return currYearFirst;
 	}
+
 	/**
 	 * date2 - date1 相差月数
 	 * @param date1
@@ -487,6 +488,23 @@ public class DateUtil {
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime();
 	}
+
+	
+	
+	public static Long getAfterMonthTime(int month){
+		Calendar cal = Calendar.getInstance();
+//		Date date1 = cal.getTime();
+		cal.add(Calendar.MONTH, month);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date date = cal.getTime();
+//		System.out.println(date1);
+//		System.out.println(date2);
+		return new Long(date.getTime());
+	} 
+
 
 
 	
