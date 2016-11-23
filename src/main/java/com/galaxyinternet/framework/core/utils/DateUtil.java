@@ -451,6 +451,21 @@ public class DateUtil {
 		Date currYearFirst = calendar.getTime();
 		return currYearFirst;
 	}
+	
+	
+	public static Long getAfterMonthTime(int month){
+		Calendar cal = Calendar.getInstance();
+//		Date date1 = cal.getTime();
+		cal.add(Calendar.MONTH, month);
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date date = cal.getTime();
+//		System.out.println(date1);
+//		System.out.println(date2);
+		return new Long(date.getTime());
+	} 
 
 
 	
