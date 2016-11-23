@@ -13,7 +13,7 @@ import com.galaxyinternet.framework.core.model.Result.Status;
  *
  * @param <T>
  */
-public class ResponseData<T extends BaseEntity> {
+public class ResponseData<T> {
 
 	/**
 	 * 单记录操作存储对象
@@ -85,9 +85,6 @@ public class ResponseData<T extends BaseEntity> {
 
 	public void setEntity(T entity) {
 		this.entity = entity;
-		if (null != entity) {
-			this.id = entity.getId();
-		}
 	}
 
 	public Header getHeader() {
