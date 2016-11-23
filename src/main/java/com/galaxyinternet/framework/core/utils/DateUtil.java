@@ -451,6 +451,42 @@ public class DateUtil {
 		Date currYearFirst = calendar.getTime();
 		return currYearFirst;
 	}
+	/**
+	 * date2 - date1 相差月数
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	public static int dateDiffMonth(Date date1, Date date2)
+	{
+		int diff = 0;
+		Calendar cal1 = Calendar.getInstance();
+		cal1.setTime(date1);
+		Calendar cal2 = Calendar.getInstance();
+		cal2.setTime(date2);
+		
+		int month1 = cal1.get(Calendar.MONTH);
+		int month2 = cal2.get(Calendar.MONTH);
+		
+		diff = month2 - month1;
+		
+		int year1 = cal1.get(Calendar.YEAR);
+		int year2 = cal2.get(Calendar.YEAR);
+		diff += (year2 - year1)*12;
+		return diff;
+	}
+	
+	public static Date dayEnd(Date date)
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone(GTM8TimeZone);
+		calendar.setTime(date);
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 0);
+		return calendar.getTime();
+	}
 
 
 	

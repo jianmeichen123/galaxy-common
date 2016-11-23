@@ -29,6 +29,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -562,5 +563,23 @@ public abstract class WebUtils {
 			 return true;
 		 }
 		 return false;
+	 }
+	 
+	public static Cookie getCookie(HttpServletRequest request, String name)
+	 {
+		if(name == null) return null;
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null && cookies.length > 0)
+		{
+			for (Cookie cookie : cookies)
+			{
+				String cookieName = cookie.getName();
+				if (name.equals(name))
+				{
+					return cookie;
+				}
+			}
+		}
+		return null;
 	 }
 }

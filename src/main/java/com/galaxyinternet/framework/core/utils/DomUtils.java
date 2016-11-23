@@ -23,6 +23,23 @@ public class DomUtils
 		}
 		return null;
 	}
+	public static String getNodeValue(Document doc, String path)
+	{
+		try
+		{
+			Node node = doc.selectSingleNode(path);
+			if(node != null)
+			{
+				return node.getText();
+			}
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	public static String getNodeValue(Element ele, String path)
 	{
 		try

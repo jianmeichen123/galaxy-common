@@ -115,4 +115,21 @@ public class StringEx {
 		}
 		return keyword;
 	}
+	
+	public static boolean equal(String str1, String str2)
+	{
+		if(str1 == null && str2 != null)
+		{
+			return false;
+		}
+		if(str1 != null && str2 == null)
+		{
+			return false;
+		}
+		if(str1 == null && str2 == null)
+		{
+			return true;
+		}
+		return str1.equals(str2);
+	}
 }
