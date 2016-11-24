@@ -504,6 +504,20 @@ public class DateUtil {
 //		System.out.println(date2);
 		return new Long(date.getTime());
 	} 
+	
+	public static Long getCurrentTime(){
+		Calendar cal = Calendar.getInstance();
+//		Date date1 = cal.getTime();
+		cal.add(Calendar.MONTH, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date date = cal.getTime();
+//		System.out.println(date1);
+//		System.out.println(date2);
+		return new Long(date.getTime());
+	}
 
 
 
