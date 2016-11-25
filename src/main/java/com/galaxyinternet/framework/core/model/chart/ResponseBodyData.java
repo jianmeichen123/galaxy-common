@@ -1,12 +1,13 @@
 package com.galaxyinternet.framework.core.model.chart;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 
-public class ResponseBodyData {
+public class ResponseBodyData implements Serializable{
 	/**
 	 * 单记录操作存储对象
 	 */
