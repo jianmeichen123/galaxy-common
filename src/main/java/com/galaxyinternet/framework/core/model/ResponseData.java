@@ -1,5 +1,6 @@
 package com.galaxyinternet.framework.core.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ import com.galaxyinternet.framework.core.model.Result.Status;
  *
  * @param <T>
  */
-public class ResponseData<T extends BaseEntity> {
+public class ResponseData<T extends BaseEntity> implements Serializable{
 
 	/**
 	 * 单记录操作存储对象
