@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -135,10 +136,13 @@ public class ExcelUtils {
         try {
         	
         	 response.reset();
-        	 response.setContentType("application/vnd.ms-excel;");
-   			// response.setHeader("Content-Disposition", "attachment;filename="+new String(sheetName.getBytes("gb2312"), "ISO8859-1") + ".xls");
-            response.setHeader("Content-Disposition", "attachment;filename="+toUtf8String(sheetName) + ".xls");
-
+        	 response.setContentType("application/vnd.ms-excel;charset=utf-8");
+    			// response.setHeader("Content-Disposition", "attachment;filename="+new String(sheetName.getBytes("gb2312"), "ISO8859-1") + ".xls");
+             response.setHeader("Content-Disposition", "attachment;filename=" + sheetName + ".xls");
+             response.setCharacterEncoding("UTF-8");
+             
+      
+             
             OutputStream os = response.getOutputStream();
             listToExcel(list, fieldMap, sheetName, sheetSize, os);
         } catch (Exception e) {
