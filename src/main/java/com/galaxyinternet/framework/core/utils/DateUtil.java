@@ -491,8 +491,11 @@ public class DateUtil {
 
 	
 	
-	public static Long getAfterMonthTime(int month){
+	public static Long getAfterMonthTime(int month,Long time){
 		Calendar cal = Calendar.getInstance();
+		if(time != null){
+			cal.setTime(new Date(time));
+		}
 //		Date date1 = cal.getTime();
 		cal.add(Calendar.MONTH, month);
 		cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -518,6 +521,23 @@ public class DateUtil {
 //		System.out.println(date2);
 		return new Long(date.getTime());
 	}
+	
+	public static Long getAfterDayTime(int day,Long time){
+		Calendar cal = Calendar.getInstance();
+		if(time!=null){
+			cal.setTime(new Date(time));
+		}
+//		Date date1 = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, day);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date date = cal.getTime();
+//		System.out.println(date1);
+		System.out.println(date);
+		return new Long(date.getTime());
+	} 
 
 
 
