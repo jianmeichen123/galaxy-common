@@ -27,6 +27,7 @@ public abstract class AbstractRepeatableTask implements GalaxyTask
 		Long currTime = System.currentTimeMillis();
 		if(latestRunTime != null && currTime-latestRunTime < minPeriod)
 		{
+			QueueTaskExecutor.add(this);
 			return;
 		}
 		latestRunTime = currTime;
@@ -35,7 +36,7 @@ public abstract class AbstractRepeatableTask implements GalaxyTask
 		
 		count++;
 		executeInteral();
-		if(repeatable)
+		if(isRepeatable())
 		{
 			QueueTaskExecutor.add(this);
 		}
