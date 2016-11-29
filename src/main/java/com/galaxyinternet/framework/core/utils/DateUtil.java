@@ -489,7 +489,10 @@ public class DateUtil {
 		return calendar.getTime();
 	}
 
-	
+	public static Long getAfterMonthTime(int month)
+	{
+		return getAfterMonthTime(month,new Date().getTime());
+	}
 	
 	public static Long getAfterMonthTime(int month,Long time){
 		Calendar cal = Calendar.getInstance();
