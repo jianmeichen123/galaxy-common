@@ -67,6 +67,7 @@ public class Constants {
 	public static final String MAIL_SUFFIX = "@galaxyinternet.com";
 
 	public static final String MAIL_TEMPLATE_FILE = "mail-template.properties";
+	
 	// 催办模板
 	public static final String MAIL_URGE_CONTENT = "mail.urge.content";
 
@@ -104,5 +105,10 @@ public class Constants {
 	
 	public static final String IDENTY_URL = "identyUrl";
 	
-
+	
+	//短信模版
+	public static final String SMS_TEMPLATE_FILE = "sms-notice-message.properties";
+	public static final String SMS_TEMPLATE_ONENUM_KEY = "one-instance-expired";
+	public static final String SMS_TEMPLATE_MORENUM_KEY = "more-instance-expired";
+	
 }
