@@ -574,7 +574,7 @@ public abstract class WebUtils {
 			for (Cookie cookie : cookies)
 			{
 				String cookieName = cookie.getName();
-				if (name.equals(name))
+				if (name.equals(cookieName))
 				{
 					return cookie;
 				}
