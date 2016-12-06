@@ -14,7 +14,7 @@
 		<property name="cookiePath" value="/"></property>
 	</bean>
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
-		<property name="maxInactiveIntervalInSeconds" value="7200"></property>
+		<property name="maxInactiveIntervalInSeconds" value="1800"></property>
 	</bean>
 
 </beans>
