@@ -17,7 +17,7 @@ import com.galaxyinternet.framework.core.utils.PropertiesUtils;
  */
 public class SmsTemplateUtils {
 	
-	static Properties property = PropertiesUtils.getProperties(Constants.MAIL_TEMPLATE_FILE);
+	static Properties property = PropertiesUtils.getProperties(Constants.SMS_TEMPLATE_FILE);
 	
 	/**
 	 * 
