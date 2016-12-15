@@ -18,6 +18,11 @@ public class Result implements Serializable {
 	 * @fields record 消息对象
 	 */
 	private Object message;
+	
+	/**
+	 * @fields record 自定义消息标识
+	 */
+	private Object flag;
 
 	/**
 	 * 错误码
@@ -55,6 +60,24 @@ public class Result implements Serializable {
 		this.message = message;
 	}
 
+	/**
+	 * @description
+	 * @param status
+	 *            状态
+	 * @param errorCode
+	 *            错误码
+	 * @param message
+	 *            消息标识
+	 * @param message
+	 *            消息
+	 */
+	public Result(Status status, String errorCode, Object flag, Object message) {
+		this.status = status;
+		this.errorCode = errorCode;
+		this.flag = flag;
+		this.message = message;
+	}
+	
 	/**
 	 * @description
 	 * @param status
@@ -137,6 +160,14 @@ public class Result implements Serializable {
 
 	public void setErrorCode(String errorCode) {
 		this.errorCode = errorCode;
+	}
+
+	public Object getFlag() {
+		return flag;
+	}
+
+	public void setFlag(Object flag) {
+		this.flag = flag;
 	}
 
 }
