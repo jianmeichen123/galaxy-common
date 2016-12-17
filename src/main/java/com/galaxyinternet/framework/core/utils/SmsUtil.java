@@ -148,6 +148,11 @@ public class SmsUtil
 	}
 	private HttpPost createPost(String messages, String mobile, String model) throws UnsupportedEncodingException
 	{
+		String phoneNumber = mobile;
+		if(mobile != null && mobile.length() == 12 && mobile.startsWith("0"))
+		{
+			phoneNumber = mobile.substring(1);
+		}
 		HttpPost httpPost = new HttpPost(url);
 		// 建立一个NameValuePair数组，用于存储欲传递的参数
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
@@ -156,7 +161,7 @@ public class SmsUtil
 		nvps.add(new BasicNameValuePair("spwd", password));
 		nvps.add(new BasicNameValuePair("scorpid", spCode));
 		nvps.add(new BasicNameValuePair("sprdid", productId));
-		nvps.add(new BasicNameValuePair("sdst", mobile));
+		nvps.add(new BasicNameValuePair("sdst", phoneNumber));
 		nvps.add(new BasicNameValuePair("smsg", messages));
 
 		if (model != null)
