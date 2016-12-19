@@ -17,7 +17,7 @@ public abstract class AbstractRepeatableTask implements GalaxyTask
 	/**执行次数**/
 	protected int count=0;
 	/**最大执行次数**/
-	protected int maxCount = 10;
+	protected int maxCount = 100;
 	/**是否再次执行**/
 	protected boolean repeatable = false;
 	protected Cache cache = BeanContextUtils.getBean(Cache.class);
