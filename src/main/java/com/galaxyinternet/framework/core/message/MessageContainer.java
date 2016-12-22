@@ -21,24 +21,25 @@ public class MessageContainer
 	private ExecutorService pool = GalaxyThreadPool.getExecutorService();
 	private static final String PREFIX = "mq:";
 	private static final String CHANNEL_SUB_MEMBER_PREFIX = PREFIX+"sub_member:";
+	private static final String CHANNEL_SUB_SEQ_PREFIX = PREFIX+"sub_seq:";
 	public void publish(String channel, Message message)
 	{
 		Set<String> members = cache.smembers(CHANNEL_SUB_MEMBER_PREFIX+channel);
 		for(String member : members)
 		{
-			cache.lpush((PREFIX+member).getBytes(), ObjectUtils.serialize(message));
+			cache.lpush(member.getBytes(), ObjectUtils.serialize(message));
 		}
 	}
 	public String subscribe(final MessageListener listener, final String channel)
 	{
-		Long seq = cache.incrBy(PREFIX+channel, 1);
-		final String key = PREFIX+channel+"/"+seq;
+		Long seq = cache.incrBy(CHANNEL_SUB_SEQ_PREFIX+channel, 1);
+		final String key = PREFIX+channel+":"+seq;
 		cache.sadd(CHANNEL_SUB_MEMBER_PREFIX+channel, key);
 		if (logger.isDebugEnabled())
 		{
 			logger.debug("Subscriber: "+key);
 		}
-		pool.execute(new SubscribeTask(key,listener));
+		//pool.execute(new SubscribeTask(key,listener));
 		return key;
 	}
 	public void unsubscribe(String key)
@@ -47,19 +48,9 @@ public class MessageContainer
 		{
 			logger.debug("Unsubscribe "+key);
 		}
-		Message endMessage = new Message(){
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public boolean stop()
-			{
-				return true;
-			}
-		};
-		cache.rpush((PREFIX+key).getBytes(), ObjectUtils.serialize(endMessage));
+		Message endMessage = new Message();
+		endMessage.setStop(true);
+		cache.rpush(key.getBytes(), ObjectUtils.serialize(endMessage));
 	}
 	public Cache getCache()
 	{
@@ -81,7 +72,7 @@ public class MessageContainer
 		{
 			this.key = key;
 			this.listener = listener;
-			this.channel = key.split("/")[0];
+			this.channel = key.split(":")[01];
 		}
 
 
@@ -109,7 +100,7 @@ public class MessageContainer
 					Message message = (Message)obj;
 					if(message.stop())
 					{
-						cache.removeRedisKeyOBJ(key);
+						cache.srem(CHANNEL_SUB_MEMBER_PREFIX+channel, key);
 						if(logger.isDebugEnabled())
 						{
 							logger.debug(key+" undescribe "+channel);
