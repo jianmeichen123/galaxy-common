@@ -39,7 +39,7 @@ public class MessageContainer
 		{
 			logger.debug("Subscriber: "+key);
 		}
-		//pool.execute(new SubscribeTask(key,listener));
+		pool.execute(new SubscribeTask(key,listener));
 		return key;
 	}
 	public void unsubscribe(String key)
