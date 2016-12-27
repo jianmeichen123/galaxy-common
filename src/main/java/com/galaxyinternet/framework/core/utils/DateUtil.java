@@ -541,6 +541,14 @@ public class DateUtil {
 		System.out.println(date);
 		return new Long(date.getTime());
 	} 
+	
+	public static Date add(Date date, int field, int amount)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(field, amount);
+		return cal.getTime();
+	}
 
 
 
