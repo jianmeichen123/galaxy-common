@@ -15,6 +15,8 @@ public class DateUtil {
 	private static final String dateTimeFormat = "MM/dd/yyyy HH:mm:ss";
 	private static final String dateTimeFormatForChina = "yyyy-MM-dd HH:mm:ss";
 	private static final String dateFormatForTeamCode = "yyyyMMdd";
+	public static final String NATUAL_MONTH = "natualMonth";
+	public static final String BILLING_MONTH = "billingMonth";
 
 	public static Date convertStringToDate(String time) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
@@ -510,6 +512,27 @@ public class DateUtil {
 //		System.out.println(date2);
 		return new Long(date.getTime());
 	} 
+	
+	public static Long getAfterMonthTime(int month,Long time,String mode){
+		Calendar cal = Calendar.getInstance();
+		if(time != null){
+			cal.setTime(new Date(time));
+		}
+		if(BILLING_MONTH.equals(mode)){
+			cal.add(Calendar.DAY_OF_YEAR, 30*month);
+		}else{
+			cal.add(Calendar.MONTH, month);
+			cal.add(Calendar.DAY_OF_YEAR, -1);
+		}
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 0);
+		Date date = cal.getTime();
+		return new Long(date.getTime());
+	}
+	
+	
 	
 	public static Long getCurrentTime(){
 		Calendar cal = Calendar.getInstance();
