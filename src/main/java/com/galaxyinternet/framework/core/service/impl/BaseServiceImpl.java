@@ -61,7 +61,6 @@ public abstract class BaseServiceImpl<T extends BaseEntity> implements BaseServi
 	@Override
 	@Transactional
 	public Long insert(T entity) {
-		System.out.println("------------------------------------------------------zhangfeng");
 		return getBaseDao().insert(entity);
 	}
 
