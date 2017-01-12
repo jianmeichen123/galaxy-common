@@ -100,4 +100,6 @@ public class Constants {
 	
 	public static final String PUSH_MESSAGE_LIST = "pushMessageList";
 
+	public static final String ACTUAL_TARGET = "actual"; //标识实际投资关联关系
+	
 }
