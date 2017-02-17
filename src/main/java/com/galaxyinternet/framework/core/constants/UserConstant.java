@@ -33,6 +33,10 @@ public interface UserConstant {
 	public long CEOMS = 19L;
 	//投后运营
 	public long THYY = 20L;
+	
+	//投后运营
+	public long YJY = 21L;
+		
 	//用户状态
 	String NORMAL = "0";
 	String DISABLE = "1";
