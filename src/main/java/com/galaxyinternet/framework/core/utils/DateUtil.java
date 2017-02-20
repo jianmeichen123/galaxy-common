@@ -15,6 +15,17 @@ public class DateUtil {
 	private static final String dateTimeFormat = "MM/dd/yyyy HH:mm:ss";
 	private static final String dateTimeFormatForChina = "yyyy-MM-dd HH:mm:ss";
 	private static final String dateFormatForTeamCode = "yyyyMMdd";
+    /**
+     * 把毫秒转化成日期
+     * @param dateFormat(日期格式，例如：MM/ dd/yyyy HH:mm:ss)
+     * @param millSec(毫秒数)
+     * @return
+     */
+    public static  String transferLongToDate(String dateFormat,Long millSec){
+     SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+      Date date= new Date(millSec);
+            return sdf.format(date);
+    }
 
 	public static Date convertStringToDate(String time) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
