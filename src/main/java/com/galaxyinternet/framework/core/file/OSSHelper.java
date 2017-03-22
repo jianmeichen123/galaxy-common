@@ -2,6 +2,8 @@ package com.galaxyinternet.framework.core.file;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -624,4 +626,21 @@ public class OSSHelper {
 			logger.error(DOWNLOAD_ERROR_MESSAGE);
 		}
 	}
+	
+	 /**
+	   * 获得url链接
+	   *
+	   * @param key
+	   * @return
+	   */
+	  public static String getUrl(String bucketName,String key) {
+	    // 设置URL过期时间为10年  3600l* 1000*24*365*10
+	    Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 10);
+	    // 生成URL
+	    URL url = client.generatePresignedUrl(bucketName, key, expiration);
+	    if (url != null) {
+	      return url.toString();
+	    }
+	    return null;
+	  }
 }
