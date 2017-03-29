@@ -634,8 +634,8 @@ public class OSSHelper {
 	   * @return
 	   */
 	  public static String getUrl(String bucketName,String key) {
-	    // 设置URL过期时间为10年  3600l* 1000*24*365*10
-	    Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 10);
+	    // 设置URL过期时间为60年  3600l* 1000*24*365*10
+	    Date expiration = new Date(new Date().getTime() + 3600l * 1000 * 24 * 365 * 60);
 	    // 生成URL
 	    URL url = client.generatePresignedUrl(bucketName, key, expiration);
 	    if (url != null) {
