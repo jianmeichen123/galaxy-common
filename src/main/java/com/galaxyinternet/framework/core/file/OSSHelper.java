@@ -162,6 +162,9 @@ public class OSSHelper {
 		return simpleUploadByOSS(inputStream, defaultBucketName, key);
 	}
 
+	public static UploadFileResult simpleUploadByOSSTO(File file, String key, ObjectMetadata metadata) {
+		return simpleUploadByOSSTO(file, defaultBucketName, key, metadata);
+	}
 	/**
 	 * 
 	 * @Description:简单的文件上传接口
@@ -193,6 +196,20 @@ public class OSSHelper {
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileFullName);
 		objectMetadata.setHeader(OSSHeaders.CONTENT_LENGTH, fileSize);
+		return objectMetadata;
+	}
+	
+	/**
+	 * 设置contentType
+	 * @param fileFullName
+	 * @param fileSize
+	 * @return
+	 */
+	public static ObjectMetadata setRequestHeaderForContentType(String fileFullName, long fileSize,String contentType) {
+		ObjectMetadata objectMetadata = new ObjectMetadata();
+		objectMetadata.setHeader(OSSHeaders.CONTENT_DISPOSITION, "attachment;filename=" + fileFullName);
+		objectMetadata.setHeader(OSSHeaders.CONTENT_LENGTH, fileSize);
+		objectMetadata.setContentType(contentType);
 		return objectMetadata;
 	}
 
@@ -249,6 +266,57 @@ public class OSSHelper {
 		}
 		return responseFile;
 	}
+	
+	/**
+	 * 简单的文件上传修改
+	 * 
+	 * @param file
+	 *            上传的文件
+	 * @param bucketName
+	 *            oss中存储文件的队列
+	 * @param key
+	 *            文件的唯一标示
+	 */
+	public static UploadFileResult simpleUploadByOSSTO(File file, String bucketName, String key,
+			ObjectMetadata metadata) {
+		UploadFileResult responseFile = new UploadFileResult();
+		Result result = new Result();
+		int checkBucketName = OSSFactory.getBucketName(bucketName);
+		if (checkBucketName == GlobalCode.ERROR) {
+			result.setStatus(Status.ERROR);
+			result.setMessage("Bucket name does not exist or is empty.");
+			responseFile.setResult(result);
+			return responseFile;
+		}
+		if (file.exists()) {
+			try {
+				PutObjectResult putObjectResult = null;
+				putObjectResult = client.putObject(bucketName, key, file, metadata);
+				responseFile.setEtag(putObjectResult.getETag());
+				result.addOK("上传成功");
+			} catch (OSSException oe) {
+				result.addError(oe.getErrorMessage(), oe.getErrorCode());
+				logger.error(
+						"Caught an OSSException, which means your request made it to OSS, "
+								+ "but was rejected with an error response for some reason.",
+						"Error Message: " + oe.getErrorMessage(), "Error Code:       " + oe.getErrorCode(),
+						"Request ID:      " + oe.getRequestId(), "Host ID:           " + oe.getHostId());
+			} catch (ClientException ce) {
+				result.addError(ce.getErrorMessage(), ce.getErrorCode());
+				logger.error("Caught an ClientException, which means the client encountered "
+						+ "a serious internal problem while trying to communicate with OSS, "
+						+ "such as not being able to access the network.", "Error Message: " + ce.getMessage());
+			}
+			responseFile.setBucketName(bucketName);
+			responseFile.setFileKey(key);
+			responseFile.setContentLength(file.length());
+			responseFile.setResult(result);
+		} else {
+			logger.warn("file does not exist");
+		}
+		return responseFile;
+	}
+
 
 	/**
 	 * 简单的文件上传
@@ -628,7 +696,7 @@ public class OSSHelper {
 	}
 	
 	 /**
-	   * 获得url链接   2017/3/24 拷贝到这的
+	   * 获得url链接
 	   *
 	   * @param key
 	   * @return
