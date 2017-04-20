@@ -588,4 +588,53 @@ public class DateUtil {
 	
 
 	
+	
+	
+	/**
+	 * 根据传入的  timeStr,
+	 * 返回  今日、明日、  
+	 */
+	public static String convertTimeForSuchDay(String beginTimeStr){
+		
+		long aday = (long) 1*24*60*60*1000;
+		
+		String[] date_time = beginTimeStr.split(" ");
+		String date = date_time[0];
+		String time = "";
+		if(date_time.length == 2){
+			time = date_time[1];
+		}
+		
+		
+		Date beginTimeDate = null;
+		try {
+			beginTimeDate = convertStringToDate(date,"yyyy-MM-dd");
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "（" + beginTimeStr +"）" ;
+		}
+		Long beginTimeLong = beginTimeDate.getTime();
+		
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		long nowTimeLong = calendar.getTimeInMillis();
+		
+		
+		if(nowTimeLong + aday == beginTimeLong){
+			beginTimeStr = "明日（" + date +"） " + time ;
+		}else if(nowTimeLong == beginTimeLong){
+			beginTimeStr = "今日（" + date +"） " + time ;
+		}else{
+			beginTimeStr = "（" + beginTimeStr +"）" ;
+		}
+		
+		return beginTimeStr;
+	}
+	
+	
+	
 }
