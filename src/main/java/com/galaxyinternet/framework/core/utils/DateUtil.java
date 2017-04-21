@@ -560,8 +560,6 @@ public class DateUtil {
 	
 	/**
 	 * 根据传入的     年 月 日  时分 秒 等到long
-	 * @param year month day
-	 * @return resultMap：beginTimeStr、endTimeStr
 	 */
 	public static Long convertHMSToDateTime(int year, int month, int day, int hh, int mm, int ss){
 		
@@ -636,5 +634,31 @@ public class DateUtil {
 	}
 	
 	
+	
+	/**
+	 * 根据传入的 Long time, 判断是否在今日
+	 */
+	public static boolean checkLongIsToday(long longTime){
+		boolean isToday = false;
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		long nowTimeLong = calendar.getTimeInMillis();
+		
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 0);
+		long endTimeLong = calendar.getTimeInMillis();
+		
+		if(longTime >= nowTimeLong &&  longTime<= endTimeLong){
+			isToday = true;
+		}
+		
+		return isToday;
+	}
 	
 }
