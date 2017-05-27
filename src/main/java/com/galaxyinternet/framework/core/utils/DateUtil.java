@@ -661,4 +661,36 @@ public class DateUtil {
 		return isToday;
 	}
 	
+	public static int getQuarterly(Date date)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int month = cal.get(Calendar.MONTH);
+		int quarter = 0;
+		switch (month)
+		{
+			case Calendar.JANUARY	:
+			case Calendar.FEBRUARY	:
+			case Calendar.MARCH		:
+				quarter = 1;
+				break;
+			case Calendar.APRIL		:
+			case Calendar.MAY		:
+			case Calendar.JUNE		:
+				quarter = 2;
+				break;
+			case Calendar.JULY		:
+			case Calendar.AUGUST		:
+			case Calendar.SEPTEMBER		:
+				quarter = 3;
+				break;
+			case Calendar.OCTOBER		:
+			case Calendar.NOVEMBER		:
+			case Calendar.DECEMBER		:
+				quarter = 4;
+				break;
+		}
+		return quarter;
+	}
+	
 }
