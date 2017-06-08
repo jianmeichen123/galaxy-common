@@ -11,8 +11,11 @@
 	<artifactId>galaxy-common</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0-fz</version>
+<<<<<<< HEAD
 	
 >>>>>>> refs/heads/rc_1.4
+=======
+>>>>>>> refs/remotes/origin/rc_1.4
 	<name />
 	
 	<description />
