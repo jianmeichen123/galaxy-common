@@ -3,6 +3,9 @@ package com.galaxyinternet.framework.core.model;
 public class PagableEntity extends BaseEntity implements Pagable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private String messageType;
+	
 	protected Integer pageSize;
 	protected Integer pageNum;
 	protected String direction;// asc,desc
@@ -48,4 +51,14 @@ public class PagableEntity extends BaseEntity implements Pagable {
 	public String getProperty() {
 		return this.property;
 	}
+
+	public String getMessageType() {
+		return messageType;
+	}
+
+	public void setMessageType(String messageType) {
+		this.messageType = messageType;
+	}
+	
+	
 }
