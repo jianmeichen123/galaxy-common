@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
 /**
@@ -462,7 +464,233 @@ public class DateUtil {
 		Date currYearFirst = calendar.getTime();
 		return currYearFirst;
 	}
+	
+	
+	
+	
+	/**
+	 * 根据传入的     年 月 日， 获取 开始、结束 时间 
+	 * @param year month day
+	 * @return resultMap：beginTimeStr、endTimeStr
+	 */
+	public static Map<String,String> getBeginEndTimeStr(Integer year, Integer month, Integer day){
+		Map<String,String> resultMap = new HashMap<String,String>();
+		String beginTimeStr = null;
+		String endTimeStr = null;
+		
+		Date bdate = null;
+		Date edate = null;
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone(GTM8TimeZone);
+		
+		if(day!=null && month!=null && year!=null){
+			calendar.clear();
+			
+			calendar.set(Calendar.YEAR, year);
+			calendar.set(Calendar.MONTH, month-1);
+			calendar.set(Calendar.DATE, day);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			bdate = calendar.getTime();
+			
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			edate = calendar.getTime();
+		}else if(day==null && month!=null && year!=null){
+			calendar.clear();
+			
+			calendar.set(Calendar.YEAR, year);
+			calendar.set(Calendar.MONTH, month-1);
+			calendar.set(Calendar.DAY_OF_MONTH, 1);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			bdate = calendar.getTime();
+			
+			calendar.set(Calendar.DAY_OF_MONTH,  calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+			
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			edate = calendar.getTime();
+		}else if(day==null && month==null && year!=null){
+			calendar.clear();
+			
+			calendar.set(Calendar.YEAR, year);
+			calendar.set(Calendar.DAY_OF_YEAR, 1);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.set(Calendar.MINUTE, 0);
+			calendar.set(Calendar.SECOND, 0);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			bdate = calendar.getTime();
+			
+			calendar.set(Calendar.DAY_OF_YEAR, calendar.getActualMaximum(Calendar.DAY_OF_YEAR));
+			calendar.set(Calendar.HOUR_OF_DAY, 23);
+			calendar.set(Calendar.MINUTE, 59);
+			calendar.set(Calendar.SECOND, 59);
+			calendar.set(Calendar.MILLISECOND, 0);
+			
+			edate = calendar.getTime();
+		}else{
+			return null;
+		}
+		
+		beginTimeStr = convertDateToStringForChina(bdate);
+		endTimeStr = convertDateToStringForChina(edate);
+		
+		resultMap.put("beginTimeStr", beginTimeStr);
+		resultMap.put("endTimeStr", endTimeStr);
+		
+		return resultMap;
+	}
+	
+	
+	
+	/**
+	 * 根据传入的     年 月 日  时分 秒 等到long
+	 */
+	public static Long convertHMSToDateTime(int year, int month, int day, int hh, int mm, int ss){
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeZone(GTM8TimeZone);
+		calendar.clear();
+		
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month-1);
+		calendar.set(Calendar.DATE, day);
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+			
+		//	bdate = calendar.getTime();
+		Date date = calendar.getTime();
+		Long _1 = date.getTime();
+		Long _2 = calendar.getTimeInMillis();
+		
+		return calendar.getTimeInMillis();
+	}
+	
+	
 
-
+	
+	
+	
+	/**
+	 * 根据传入的  timeStr,
+	 * 返回  今日、明日、  
+	 */
+	public static String convertTimeForSuchDay(String beginTimeStr){
+		
+		long aday = (long) 1*24*60*60*1000;
+		
+		String[] date_time = beginTimeStr.split(" ");
+		String date = date_time[0];
+		String time = "";
+		if(date_time.length == 2){
+			time = date_time[1];
+		}
+		
+		
+		Date beginTimeDate = null;
+		try {
+			beginTimeDate = convertStringToDate(date,"yyyy-MM-dd");
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return "（" + beginTimeStr +"）" ;
+		}
+		Long beginTimeLong = beginTimeDate.getTime();
+		
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		long nowTimeLong = calendar.getTimeInMillis();
+		
+		
+		if(nowTimeLong + aday == beginTimeLong){
+			beginTimeStr = "明日（" + date +"） " + time ;
+		}else if(nowTimeLong == beginTimeLong){
+			beginTimeStr = "今日（" + date +"） " + time ;
+		}else{
+			beginTimeStr = "（" + beginTimeStr +"）" ;
+		}
+		
+		return beginTimeStr;
+	}
+	
+	
+	
+	/**
+	 * 根据传入的 Long time, 判断是否在今日
+	 */
+	public static boolean checkLongIsToday(long longTime){
+		boolean isToday = false;
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.set(Calendar.MILLISECOND, 0);
+		long nowTimeLong = calendar.getTimeInMillis();
+		
+		calendar.set(Calendar.HOUR_OF_DAY, 23);
+		calendar.set(Calendar.MINUTE, 59);
+		calendar.set(Calendar.SECOND, 59);
+		calendar.set(Calendar.MILLISECOND, 0);
+		long endTimeLong = calendar.getTimeInMillis();
+		
+		if(longTime >= nowTimeLong &&  longTime<= endTimeLong){
+			isToday = true;
+		}
+		
+		return isToday;
+	}
+	
+	public static int getQuarterly(Date date)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int month = cal.get(Calendar.MONTH);
+		int quarter = 0;
+		switch (month)
+		{
+			case Calendar.JANUARY	:
+			case Calendar.FEBRUARY	:
+			case Calendar.MARCH		:
+				quarter = 1;
+				break;
+			case Calendar.APRIL		:
+			case Calendar.MAY		:
+			case Calendar.JUNE		:
+				quarter = 2;
+				break;
+			case Calendar.JULY		:
+			case Calendar.AUGUST		:
+			case Calendar.SEPTEMBER		:
+				quarter = 3;
+				break;
+			case Calendar.OCTOBER		:
+			case Calendar.NOVEMBER		:
+			case Calendar.DECEMBER		:
+				quarter = 4;
+				break;
+		}
+		return quarter;
+	}
 	
 }
