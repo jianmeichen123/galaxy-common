@@ -3,6 +3,7 @@ package com.galaxyinternet.framework.core.thread;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +18,9 @@ public class GalaxyThreadPool {
 	final static Logger logger = LoggerFactory.getLogger(GalaxyThreadPool.class);
 	static int cpu_core_size = Runtime.getRuntime().availableProcessors();
 	static ExecutorService executorService;
+	private static final ForkJoinPool forkJoinPool;
 	static {
+		forkJoinPool = new ForkJoinPool();
 		executorService = getThreadPoolExector();
 	}
 
@@ -48,5 +51,10 @@ public class GalaxyThreadPool {
 	}
 
 	private GalaxyThreadPool() {
+	}
+	
+	public static ForkJoinPool getForkJoinPool()
+	{
+		return forkJoinPool;
 	}
 }
