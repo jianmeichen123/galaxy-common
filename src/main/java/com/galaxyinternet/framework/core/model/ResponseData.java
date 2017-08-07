@@ -50,6 +50,11 @@ public class ResponseData<T extends BaseEntity> {
 
 	private String queryParamsJsonStr;
 	
+	/**
+	 * 
+	 */
+	private Map<String,List<Object>> listObject;
+	
 	public ResponseData() {
 		result = new Result(Status.OK, null);
 		pageList = new Page<T>(null, null, null);
@@ -134,5 +139,16 @@ public class ResponseData<T extends BaseEntity> {
 	public void setQueryParamsJsonStr(String queryParamsJsonStr) {
 		this.queryParamsJsonStr = queryParamsJsonStr;
 	}
+
+	public Map<String, List<Object>> getListObject() {
+		return listObject;
+	}
+
+	public void setListObject(Map<String, List<Object>> listObject) {
+		this.listObject = listObject;
+	}
+
+	
+	
 	
 }
