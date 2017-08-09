@@ -20,7 +20,19 @@ public class GalaxyThreadPool {
 	static ExecutorService executorService;
 	private static final ForkJoinPool forkJoinPool;
 	static {
-		forkJoinPool = new ForkJoinPool();
+		forkJoinPool = new ForkJoinPool(
+					cpu_core_size, 
+					ForkJoinPool.defaultForkJoinWorkerThreadFactory, 
+					new Thread.UncaughtExceptionHandler() 
+					{
+						@Override
+						public void uncaughtException(Thread t, Throwable e)
+						{
+							logger.error("ForkJoin Thread exception :"+t.getName(),e);
+						}
+					}, 
+					false
+				);
 		executorService = getThreadPoolExector();
 	}
 
