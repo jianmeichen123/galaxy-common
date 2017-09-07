@@ -99,7 +99,8 @@ public class SessionUtils {
 	public static BaseUser getUser(HttpServletRequest request, String key, Cache cache) {
 		BaseUser user = (BaseUser) cache.getByRedis(key);
 		if (user != null) {
-			cache.setByRedis(key, user, 60 * 60 * 24 * 1);
+			int secs = request.getSession().getMaxInactiveInterval();
+			cache.setByRedis(key, user, secs);
 			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 		}
 		return user;
