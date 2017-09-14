@@ -12,6 +12,7 @@
 	</bean>
 	<bean class="org.springframework.session.web.http.DefaultCookieSerializer">
 		<property name="cookiePath" value="/"></property>
+		<property name="domainName" value="galaxyinternet.com"></property>
 	</bean>
 	<bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration">
 		<property name="maxInactiveIntervalInSeconds" value="7200"></property>

@@ -101,7 +101,6 @@ public class SessionUtils {
 		if (user != null) {
 			int secs = request.getSession().getMaxInactiveInterval();
 			cache.setByRedis(key, user, secs);
-			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
 		}
 		return user;
 	}
