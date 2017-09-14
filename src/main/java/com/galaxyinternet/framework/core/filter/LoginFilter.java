@@ -25,7 +25,6 @@ import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
-import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
 /**
  * 
@@ -80,8 +79,7 @@ public class LoginFilter implements Filter {
 
 		// checkRequestParamValid(request,response);
 
-		BaseUser user = SessionUtils.getUser(request, cache);
-		request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
+		BaseUser user = (BaseUser)request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 
 		if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");
