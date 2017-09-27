@@ -4,14 +4,15 @@
 	<groupId>com.galaxyinternet</groupId>
 	<artifactId>galaxy-common</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.0.0-fz</version>
 	<name />
+	
 	<description />
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.version>4.2.1.RELEASE</spring.version>
-	   	<swagger.verison>2.7.0</swagger.verison>
-		<jackson.version>2.8.5</jackson.version>	   
+		<swagger.verison>2.7.0</swagger.verison>
+		<jackson.version>2.8.5</jackson.version>
 	</properties>
 
 	<repositories>
