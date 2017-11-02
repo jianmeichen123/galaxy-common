@@ -24,18 +24,14 @@ public class BuryRequest {
 		this.burySaveUrl = burySaveUrl;
 	}
 	
-	public String burySave(String url){
-		return burySaveUrl+url;
-	}
-	
-	public String burySave(Map<String, String> urlVariables,String burySaveUrl){
+	public String burySave(Map<String, String> urlVariables){
 		//Map<String, String> urlVariables = new HashMap<>();
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("userId", urlVariables.get("userId"));
-		headers.set("sessiionId", urlVariables.get("sessiionId"));
+		headers.set("sessionId", urlVariables.get("sessionId"));
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, String>> request = new HttpEntity<>(urlVariables, headers);
-		ResponseEntity<BuryPointResult> rtn = template.postForEntity(burySaveUrl, request, BuryPointResult.class);
+		ResponseEntity<BuryPointResult> rtn = template.postForEntity(burySaveUrl+"/bury/save", request, BuryPointResult.class);
 		return rtn.getBody().getErrorCode();
 
 	}
