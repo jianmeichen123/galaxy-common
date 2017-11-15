@@ -9,7 +9,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.OSSException;
@@ -20,7 +21,7 @@ import com.galaxyinternet.framework.core.utils.FileSerializableUtil;
  * oss多线程分段下载文件
  */
 public class OSSDownloader implements Callable<Integer> {
-	public final Logger logger = Logger.getLogger(OSSDownloader.class);
+	public final Logger logger = LoggerFactory.getLogger(OSSDownloader.class);
 	// 外层线程池
 	public static ExecutorService downloadMainPool = null;
 	// 内层线程池

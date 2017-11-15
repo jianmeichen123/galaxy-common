@@ -2,13 +2,14 @@ package com.galaxyinternet.framework.core.cluster;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.galaxyinternet.framework.core.id.IdGenerator;
@@ -17,7 +18,7 @@ import com.galaxyinternet.framework.core.utils.ZKUtils;
 
 public class LeaderSelector implements Watcher, InitializingBean
 {
-	private static final Logger logger = Logger.getLogger(LeaderSelector.class);
+	private static final Logger logger = LoggerFactory.getLogger(LeaderSelector.class);
 	private String address;
 	private String path;
 	private String id;

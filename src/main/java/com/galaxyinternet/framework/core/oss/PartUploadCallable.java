@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.UploadPartRequest;
@@ -18,7 +19,7 @@ import com.aliyun.oss.model.UploadPartResult;
 public class PartUploadCallable implements Callable<PartUploadCallable>, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	static final Logger logger = Logger.getLogger(PartUploadCallable.class);
+	static final Logger logger = LoggerFactory.getLogger(PartUploadCallable.class);
 
 	private File uploadFile;
 	private String bucket;

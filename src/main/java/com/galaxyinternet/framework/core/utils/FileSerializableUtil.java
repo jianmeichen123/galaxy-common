@@ -7,16 +7,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * 文件序列化工具类
  * 
- * @author keifer
+ * @au
+import org.slf4j.LoggerFactory;thor keifer
  */
 public class FileSerializableUtil {
 
-	public static final Logger LOGGER = Logger.getLogger(FileSerializableUtil.class);
+	public static final Logger LOGGER = LoggerFactory.getLogger(FileSerializableUtil.class);
 
 	public static void serialize(Object object, String filePath) {
 		File file = new File(filePath);
