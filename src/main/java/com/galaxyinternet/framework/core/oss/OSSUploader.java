@@ -14,7 +14,8 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSSClient;
@@ -33,7 +34,7 @@ import com.galaxyinternet.framework.core.utils.Md5Utils;
  */
 public class OSSUploader implements Callable<Integer> {
 
-	public final Logger logger = Logger.getLogger(OSSUploader.class);
+	public final Logger logger = LoggerFactory.getLogger(OSSUploader.class);
 
 	// 外层线程池
 	public static ExecutorService uploadMainPool = null;

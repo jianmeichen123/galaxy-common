@@ -6,7 +6,8 @@ import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.concurrent.Callable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.aliyun.oss.common.utils.IOUtils;
 import com.aliyun.oss.model.GetObjectRequest;
@@ -19,7 +20,7 @@ public class PartDownloadCallable implements Callable<PartDownloadCallable>, Ser
 
 	private static final long serialVersionUID = 1L;
 	
-	static final Logger logger = Logger.getLogger(PartDownloadCallable.class);
+	static final Logger logger = LoggerFactory.getLogger(PartDownloadCallable.class);
 	// 当前线程的下载开始位置
 	private long startPos;
 

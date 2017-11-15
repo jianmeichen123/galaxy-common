@@ -46,7 +46,6 @@ public class LoginFilter implements Filter {
 	 * 允许游客状态的接口
 	 */
 	static String[] webExcludedUrl = { Constants.LOGIN_TOLOGIN, Constants.LOGIN_CHECKLOGIN };
-
 	@Override
 	public void destroy() {
 	}
@@ -81,6 +80,17 @@ public class LoginFilter implements Filter {
 		// checkRequestParamValid(request,response);
 		SessionUtils.getUser(request, cache);
 		BaseUser user = (BaseUser)request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		//清除cookie后退出用户
+		if(user != null)
+		{
+			String originalSid = user.getSessionId();
+			String currentSid = request.getSession().getId();
+			if(StringUtils.isNotEmpty(originalSid) && !StringUtils.equals(originalSid, currentSid))
+			{
+				user = null;
+				cache.remove(originalSid);
+			}
+		}
 
 		if (loginFlag && null == user) {
 			logger.warn("用户长时间未操作或已过期");

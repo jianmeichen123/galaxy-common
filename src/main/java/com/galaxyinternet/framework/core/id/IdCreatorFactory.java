@@ -3,13 +3,15 @@ package com.galaxyinternet.framework.core.id;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author kaihu
  */
 public final class IdCreatorFactory {
-	private static Logger logger = Logger.getLogger(IdCreatorFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(IdCreatorFactory.class);
 
 	private static ConcurrentMap<Integer, IdCreator> timeIdCreatorMap = new ConcurrentHashMap<Integer, IdCreator>();
 

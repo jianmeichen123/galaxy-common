@@ -1,6 +1,7 @@
 package com.galaxyinternet.framework.core.id;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 全局Id生成器
@@ -8,7 +9,7 @@ import org.apache.log4j.Logger;
  * @author kaihu
  */
 public class IdGenerator {
-	private static Logger logger = Logger.getLogger(IdGenerator.class);
+	private static Logger logger = LoggerFactory.getLogger(IdGenerator.class);
 
 	public static <T> Long generateId(Class<T> clazz) {
 		IdCreator idCreator = IdCreatorFactory.getTimeIdCreator(1);
