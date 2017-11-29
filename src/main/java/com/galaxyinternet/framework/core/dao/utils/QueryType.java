@@ -35,7 +35,7 @@ public enum QueryType {
                     String queryField = getQueryFieldName(queryFieldAnnotation, field);
                     // 此处必须转型为List，否则会在in外面多一层[]
                     //所有的in查询必须是查询字段+s命名的list（例如 titleId作为查询条件，那么该字段的name为titleIds）
-                    String queryFieldNew=queryField.substring(queryField.length()-1);
+                   String queryFieldNew=queryField.substring(0,queryField.length()-1);
                     return Criteria.where(queryFieldNew).in((List<?>)value);
                 }
             }
