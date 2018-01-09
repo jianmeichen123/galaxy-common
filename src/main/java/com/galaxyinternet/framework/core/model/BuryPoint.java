@@ -58,7 +58,10 @@ public class BuryPoint {
 	public void setSoftVersion(String softVersion) {
 		this.softVersion = softVersion;
 	}
-	
-	
-
+	@Override
+	public String toString()
+	{
+		return "BuryPoint [pCode=" + pCode + ", userId=" + userId + ", recordDate=" + recordDate + ", os=" + os + ", osType=" + osType + ", osVersion=" + osVersion + ", hardware=" + hardware
+				+ ", softVersion=" + softVersion + "]";
+	}
 }

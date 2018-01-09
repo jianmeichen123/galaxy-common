@@ -32,7 +32,10 @@ public class BuryPointEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	
-	
 
+	@Override
+	public String toString()
+	{
+		return "BuryPointEntity [list=" + list + ", sessionId=" + sessionId + ", userId=" + userId + "]";
+	}
 }
