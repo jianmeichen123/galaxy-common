@@ -107,6 +107,7 @@ public class LoginFilter implements Filter {
 				response.sendRedirect(Constants.LOGIN_TOLOGIN);
 				return;
 			}else{
+				response.addHeader("Content-Type","application/json");
 				response.getWriter().write(GSONUtil.toJson(resposeData));
 				return;
 			}
