@@ -30,7 +30,6 @@ import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.file.OSSHelper;
 import com.galaxyinternet.framework.core.file.UploadFileResult;
 import com.galaxyinternet.framework.core.model.BaseEntity;
-import com.galaxyinternet.framework.core.model.BaseUser;
 import com.galaxyinternet.framework.core.model.ControllerPath;
 import com.galaxyinternet.framework.core.model.PagableEntity;
 import com.galaxyinternet.framework.core.model.Page;
@@ -227,16 +226,6 @@ public abstract class BaseControllerImpl<T extends BaseEntity, Q extends T> impl
 	}
 	
 	
-	/**
-	 * 从Session中取用户
-	 */
-	protected BaseUser getUserFromSession(HttpServletRequest request){
-		Object userObj = request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		if (userObj == null) {
-			return null;
-		}
-		return (BaseUser) userObj;
-	}
 	/**
 	 * 获取sessionId
 	 */

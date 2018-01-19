@@ -6,10 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.galaxyinternet.framework.cache.Cache;
 import com.galaxyinternet.framework.core.constants.Constants;
 import com.galaxyinternet.framework.core.id.IdGenerator;
-import com.galaxyinternet.framework.core.model.BaseUser;
 
 public class SessionUtils {
 
@@ -72,37 +70,6 @@ public class SessionUtils {
 			value = request.getParameter(key);
 		}
 		return value;
-	}
-
-	public static BaseUser getUser(HttpServletRequest request, Cache cache) {
-		String sessionId = request.getHeader(Constants.SESSION_ID_KEY);
-		if (StringUtils.isBlank(sessionId)) {
-			sessionId = request.getParameter(Constants.SESSOPM_SID_KEY);
-		}
-		if (StringUtils.isNotBlank(sessionId)) {
-			return getUser(request, sessionId, cache);
-		} else {
-			return (BaseUser) request.getSession().getAttribute(Constants.SESSION_USER_KEY);
-		}
-	}
-
-	/**
-	 * 获取session中用户的信息
-	 * 
-	 * @param request
-	 *            request
-	 * @param key
-	 *            sessionId key
-	 * @return user
-	 */
-	public static BaseUser getUser(HttpServletRequest request, String key, Cache cache) {
-		BaseUser user = (BaseUser) cache.getByRedis(key);
-		if (user != null) {
-			int secs = request.getSession().getMaxInactiveInterval();
-			cache.setByRedis(key, user, secs);
-			request.getSession().setAttribute(Constants.SESSION_USER_KEY, user);
-		}
-		return user;
 	}
 
 	public static void main(String[] args) {

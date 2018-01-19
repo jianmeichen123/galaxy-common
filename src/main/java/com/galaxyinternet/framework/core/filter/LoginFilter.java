@@ -12,6 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,7 +26,6 @@ import com.galaxyinternet.framework.core.model.Result;
 import com.galaxyinternet.framework.core.model.Result.Status;
 import com.galaxyinternet.framework.core.oss.OSSConstant;
 import com.galaxyinternet.framework.core.utils.GSONUtil;
-import com.galaxyinternet.framework.core.utils.SessionUtils;
 import com.galaxyinternet.framework.core.utils.StringEx;
 /**
  * 
@@ -77,14 +77,16 @@ public class LoginFilter implements Filter {
 			}
 		}
 
-		// checkRequestParamValid(request,response);
-		SessionUtils.getUser(request, cache);
 		BaseUser user = (BaseUser)request.getSession().getAttribute(Constants.SESSION_USER_KEY);
 		//清除cookie后退出用户
 		if(user != null)
 		{
+			HttpSession session = request.getSession();
+			int expiredTime = session.getMaxInactiveInterval();
+			cache.expire(session.getId(), expiredTime);
+			
 			String originalSid = user.getSessionId();
-			String currentSid = request.getSession().getId();
+			String currentSid = session.getId();
 			if(StringUtils.isNotEmpty(originalSid) && !StringUtils.equals(originalSid, currentSid))
 			{
 				user = null;
