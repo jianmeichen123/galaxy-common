@@ -76,8 +76,21 @@ public class LoginFilter implements Filter {
 				return;
 			}
 		}
-
 		BaseUser user = (BaseUser)request.getSession().getAttribute(Constants.SESSION_USER_KEY);
+		//其他终端免登陆
+		if(user == null)
+		{
+			String sessionId = request.getParameter("sid");
+			if(StringUtils.isEmpty(sessionId))
+			{
+				sessionId = request.getHeader("sessionId");
+			}
+			if(StringUtils.isNotEmpty(sessionId))
+			{
+				user = (BaseUser)cache.get(sessionId);
+			}
+		}
+		
 		//清除cookie后退出用户
 		if(user != null)
 		{
