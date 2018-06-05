@@ -14,6 +14,24 @@
 		<jackson.version>2.8.5</jackson.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>Team Nexus Repository</name>
+			<url>http://nexus.gi.com/content/groups/public/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+		</repository>
+	</repositories>
+
 	<dependencies>
 
 		<dependency>
@@ -318,26 +336,6 @@
 			</properties>
 		</profile>
 		<profile>
-			<id>local</id>
-			<properties>
-				<oss.service.endpoint.prefix>oss-cn-hangzhou</oss.service.endpoint.prefix>
-				<oss.service.endpoint>oss-cn-hangzhou.aliyuncs.com</oss.service.endpoint>
-				<oss.access.key.id>3Yvy23QypBtVsJhz</oss.access.key.id>
-				<oss.access.key.secret>zAXajwCAO51Qw2g8xg4WL5asmH31nr</oss.access.key.secret>
-				<oss.bucket.name>galaxydev-xhhl-fx</oss.bucket.name>
-				<oss.upload.mode>local</oss.upload.mode>
-				<mail.host>mail.galaxyinternet.com</mail.host>
-				<mail.address>fx-admin@galaxyinternet.com</mail.address>
-				<mail.username>fx-admin</mail.username>
-				<mail.password>oN1oAyt4</mail.password>
-				<mail.smtp.auth>true</mail.smtp.auth>
-				<mail.smtp.timeout>25000</mail.smtp.timeout>
-				<mail.smtp.port>587</mail.smtp.port>
-				<!-- 上线应该配置成公司的域名 -->
-				<galaxy.header.referer>http://fx.dev.galaxyinternet.com</galaxy.header.referer>
-			</properties>
-		</profile>
-		<profile>
 			<id>qa</id>
 			<properties>
 				<oss.service.endpoint.prefix>oss-cn-hangzhou</oss.service.endpoint.prefix>
@@ -374,7 +372,13 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
-		
+			<!-- 打jar包并发布到私服 -->
+			<distributionManagement>
+				<snapshotRepository>
+					<id>Snapshots</id>
+					<url>http://nexus.gi.com/content/repositories/snapshots/</url>
+				</snapshotRepository>
+			</distributionManagement>
 			<build>
 				<plugins>
 					<!-- mvn jar:jar -->
@@ -407,6 +411,13 @@
 			<properties>
 				<packtype>jar</packtype>
 			</properties>
+			<!-- 打jar包并发布到私服 -->
+			<distributionManagement>
+				<repository>
+					<id>Releases</id>
+					<url>http://nexus.gi.com/content/repositories/releases/</url>
+				</repository>
+			</distributionManagement>
 			<build>
 				<plugins>
 					<!-- mvn jar:jar -->
